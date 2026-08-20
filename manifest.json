@@ -1,10 +1,10 @@
 {
   "name": "FIREMAP",
   "short_name": "FIREMAP",
-  "start_url": "./",
+  "start_url": "./login.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#07111f",
   "theme_color": "#07111f",
-  "description": "Mapa sytuacyjna pojazdów ratowniczo-gaśniczych"
+  "description": "Mapa sytuacyjna pojazdów ratowniczo-gaśniczych — dostęp autoryzowany"
 }
