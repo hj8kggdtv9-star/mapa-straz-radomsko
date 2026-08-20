@@ -52,6 +52,7 @@ const ACTIVE_VEHICLE_MS=3*60*1000;
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function norm(s=''){return String(s).trim().toLowerCase().replace(/\s+/g,'')}
 function vehicleKey(v){return norm(v.unit_name)+'|'+norm(v.call_sign)}
+function vehicleGlyph(type){const t=String(type||'').trim().toUpperCase();if(t==='QUAD'||t.includes('QUAD'))return'🏍️';if(t==='SD'||t.startsWith('SD '))return'🪜';if(t==='SLOP')return'🚗';if(t==='SLKW'||t==='SLRR'||t==='SLRT'||t.startsWith('SLK')||t.startsWith('SLR'))return'🚐';if(t.includes('MIKROBUS'))return'🚌';if(t.includes('PRZYCZEPA'))return'◫';if(t==='GBA'||t==='GCBA'||t==='GBM'||t==='GLM'||t.startsWith('GBA')||t.startsWith('GCBA')||t.startsWith('GBM')||t.startsWith('GLM'))return'🚒';return'🚙'}
 function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
 function openSheet(id){document.querySelectorAll('.sheet.open').forEach(x=>x.classList.remove('open'));$(id).classList.add('open')}
 function closeSheet(id){$(id).classList.remove('open')}
@@ -59,8 +60,8 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSheet(b.
 function vehicleLabel(){return myData?.call?myData.call+' · ':''}
 function statusUI(){let s=STATUS[currentStatus]||STATUS.BASE;$('statusBtn').textContent='● '+s.label;$('miniStatus').textContent=vehicleLabel()+verifiedUnit+' · '+(connected?'GPS · ':'')+s.label+(driveMode?' · TRYB JAZDY':'');document.querySelectorAll('#quick [data-status]').forEach(b=>b.classList.toggle('active',b.dataset.status===currentStatus));$('driveBtn').classList.toggle('active',driveMode);if(ownMarker)ownMarker.setIcon(ownIcon())}
 statusUI();
-function vIcon(v){let s=STATUS[v.status]||STATUS.BASE;return L.divIcon({className:'',html:`<div class="vehicleIcon ${s.cls}" style="background:${s.color}">🚒</div>`,iconSize:[42,42],iconAnchor:[21,21]})}
-function ownIcon(){let s=STATUS[currentStatus]||STATUS.BASE,call=myData?.call?esc(myData.call):'';return L.divIcon({className:'',html:`<div class="ownVehicle ${s.cls}" style="background:${s.color}">${call?`<span class="call">${call}</span>`:''}🚒</div>`,iconSize:[42,50],iconAnchor:[21,45]})}
+function vIcon(v){let s=STATUS[v.status]||STATUS.BASE,g=vehicleGlyph(v.vehicle_type);return L.divIcon({className:'',html:`<div class="vehicleIcon ${s.cls}" style="background:${s.color}">${g}</div>`,iconSize:[42,42],iconAnchor:[21,21]})}
+function ownIcon(){let s=STATUS[currentStatus]||STATUS.BASE,call=myData?.call?esc(myData.call):'',g=vehicleGlyph(myData?.type);return L.divIcon({className:'',html:`<div class="ownVehicle ${s.cls}" style="background:${s.color}">${call?`<span class="call">${call}</span>`:''}${g}</div>`,iconSize:[42,50],iconAnchor:[21,45]})}
 function iIcon(k){return L.divIcon({className:'',html:`<div class="incidentIcon ${k==='FIRE'?'fire':'mz'}">${k==='FIRE'?'🔥':'⚠️'}</div>`,iconSize:[44,44],iconAnchor:[22,22]})}
 function dist(a,b){const R=6371000,p1=a[0]*Math.PI/180,p2=b[0]*Math.PI/180,dp=(b[0]-a[0])*Math.PI/180,dl=(b[1]-a[1])*Math.PI/180,h=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
 function calcBearing(a,b){const p1=a[0]*Math.PI/180,p2=b[0]*Math.PI/180,dl=(b[1]-a[1])*Math.PI/180,y=Math.sin(dl)*Math.cos(p2),x=Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl);return(Math.atan2(y,x)*180/Math.PI+360)%360}
