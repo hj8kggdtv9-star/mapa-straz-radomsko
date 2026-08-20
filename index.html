@@ -20,6 +20,7 @@
 .controls{position:fixed;z-index:900;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));display:flex;gap:8px;max-width:calc(100vw - 18px);padding:7px;background:rgba(4,12,23,.62);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(18px);box-shadow:0 10px 34px #0008}
 .glassBtn{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);color:#fff;min-height:48px;padding:0 13px;border-radius:13px;font-weight:800;font-size:13px;white-space:nowrap;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
 .glassBtn:active{transform:scale(.98)}.glassBtn.primary{background:rgba(220,38,38,.76)}.glassBtn.status-base{background:rgba(100,116,139,.70)}.glassBtn.status-dispatched{background:rgba(245,158,11,.78)}.glassBtn.status-scene{background:rgba(220,38,38,.82)}.glassBtn.status-return{background:rgba(37,99,235,.78)}
+.quickStatus{position:fixed;z-index:900;left:50%;transform:translateX(-50%);bottom:78px;display:grid;grid-template-columns:repeat(4,auto);gap:6px;padding:6px;background:rgba(4,12,23,.62);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(18px);box-shadow:0 10px 34px #0007}.quickStatus button{border:1px solid rgba(255,255,255,.18);color:#fff;min-height:40px;padding:0 10px;border-radius:11px;font-weight:800;font-size:11px;white-space:nowrap;cursor:pointer}.quickStatus [data-status="BASE"]{background:rgba(100,116,139,.76)}.quickStatus [data-status="DISPATCHED"]{background:rgba(245,158,11,.82)}.quickStatus [data-status="ON_SCENE"]{background:rgba(220,38,38,.86)}.quickStatus [data-status="RETURNING"]{background:rgba(37,99,235,.82)}.quickStatus button.active{outline:3px solid #fff;outline-offset:1px}@media(max-width:560px){.quickStatus{width:calc(100vw - 18px);grid-template-columns:repeat(4,1fr)}.quickStatus button{padding:0 4px;font-size:9.5px}.controls{bottom:max(8px,env(safe-area-inset-bottom))}}
 .fab{position:fixed;right:max(12px,env(safe-area-inset-right));z-index:900;width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:rgba(5,15,27,.72);backdrop-filter:blur(14px);color:white;font-size:20px;box-shadow:0 8px 24px #0008;cursor:pointer}
 #followBtn{top:max(70px,calc(env(safe-area-inset-top) + 70px))}#incBtn{top:max(126px,calc(env(safe-area-inset-top) + 126px))}
 .badge{position:absolute;right:-3px;top:-3px;background:#ef4444;color:white;border-radius:999px;min-width:18px;height:18px;padding:0 4px;font-size:11px;font-weight:800;display:grid;place-items:center;border:2px solid #07111f}
@@ -27,19 +28,186 @@
 .sheet.open{transform:translate(-50%,0)}.sheet h2{margin:0 0 6px;font-size:21px}.sheet p{margin:0 0 14px;color:var(--muted);font-size:13px}
 label{display:block;color:#cbd5e1;font-size:12px;margin:10px 0 5px}input,select{width:100%;height:48px;border-radius:12px;border:1px solid #475569;background:#111e30;color:white;padding:0 12px;font-size:16px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.wideBtn{width:100%;height:49px;border:0;border-radius:12px;color:#fff;font-weight:800;font-size:15px;background:#dc2626;margin-top:12px;cursor:pointer}.wideBtn.secondary{background:#334155}.statusGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.statusPick{min-height:74px;border-radius:14px;border:1px solid #475569;color:white;text-align:left;padding:10px 12px;font-weight:800;background:#1e293b}.statusPick span{font-size:11px;font-weight:500;color:#cbd5e1;display:block;margin-top:4px}.incidentRow{border:1px solid #334155;border-radius:14px;padding:11px;margin:9px 0;background:#101d2e}.incidentRow b{font-size:15px}.incidentRow small{display:block;color:#94a3b8;margin:3px 0 8px}.navBtn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:white;background:#2563eb;border-radius:10px;height:38px;padding:0 12px;font-weight:800;font-size:13px}
-.toast{position:fixed;z-index:1400;left:50%;top:calc(max(12px,env(safe-area-inset-top)) + 58px);transform:translateX(-50%) translateY(-20px);opacity:0;background:#0f172aef;border:1px solid #475569;padding:10px 14px;border-radius:12px;color:white;font-size:13px;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast{position:fixed;z-index:1400;left:50%;top:calc(max(12px,env(safe-area-inset-top)) + 58px);transform:translateX(-50%) translateY(-20px);opacity:0;background:#0f172aeF;border:1px solid #475569;padding:10px 14px;border-radius:12px;color:white;font-size:13px;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .vehicleIcon{width:34px;height:34px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-size:16px;box-shadow:0 3px 12px #0008}.vehicleIcon.me{outline:3px solid rgba(255,255,255,.45);outline-offset:2px}.vehicleIcon.stale{opacity:.55;filter:grayscale(.35)}
 .pulseAmber{animation:pulseAmber 1.7s infinite}.pulseRed{animation:pulseRed 1.25s infinite}.pulseBlue{animation:pulseBlue 1.8s infinite}
-@keyframes pulseAmber{0%,100%{box-shadow:0 0 0 0 #f59e0b99,0 3px 12px #0008}50%{box-shadow:0 0 0 10px #f59e0b00,0 3px 12px #0008}}@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 #ef444499,0 3px 12px #0008}50%{box-shadow:0 0 0 12px #ef444400,0 3px 12px #0008}}@keyframes pulseBlue{0%,100%{box-shadow:0 0 0 0 #3b82f699,0 3px 12px #0008}50%{box-shadow:0 0 0 9px #3b82f600,0 3px 12px #0008}}
+@keyframes pulseAmber{0%,100%{box-shadow:0 0 0 0 #f59e0b99,0 3px 12px #0008}50%{box-shadow:0 0 0 10px #f59e0b00,0 3px 12px #0008}}
+@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 #ef444499,0 3px 12px #0008}50%{box-shadow:0 0 0 12px #ef444400,0 3px 12px #0008}}
+@keyframes pulseBlue{0%,100%{box-shadow:0 0 0 0 #3b82f699,0 3px 12px #0008}50%{box-shadow:0 0 0 9px #3b82f600,0 3px 12px #0008}}
 .incidentIcon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:3px solid white;font-size:20px;box-shadow:0 4px 14px #0009}.incidentIcon.fire{background:#dc2626;animation:pulseRed 1.25s infinite}.incidentIcon.mz{background:#f59e0b;color:#111827}
 .leaflet-control-zoom{margin-top:76px!important}.leaflet-bottom.leaflet-right{display:none}
-@media(min-width:720px){.controls{left:18px;transform:none;bottom:18px}.sheet{left:auto;right:18px;bottom:18px;transform:translateX(110%);border-radius:18px;border-bottom:1px solid #334155;max-height:calc(100vh - 36px)}.sheet.open{transform:translateX(0)}}
-</style></head><body>
-<div id="app"><div id="map"></div></div><div class="brand"><div class="live" id="liveDot"></div><div><b>FIREMAP</b><small id="miniStatus">gotowy</small></div></div><button class="fab" id="followBtn">◎</button><button class="fab" id="incBtn">🔥<span class="badge" id="incBadge" style="display:none">0</span></button>
-<div class="controls"><button class="glassBtn primary" id="connectBtn">📍 Połącz</button><button class="glassBtn status-base" id="statusBtn">● W bazie</button><button class="glassBtn" id="disconnectBtn" disabled>■ Rozłącz</button></div>
-<div class="sheet" id="connectSheet"><h2>Połącz zastęp</h2><p>Dane będą zapamiętane na tym urządzeniu.</p><label>Jednostka</label><input id="unit" placeholder="np. JRG Radomsko"><label>Numer operacyjny</label><input id="callSign" placeholder="np. 511-25"><label>Typ pojazdu</label><select id="vehicleType"><option>GBA</option><option>GCBA</option><option>SD</option><option>SLRt</option><option>SLOp</option><option>INNY</option></select><div class="grid2"><button class="wideBtn secondary" data-close="connectSheet">Anuluj</button><button class="wideBtn" id="startGpsBtn">Uruchom GPS</button></div></div>
-<div class="sheet" id="statusSheet"><h2>Status zastępu</h2><p>Kolor i animacja ikony są widoczne dla wszystkich użytkowników FIREMAP.</p><div class="statusGrid"><button class="statusPick" data-status="BASE" style="background:#475569">⚪ W bazie<span>Szara ikona — ostatnia pozycja</span></button><button class="statusPick" data-status="DISPATCHED" style="background:#a16207">🟠 Dysponowany<span>Wyjazd do zdarzenia — delikatne miganie</span></button><button class="statusPick" data-status="ON_SCENE" style="background:#991b1b">🔴 Na miejscu<span>Zastęp bierze udział w interwencji</span></button><button class="statusPick" data-status="RETURNING" style="background:#1d4ed8">🔵 Powrót<span>Działania zakończone — powrót do bazy</span></button></div><button class="wideBtn secondary" data-close="statusSheet">Zamknij</button></div>
-<div class="sheet" id="incidentSheet"><h2>Aktywne zdarzenia</h2><p>Wskazane przez SK KP PSP Radomsko.</p><div id="incidentList"></div><button class="wideBtn secondary" data-close="incidentSheet">Zamknij</button></div><div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-(()=>{const URL='https://vqgipvwcvbhabvfipodl.supabase.co',KEY='sb_publishable_BYEVImorGhltw1aCaRXyRQ_pM2hKMkI',BOUNDS=L.latLngBounds([[50.58,18.55],[51.55,20.48]]),FOLLOW_DELAY=12000,STALE_MS=180000,$=id=>document.getElementById(id),sb=supabase.createClient(URL,KEY,{auth:{persistSession:true}}),map=L.map('map',{maxBounds:BOUNDS.pad(.08),minZoom:8,zoomControl:true}).setView([51.067,19.445],10);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);let watchId=null,lastPos=null,autoFollow=true,followTimer=null,currentStatus=localStorage.getItem('firemapStatus')||'BASE',myId=localStorage.getItem('firemapVehicleId')||crypto.randomUUID(),myData=JSON.parse(localStorage.getItem('firemapVehicleData')||'null'),connected=false,markers=new Map(),incidentMarkers=new Map(),incidents=[];localStorage.setItem('firemapVehicleId',myId);const STATUS={BASE:{label:'W bazie',color:'#64748b',cls:'',btn:'status-base'},DISPATCHED:{label:'Dysponowany',color:'#f59e0b',cls:'pulseAmber',btn:'status-dispatched'},ON_SCENE:{label:'Na miejscu',color:'#dc2626',cls:'pulseRed',btn:'status-scene'},RETURNING:{label:'Powrót',color:'#2563eb',cls:'pulseBlue',btn:'status-return'}};function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}function openSheet(id){document.querySelectorAll('.sheet.open').forEach(x=>x.classList.remove('open'));$(id).classList.add('open')}function closeSheet(id){$(id).classList.remove('open')}document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSheet(b.dataset.close));function ageText(ts){let s=Math.max(0,Math.floor((Date.now()-new Date(ts))/1000));return s<60?s+' s temu':s<3600?Math.floor(s/60)+' min temu':Math.floor(s/3600)+' h temu'}function statusButton(){let s=STATUS[currentStatus]||STATUS.BASE;$('statusBtn').className='glassBtn '+s.btn;$('statusBtn').textContent='● '+s.label;$('miniStatus').textContent=(connected?'GPS aktywny · ':'')+s.label}statusButton();function vehicleIcon(v){let st=STATUS[v.status]||STATUS.BASE,stale=(Date.now()-new Date(v.updated_at))>STALE_MS;return L.divIcon({className:'',html:`<div class="vehicleIcon ${v.id===myId?'me':''} ${st.cls} ${stale?'stale':''}" style="background:${st.color}">🚒</div>`,iconSize:[38,38],iconAnchor:[19,19]})}function incidentIcon(kind){return L.divIcon({className:'',html:`<div class="incidentIcon ${kind==='FIRE'?'fire':'mz'}">${kind==='FIRE'?'🔥':'⚠️'}</div>`,iconSize:[42,42],iconAnchor:[21,21]})}async function resolveVehicleId(call){const {data}=await sb.from('vehicles').select('id').eq('call_sign',call).order('updated_at',{ascending:false}).limit(1);if(data?.[0]?.id){myId=data[0].id;localStorage.setItem('firemapVehicleId',myId)}}async function refreshVehicles(){const {data,error}=await sb.from('vehicles').select('*').order('updated_at',{ascending:false});if(error)return;const seen=new Set();(data||[]).forEach(v=>{if(!BOUNDS.contains([v.lat,v.lng]))return;seen.add(v.id);let m=markers.get(v.id);if(!m){m=L.marker([v.lat,v.lng],{icon:vehicleIcon(v)}).addTo(map);markers.set(v.id,m)}else{m.setLatLng([v.lat,v.lng]);m.setIcon(vehicleIcon(v))}let st=STATUS[v.status]||STATUS.BASE;m.bindPopup(`<b>${esc(v.call_sign)} · ${esc(v.vehicle_type)}</b><br>${esc(v.unit_name)}<br>Status: <b>${st.label}</b><br><small>Aktualizacja: ${ageText(v.updated_at)}</small>`)});for(let[id,m]of markers)if(!seen.has(id)){map.removeLayer(m);markers.delete(id)}}async function refreshIncidents(){const {data,error}=await sb.from('incidents').select('*').eq('active',true).order('created_at',{ascending:false});if(error)return;incidents=data||[];let seen=new Set();incidents.forEach(i=>{seen.add(i.id);let m=incidentMarkers.get(i.id);if(!m){m=L.marker([i.lat,i.lng],{icon:incidentIcon(i.kind),zIndexOffset:1000}).addTo(map);incidentMarkers.set(i.id,m)}else m.setLatLng([i.lat,i.lng]);const nav=`https://www.google.com/maps/dir/?api=1&destination=${i.lat},${i.lng}`;m.bindPopup(`<b>${i.kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><br>${esc(i.description||'Zdarzenie')}<br>${i.lat.toFixed(5)}, ${i.lng.toFixed(5)}<br><br><a href="${nav}" target="_blank" rel="noopener">Nawiguj w Google Maps</a>`)});for(let[id,m]of incidentMarkers)if(!seen.has(id)){map.removeLayer(m);incidentMarkers.delete(id)}$('incBadge').textContent=incidents.length;$('incBadge').style.display=incidents.length?'grid':'none';$('incidentList').innerHTML=incidents.length?incidents.map(i=>{const nav=`https://www.google.com/maps/dir/?api=1&destination=${i.lat},${i.lng}`;return `<div class="incidentRow"><b>${i.kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><small>${esc(i.description||'Bez opisu')} · ${i.lat.toFixed(5)}, ${i.lng.toFixed(5)}</small><a class="navBtn" href="${nav}" target="_blank" rel="noopener">🧭 Nawiguj</a></div>`}).join(''):'<p>Brak aktywnych zdarzeń.</p>'}async function publish(pos){if(!connected||!myData)return;const lat=pos.coords.latitude,lng=pos.coords.longitude;lastPos=[lat,lng];if(!BOUNDS.contains(lastPos)){toast('Poza obszarem FIREMAP');return}const payload={id:myId,unit_name:myData.unit,call_sign:myData.call,vehicle_type:myData.type,status:currentStatus,lat,lng,accuracy:Math.round(pos.coords.accuracy||0),speed:pos.coords.speed==null?null:Math.max(0,pos.coords.speed*3.6),heading:pos.coords.heading,updated_at:new Date().toISOString()};const {error}=await sb.from('vehicles').upsert(payload,{onConflict:'id'});if(error){toast('Błąd wysyłania pozycji');return}$('liveDot').style.background='#22c55e';$('miniStatus').textContent=`${STATUS[currentStatus].label} · GPS ~${payload.accuracy} m`;if(autoFollow)map.panTo(lastPos,{animate:true,duration:.5})}function pauseFollow(){autoFollow=false;clearTimeout(followTimer);followTimer=setTimeout(()=>{autoFollow=true;if(lastPos)map.flyTo(lastPos,Math.max(map.getZoom(),14),{duration:.7})},FOLLOW_DELAY)};['pointerdown','wheel','touchstart'].forEach(ev=>map.getContainer().addEventListener(ev,pauseFollow,{passive:true}));$('followBtn').onclick=()=>{autoFollow=true;clearTimeout(followTimer);if(lastPos)map.flyTo(lastPos,Math.max(map.getZoom(),14),{duration:.6});toast('Śledzenie pozycji włączone')};$('connectBtn').onclick=()=>{if(myData){$('unit').value=myData.unit||'';$('callSign').value=myData.call||'';$('vehicleType').value=myData.type||'GBA'}openSheet('connectSheet')};$('statusBtn').onclick=()=>openSheet('statusSheet');$('incBtn').onclick=()=>openSheet('incidentSheet');$('startGpsBtn').onclick=async()=>{const unit=$('unit').value.trim(),call=$('callSign').value.trim(),type=$('vehicleType').value;if(!unit||!call)return toast('Uzupełnij jednostkę i numer operacyjny');myData={unit,call,type};localStorage.setItem('firemapVehicleData',JSON.stringify(myData));await resolveVehicleId(call);if(!navigator.geolocation)return toast('Brak obsługi GPS');connected=true;$('connectBtn').disabled=true;$('disconnectBtn').disabled=false;$('connectBtn').textContent='✓ Połączono';closeSheet('connectSheet');statusButton();watchId=navigator.geolocation.watchPosition(publish,e=>{toast('GPS: '+e.message);$('liveDot').style.background='#ef4444'},{enableHighAccuracy:true,maximumAge:2000,timeout:15000})};$('disconnectBtn').onclick=async()=>{if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;connected=false;$('connectBtn').disabled=false;$('disconnectBtn').disabled=true;$('connectBtn').textContent='📍 Połącz';$('liveDot').style.background='#94a3b8';statusButton();if(lastPos&&myData)await sb.from('vehicles').update({status:currentStatus,updated_at:new Date().toISOString()}).eq('id',myId);toast('Udostępnianie zatrzymane')};document.querySelectorAll('[data-status]').forEach(b=>b.onclick=async()=>{currentStatus=b.dataset.status;localStorage.setItem('firemapStatus',currentStatus);statusButton();closeSheet('statusSheet');if(myData)await sb.from('vehicles').update({status:currentStatus,updated_at:new Date().toISOString()}).eq('id',myId);refreshVehicles();toast('Status: '+STATUS[currentStatus].label)});async function init(){await Promise.all([refreshVehicles(),refreshIncidents()]);sb.channel('firemap-live').on('postgres_changes',{event:'*',schema:'public',table:'vehicles'},refreshVehicles).on('postgres_changes',{event:'*',schema:'public',table:'incidents'},refreshIncidents).subscribe();setInterval(refreshVehicles,30000);setInterval(refreshIncidents,30000);setTimeout(()=>map.invalidateSize(),200)}init()})();
-</script></body></html>
+@media(min-width:720px){.controls{left:18px;transform:none;bottom:18px}.quickStatus{left:18px;transform:none;bottom:82px}.sheet{left:auto;right:18px;bottom:18px;transform:translateX(110%);border-radius:18px;border-bottom:1px solid #334155;max-height:calc(100vh - 36px)}.sheet.open{transform:translateX(0)}}
+</style>
+</head>
+<body>
+<div id="app"><div id="map"></div></div>
+
+<div class="brand"><div class="live" id="liveDot"></div><div><b>FIREMAP</b><small id="miniStatus">gotowy</small></div></div>
+<button class="fab" id="followBtn" title="Wróć do mojej pozycji">◎</button>
+<button class="fab" id="incBtn" title="Zdarzenia">🔥<span class="badge" id="incBadge" style="display:none">0</span></button>
+
+<div class="quickStatus" id="quickStatus">
+  <button data-status="BASE">BAZA</button>
+  <button data-status="DISPATCHED">WYJAZD</button>
+  <button data-status="ON_SCENE">NA MIEJSCU</button>
+  <button data-status="RETURNING">KONIEC</button>
+</div>
+<div class="controls">
+  <button class="glassBtn primary" id="connectBtn">📍 Połącz</button>
+  <button class="glassBtn status-base" id="statusBtn">● W bazie</button>
+  <button class="glassBtn" id="disconnectBtn" disabled>■ Rozłącz</button>
+</div>
+
+<div class="sheet" id="connectSheet">
+  <h2>Połącz zastęp</h2><p>Dane będą zapamiętane na tym urządzeniu.</p>
+  <label>Jednostka</label><input id="unit" placeholder="np. JRG Radomsko">
+  <label>Numer operacyjny</label><input id="callSign" placeholder="np. 511-25">
+  <label>Typ pojazdu</label><select id="vehicleType"><option>GBA</option><option>GCBA</option><option>SD</option><option>SLRt</option><option>SLOp</option><option>INNY</option></select>
+  <div class="grid2"><button class="wideBtn secondary" data-close="connectSheet">Anuluj</button><button class="wideBtn" id="startGpsBtn">Uruchom GPS</button></div>
+</div>
+
+<div class="sheet" id="statusSheet">
+  <h2>Status zastępu</h2><p>Kolor i animacja ikony są widoczne dla wszystkich użytkowników FIREMAP.</p>
+  <div class="statusGrid">
+    <button class="statusPick" data-status="BASE" style="background:#475569">⚪ W bazie<span>Szara ikona — ostatnia pozycja</span></button>
+    <button class="statusPick" data-status="DISPATCHED" style="background:#a16207">🟠 Wyjazd do akcji<span>Zastęp wyjechał do zdarzenia — delikatne miganie</span></button>
+    <button class="statusPick" data-status="ON_SCENE" style="background:#991b1b">🔴 Na miejscu<span>Zastęp bierze udział w interwencji</span></button>
+    <button class="statusPick" data-status="RETURNING" style="background:#1d4ed8">🔵 Zakończenie działań<span>Działania zakończone — zastęp zakończył interwencję</span></button>
+  </div>
+  <button class="wideBtn secondary" data-close="statusSheet">Zamknij</button>
+</div>
+
+<div class="sheet" id="incidentSheet">
+  <h2>Aktywne zdarzenia</h2><p>Wskazane przez SK KP PSP Radomsko.</p>
+  <div id="incidentList"></div>
+  <button class="wideBtn secondary" data-close="incidentSheet">Zamknij</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(()=>{
+const URL='https://vqgipvwcvbhabvfipodl.supabase.co';
+const KEY='sb_publishable_BYEVImorGhltw1aCaRXyRQ_pM2hKMkI';
+const BOUNDS=L.latLngBounds([[50.58,18.55],[51.55,20.48]]);
+const FOLLOW_DELAY=12000, STALE_MS=3*60*1000;
+const $=id=>document.getElementById(id);
+const sb=supabase.createClient(URL,KEY,{auth:{persistSession:true}});
+const map=L.map('map',{maxBounds:BOUNDS.pad(.08),minZoom:8,zoomControl:true}).setView([51.067,19.445],10);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+
+let watchId=null,lastPos=null,autoFollow=true,followTimer=null,currentStatus=localStorage.getItem('firemapStatus')||'BASE';
+let myId=localStorage.getItem('firemapVehicleId')||crypto.randomUUID();
+let myData=JSON.parse(localStorage.getItem('firemapVehicleData')||'null');
+let connected=false,markers=new Map(),incidentMarkers=new Map(),incidents=[];
+localStorage.setItem('firemapVehicleId',myId);
+
+const STATUS={
+ BASE:{label:'W bazie',color:'#64748b',cls:'',btn:'status-base'},
+ DISPATCHED:{label:'Wyjazd do akcji',color:'#f59e0b',cls:'pulseAmber',btn:'status-dispatched'},
+ ON_SCENE:{label:'Na miejscu',color:'#dc2626',cls:'pulseRed',btn:'status-scene'},
+ RETURNING:{label:'Zakończenie działań',color:'#2563eb',cls:'pulseBlue',btn:'status-return'}
+};
+
+function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
+function openSheet(id){document.querySelectorAll('.sheet.open').forEach(x=>x.classList.remove('open'));$(id).classList.add('open')}
+function closeSheet(id){$(id).classList.remove('open')}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSheet(b.dataset.close));
+function ageText(ts){let s=Math.max(0,Math.floor((Date.now()-new Date(ts))/1000));if(s<60)return s+' s temu';if(s<3600)return Math.floor(s/60)+' min temu';return Math.floor(s/3600)+' h temu'}
+function statusButton(){let s=STATUS[currentStatus]||STATUS.BASE;$('statusBtn').className='glassBtn '+s.btn;$('statusBtn').textContent='● '+s.label;$('miniStatus').textContent=(connected?'GPS aktywny · ':'')+s.label;document.querySelectorAll('#quickStatus [data-status]').forEach(b=>b.classList.toggle('active',b.dataset.status===currentStatus))}
+statusButton();
+
+function vehicleIcon(v){
+ let st=STATUS[v.status]||STATUS.BASE, stale=(Date.now()-new Date(v.updated_at))>STALE_MS;
+ return L.divIcon({className:'',html:`<div class="vehicleIcon ${v.id===myId?'me':''} ${st.cls} ${stale?'stale':''}" style="background:${st.color}">🚒</div>`,iconSize:[38,38],iconAnchor:[19,19]});
+}
+function incidentIcon(kind){return L.divIcon({className:'',html:`<div class="incidentIcon ${kind==='FIRE'?'fire':'mz'}">${kind==='FIRE'?'🔥':'⚠️'}</div>`,iconSize:[42,42],iconAnchor:[21,21]})}
+
+async function resolveVehicleId(call){
+ const {data}=await sb.from('vehicles').select('id').eq('call_sign',call).order('updated_at',{ascending:false}).limit(1);
+ if(data?.[0]?.id){myId=data[0].id;localStorage.setItem('firemapVehicleId',myId)}
+}
+async function refreshVehicles(){
+ const {data,error}=await sb.from('vehicles').select('*').order('updated_at',{ascending:false});
+ if(error)return;
+ const seen=new Set();
+ (data||[]).forEach(v=>{
+   if(!BOUNDS.contains([v.lat,v.lng]))return;
+   seen.add(v.id);
+   let m=markers.get(v.id);
+   if(!m){m=L.marker([v.lat,v.lng],{icon:vehicleIcon(v)}).addTo(map);markers.set(v.id,m)}
+   else{m.setLatLng([v.lat,v.lng]);m.setIcon(vehicleIcon(v))}
+   let st=STATUS[v.status]||STATUS.BASE;
+   m.bindPopup(`<b>${esc(v.call_sign)} · ${esc(v.vehicle_type)}</b><br>${esc(v.unit_name)}<br>Status: <b>${st.label}</b><br><small>Aktualizacja: ${ageText(v.updated_at)}</small>`);
+ });
+ for(let [id,m] of markers)if(!seen.has(id)){map.removeLayer(m);markers.delete(id)}
+}
+async function refreshIncidents(){
+ const {data,error}=await sb.from('incidents').select('*').eq('active',true).order('created_at',{ascending:false});
+ if(error){return}
+ incidents=data||[];let seen=new Set();
+ incidents.forEach(i=>{seen.add(i.id);let m=incidentMarkers.get(i.id);
+   if(!m){m=L.marker([i.lat,i.lng],{icon:incidentIcon(i.kind),zIndexOffset:1000}).addTo(map);incidentMarkers.set(i.id,m)}
+   else m.setLatLng([i.lat,i.lng]);
+   const nav=`https://www.google.com/maps/dir/?api=1&destination=${i.lat},${i.lng}`;
+   m.bindPopup(`<b>${i.kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><br>${esc(i.description||'Zdarzenie')}<br>${i.lat.toFixed(5)}, ${i.lng.toFixed(5)}<br><br><a href="${nav}" target="_blank" rel="noopener">Nawiguj w Google Maps</a>`);
+ });
+ for(let [id,m] of incidentMarkers)if(!seen.has(id)){map.removeLayer(m);incidentMarkers.delete(id)}
+ $('incBadge').textContent=incidents.length;$('incBadge').style.display=incidents.length?'grid':'none';
+ $('incidentList').innerHTML=incidents.length?incidents.map(i=>{
+   const nav=`https://www.google.com/maps/dir/?api=1&destination=${i.lat},${i.lng}`;
+   return `<div class="incidentRow"><b>${i.kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><small>${esc(i.description||'Bez opisu')} · ${i.lat.toFixed(5)}, ${i.lng.toFixed(5)}</small><a class="navBtn" href="${nav}" target="_blank" rel="noopener">🧭 Nawiguj</a></div>`
+ }).join(''):'<p>Brak aktywnych zdarzeń.</p>';
+}
+
+async function publish(pos){
+ if(!connected||!myData)return;
+ const lat=pos.coords.latitude,lng=pos.coords.longitude;lastPos=[lat,lng];
+ if(!BOUNDS.contains(lastPos)){toast('Poza obszarem FIREMAP');return}
+ const payload={id:myId,unit_name:myData.unit,call_sign:myData.call,vehicle_type:myData.type,status:currentStatus,lat,lng,accuracy:Math.round(pos.coords.accuracy||0),speed:pos.coords.speed==null?null:Math.max(0,pos.coords.speed*3.6),heading:pos.coords.heading,updated_at:new Date().toISOString()};
+ const {error}=await sb.from('vehicles').upsert(payload,{onConflict:'id'});
+ if(error){toast('Błąd wysyłania pozycji');return}
+ $('liveDot').style.background='#22c55e';$('miniStatus').textContent=`${STATUS[currentStatus].label} · GPS ~${payload.accuracy} m`;
+ if(autoFollow)map.panTo(lastPos,{animate:true,duration:.5});
+}
+function pauseFollow(){
+ autoFollow=false;clearTimeout(followTimer);
+ followTimer=setTimeout(()=>{autoFollow=true;if(lastPos)map.flyTo(lastPos,Math.max(map.getZoom(),14),{duration:.7})},FOLLOW_DELAY);
+}
+['pointerdown','wheel','touchstart'].forEach(ev=>map.getContainer().addEventListener(ev,pauseFollow,{passive:true}));
+$('followBtn').onclick=()=>{autoFollow=true;clearTimeout(followTimer);if(lastPos)map.flyTo(lastPos,Math.max(map.getZoom(),14),{duration:.6});toast('Śledzenie pozycji włączone')};
+
+$('connectBtn').onclick=()=>{if(myData){$('unit').value=myData.unit||'';$('callSign').value=myData.call||'';$('vehicleType').value=myData.type||'GBA'}openSheet('connectSheet')};
+$('statusBtn').onclick=()=>openSheet('statusSheet');
+$('incBtn').onclick=()=>openSheet('incidentSheet');
+
+$('startGpsBtn').onclick=async()=>{
+ const unit=$('unit').value.trim(),call=$('callSign').value.trim(),type=$('vehicleType').value;
+ if(!unit||!call)return toast('Uzupełnij jednostkę i numer operacyjny');
+ myData={unit,call,type};localStorage.setItem('firemapVehicleData',JSON.stringify(myData));await resolveVehicleId(call);
+ if(!navigator.geolocation)return toast('Brak obsługi GPS');
+ connected=true;$('connectBtn').disabled=true;$('disconnectBtn').disabled=false;$('connectBtn').textContent='✓ Połączono';closeSheet('connectSheet');statusButton();
+ watchId=navigator.geolocation.watchPosition(publish,e=>{toast('GPS: '+e.message);$('liveDot').style.background='#ef4444'},{enableHighAccuracy:true,maximumAge:2000,timeout:15000});
+};
+$('disconnectBtn').onclick=async()=>{
+ if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;connected=false;$('connectBtn').disabled=false;$('disconnectBtn').disabled=true;$('connectBtn').textContent='📍 Połącz';$('liveDot').style.background='#94a3b8';statusButton();
+ if(lastPos&&myData)await sb.from('vehicles').update({status:currentStatus,updated_at:new Date().toISOString()}).eq('id',myId);
+ toast('Udostępnianie zatrzymane');
+};
+document.querySelectorAll('[data-status]').forEach(b=>b.onclick=async()=>{
+ currentStatus=b.dataset.status;localStorage.setItem('firemapStatus',currentStatus);statusButton();closeSheet('statusSheet');
+ if(myData)await sb.from('vehicles').update({status:currentStatus,updated_at:new Date().toISOString()}).eq('id',myId);
+ refreshVehicles();toast('Status: '+STATUS[currentStatus].label);
+});
+
+async function init(){
+ await Promise.all([refreshVehicles(),refreshIncidents()]);
+ sb.channel('firemap-live').on('postgres_changes',{event:'*',schema:'public',table:'vehicles'},refreshVehicles).on('postgres_changes',{event:'*',schema:'public',table:'incidents'},refreshIncidents).subscribe();
+ setInterval(refreshVehicles,30000);setInterval(refreshIncidents,30000);setTimeout(()=>map.invalidateSize(),200);
+}
+init();
+})();
+</script>
+</body></html>
