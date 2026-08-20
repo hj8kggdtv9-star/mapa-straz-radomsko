@@ -6,7 +6,8 @@
   <meta name="theme-color" content="#8b0000"/>
   <title>Mapa pojazdów strażackich — Radomsko</title>
   <link rel="preconnect" href="https://unpkg.com">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIINfQ3yn6kYhZsWp2nJ8uLgJ8D1h7+9M10=" crossorigin=""/>
   <style>
     :root { --panel:#111827; --panel2:#1f2937; --text:#f9fafb; --muted:#cbd5e1; --accent:#dc2626; --ok:#16a34a; }
     * { box-sizing:border-box; }
@@ -65,63 +66,238 @@
         <button id="joinBtn">Połącz / udostępnij pozycję</button>
         <button id="stopBtn" class="secondary" disabled>Zatrzymaj udostępnianie</button>
       </div>
+
       <div class="card">
         <h2>Aktywne pojazdy <span id="count">(0)</span></h2>
         <div id="vehicles"><div class="note">Brak aktywnych pojazdów.</div></div>
       </div>
+
       <div class="card">
         <h2>Konfiguracja serwera</h2>
         <div id="serverState" class="note">Sprawdzanie…</div>
         <button id="configBtn" class="secondary">Ustaw Supabase</button>
       </div>
-      <div class="card"><div class="note">Mapa korzysta z OpenStreetMap. Pozycje są wysyłane wyłącznie po naciśnięciu „Połącz”. Rekord starszy niż 3 minuty jest traktowany jako nieaktywny.</div></div>
+
+      <div class="card">
+        <div class="note">
+          Mapa korzysta z OpenStreetMap. Pozycje są wysyłane wyłącznie po naciśnięciu „Połącz”.
+          Rekord starszy niż 3 minuty jest traktowany jako nieaktywny.
+        </div>
+      </div>
     </aside>
     <div id="map"></div>
   </div>
 </div>
-<dialog id="joinDialog"><div class="body">
-  <h2>Połącz pojazd</h2><p>Podaj dane pojazdu. Następnie przeglądarka poprosi o zgodę na GPS.</p>
-  <label>Nazwa jednostki</label><input id="unit" placeholder="np. OSP Kamieńsk" maxlength="80">
-  <label>Numer operacyjny</label><input id="callSign" placeholder="np. 511-25" maxlength="20">
-  <label>Rodzaj samochodu</label><select id="type"><option value="GBA">GBA</option><option value="GCBA">GCBA</option><option value="SD">SD / SH</option><option value="SLRt">SLRt</option><option value="SLOp">SLOp</option><option value="INNY">Inny</option></select>
-  <div class="row"><button id="cancelJoin" class="secondary">Anuluj</button><button id="confirmJoin" class="good">Uruchom GPS</button></div>
-  <div id="joinMsg" class="note" style="margin-top:8px"></div>
-</div></dialog>
-<dialog id="configDialog"><div class="body">
-  <h2>Połączenie z Supabase</h2><p>Wpisz Project URL i anon/publishable key. Nie wpisuj service_role.</p>
-  <label>Project URL</label><input id="sbUrl" placeholder="https://xxxxx.supabase.co">
-  <label>Anon / publishable key</label><input id="sbKey" placeholder="eyJ... lub sb_publishable_...">
-  <div class="row"><button id="cancelConfig" class="secondary">Anuluj</button><button id="saveConfig" class="good">Zapisz</button></div>
-  <div id="configMsg" class="note" style="margin-top:8px"></div>
-</div></dialog>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<dialog id="joinDialog">
+  <div class="body">
+    <h2>Połącz pojazd</h2>
+    <p>Podaj dane pojazdu. Następnie przeglądarka poprosi o zgodę na GPS.</p>
+    <label>Nazwa jednostki</label>
+    <input id="unit" placeholder="np. OSP Kamieńsk" maxlength="80">
+    <label>Numer operacyjny</label>
+    <input id="callSign" placeholder="np. 511-25" maxlength="20">
+    <label>Rodzaj samochodu</label>
+    <select id="type">
+      <option value="GBA">GBA</option>
+      <option value="GCBA">GCBA</option>
+      <option value="SD">SD / SH</option>
+      <option value="SLRt">SLRt</option>
+      <option value="SLOp">SLOp</option>
+      <option value="INNY">Inny</option>
+    </select>
+    <div class="row">
+      <button id="cancelJoin" class="secondary">Anuluj</button>
+      <button id="confirmJoin" class="good">Uruchom GPS</button>
+    </div>
+    <div id="joinMsg" class="note" style="margin-top:8px"></div>
+  </div>
+</dialog>
+
+<dialog id="configDialog">
+  <div class="body">
+    <h2>Połączenie z Supabase</h2>
+    <p>Te dane są publicznymi danymi klienta projektu (Project URL i anon/publishable key). Nie wpisuj service_role ani żadnego sekretnego klucza.</p>
+    <label>Project URL</label>
+    <input id="sbUrl" placeholder="https://xxxxx.supabase.co">
+    <label>Anon / publishable key</label>
+    <input id="sbKey" placeholder="eyJ... lub sb_publishable_...">
+    <div class="row">
+      <button id="cancelConfig" class="secondary">Anuluj</button>
+      <button id="saveConfig" class="good">Zapisz</button>
+    </div>
+    <div id="configMsg" class="note" style="margin-top:8px"></div>
+  </div>
+</dialog>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (() => {
   const MAX_AGE_MS = 3 * 60 * 1000;
   const AREA_BOUNDS = L.latLngBounds([[50.70,18.70],[51.40,20.25]]);
   const map = L.map('map', { maxBounds: AREA_BOUNDS.pad(0.05), minZoom: 8 }).setView([51.067,19.445], 10);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
-  L.rectangle(AREA_BOUNDS,{weight:1,fill:false,dashArray:'6,6'}).addTo(map).bindTooltip('Obszar działania aplikacji (wersja 1)');
-  let sb=null,channel=null,watchId=null,myVehicleId=localStorage.getItem('vehicleId')||crypto.randomUUID();
-  localStorage.setItem('vehicleId',myVehicleId);
-  let myData=JSON.parse(localStorage.getItem('vehicleData')||'null');
-  const markers=new Map(); const $=id=>document.getElementById(id); const joinDialog=$('joinDialog'),configDialog=$('configDialog');
-  function getCfg(){return{url:localStorage.getItem('sbUrl')||'',key:localStorage.getItem('sbKey')||''};}
-  function setStatus(text,online=false){$('connStatus').textContent=text;$('connStatus').classList.toggle('online',online);}
-  function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-  function isInside(lat,lng){return AREA_BOUNDS.contains([lat,lng]);}
-  function ageText(ts){const s=Math.max(0,Math.floor((Date.now()-new Date(ts).getTime())/1000));return s<60?s+' s temu':Math.floor(s/60)+' min temu';}
-  function markerIcon(type){const colors={GBA:'#ef4444',GCBA:'#b91c1c',SD:'#f59e0b',SLRt:'#3b82f6',SLOp:'#8b5cf6',INNY:'#64748b'};const c=colors[type]||colors.INNY;return L.divIcon({className:'',html:`<div style="width:28px;height:28px;border-radius:50%;background:${c};border:3px solid white;box-shadow:0 1px 7px #000;display:flex;align-items:center;justify-content:center;font-size:15px">🚒</div>`,iconSize:[28,28],iconAnchor:[14,14]});}
-  async function connectServer(){const cfg=getCfg();if(!cfg.url||!cfg.key){sb=null;$('serverState').innerHTML='<span class="warn">Brak konfiguracji Supabase.</span>';setStatus('brak serwera');return false;}try{sb=window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:false}});const{error}=await sb.from('vehicles').select('id').limit(1);if(error)throw error;$('serverState').innerHTML='<span style="color:#86efac">Supabase połączony.</span>';await refreshVehicles();subscribeRealtime();setStatus('online',true);return true;}catch(e){console.error(e);$('serverState').innerHTML='<span class="error">Błąd połączenia: '+esc(e.message)+'</span>';setStatus('błąd serwera');return false;}}
-  async function refreshVehicles(){if(!sb)return;const cutoff=new Date(Date.now()-MAX_AGE_MS).toISOString();const{data,error}=await sb.from('vehicles').select('*').gte('updated_at',cutoff).order('updated_at',{ascending:false});if(error){console.error(error);return;}renderVehicles(data||[]);}
-  function renderVehicles(rows){const nowActive=new Set();rows.forEach(v=>{if(!isInside(v.lat,v.lng))return;nowActive.add(v.id);let m=markers.get(v.id);const popup=`<strong>${esc(v.unit_name)}</strong><br>${esc(v.call_sign)} · ${esc(v.vehicle_type)}<br><small>${ageText(v.updated_at)}</small>`;if(!m){m=L.marker([v.lat,v.lng],{icon:markerIcon(v.vehicle_type)}).addTo(map);markers.set(v.id,m);}else m.setLatLng([v.lat,v.lng]);m.setPopupContent(popup).bindTooltip(esc(v.call_sign),{permanent:false,className:'map-label'});});for(const[id,m]of markers)if(!nowActive.has(id)){map.removeLayer(m);markers.delete(id);}const active=rows.filter(v=>isInside(v.lat,v.lng));$('count').textContent=`(${active.length})`;$('vehicles').innerHTML=active.length?active.map(v=>`<div class="vehicle" data-id="${esc(v.id)}"><div class="dot"></div><div><strong>${esc(v.call_sign)} · ${esc(v.vehicle_type)}</strong><small>${esc(v.unit_name)} · ${ageText(v.updated_at)}</small></div></div>`).join(''):'<div class="note">Brak aktywnych pojazdów.</div>';[...document.querySelectorAll('.vehicle')].forEach(el=>{el.onclick=()=>{const m=markers.get(el.dataset.id);if(m){map.setView(m.getLatLng(),14);m.openPopup();}};});}
-  function subscribeRealtime(){if(!sb)return;if(channel)sb.removeChannel(channel);channel=sb.channel('vehicles-live').on('postgres_changes',{event:'*',schema:'public',table:'vehicles'},()=>refreshVehicles()).subscribe();setInterval(refreshVehicles,30000);}
-  async function upsertPosition(pos){if(!sb||!myData)return;const lat=pos.coords.latitude,lng=pos.coords.longitude;if(!isInside(lat,lng)){$('myInfo').innerHTML=`<span class="warn">GPS poza dozwolonym obszarem. Pozycja nie jest publikowana.</span><br>${lat.toFixed(5)}, ${lng.toFixed(5)}`;return;}const payload={id:myVehicleId,unit_name:myData.unit,call_sign:myData.callSign,vehicle_type:myData.type,lat,lng,accuracy:Math.round(pos.coords.accuracy||0),updated_at:new Date().toISOString()};const{error}=await sb.from('vehicles').upsert(payload,{onConflict:'id'});if(error){$('myInfo').innerHTML='<span class="error">Błąd zapisu GPS: '+esc(error.message)+'</span>';return;}$('myInfo').innerHTML=`<strong>${esc(myData.callSign)} · ${esc(myData.type)}</strong><br>${esc(myData.unit)}<br><span style="color:#86efac">GPS aktywny</span> · dokładność ~${payload.accuracy} m`;}
-  async function startSharing(){if(!sb){$('joinMsg').innerHTML='<span class="error">Najpierw skonfiguruj Supabase.</span>';return;}const unit=$('unit').value.trim(),callSign=$('callSign').value.trim(),type=$('type').value;if(!unit||!callSign){$('joinMsg').textContent='Uzupełnij nazwę jednostki i numer operacyjny.';return;}myData={unit,callSign,type};localStorage.setItem('vehicleData',JSON.stringify(myData));if(!navigator.geolocation){$('joinMsg').textContent='Ta przeglądarka nie obsługuje GPS.';return;}$('joinMsg').textContent='Czekam na zgodę GPS…';watchId=navigator.geolocation.watchPosition(upsertPosition,err=>{$('myInfo').innerHTML='<span class="error">GPS: '+esc(err.message)+'</span>';},{enableHighAccuracy:true,maximumAge:3000,timeout:15000});$('joinBtn').disabled=true;$('stopBtn').disabled=false;joinDialog.close();}
-  async function stopSharing(){if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;}if(sb)await sb.from('vehicles').delete().eq('id',myVehicleId);$('joinBtn').disabled=false;$('stopBtn').disabled=true;$('myInfo').textContent='Udostępnianie zatrzymane.';refreshVehicles();}
-  $('joinBtn').onclick=()=>{if(myData){$('unit').value=myData.unit||'';$('callSign').value=myData.callSign||'';$('type').value=myData.type||'GBA';}joinDialog.showModal();};$('cancelJoin').onclick=()=>joinDialog.close();$('confirmJoin').onclick=startSharing;$('stopBtn').onclick=stopSharing;
-  $('configBtn').onclick=()=>{const c=getCfg();$('sbUrl').value=c.url;$('sbKey').value=c.key;$('configMsg').textContent='';configDialog.showModal();};$('cancelConfig').onclick=()=>configDialog.close();$('saveConfig').onclick=async()=>{const url=$('sbUrl').value.trim(),key=$('sbKey').value.trim();if(!url||!key){$('configMsg').textContent='Wpisz oba pola.';return;}if(/service_role/i.test(key)){$('configMsg').innerHTML='<span class="error">Nie używaj klucza service_role.</span>';return;}localStorage.setItem('sbUrl',url);localStorage.setItem('sbKey',key);configDialog.close();await connectServer();};
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, attribution:'© OpenStreetMap contributors'
+  }).addTo(map);
+  L.rectangle(AREA_BOUNDS, {weight:1, fill:false, dashArray:'6,6'}).addTo(map)
+    .bindTooltip('Obszar działania aplikacji (wersja 1)');
+
+  let sb = null, channel = null, watchId = null, myVehicleId = localStorage.getItem('vehicleId') || crypto.randomUUID();
+  localStorage.setItem('vehicleId', myVehicleId);
+  let myData = JSON.parse(localStorage.getItem('vehicleData') || 'null');
+  const markers = new Map();
+
+  const $ = id => document.getElementById(id);
+  const joinDialog = $('joinDialog'), configDialog = $('configDialog');
+
+  function getCfg(){
+    return { url: localStorage.getItem('sbUrl') || 'https://vqgipvwcvbhabvfipodl.supabase.co', key: localStorage.getItem('sbKey') || 'sb_publishable_BYEVImorGhltw1aCaRXyRQ_pM2hKMkI' };
+  }
+  function setStatus(text, online=false){ $('connStatus').textContent=text; $('connStatus').classList.toggle('online',online); }
+  function esc(s=''){ return String(s).replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+  function isInside(lat,lng){ return AREA_BOUNDS.contains([lat,lng]); }
+  function ageText(ts){
+    const s = Math.max(0,Math.floor((Date.now()-new Date(ts).getTime())/1000));
+    if(s<60) return s+' s temu';
+    return Math.floor(s/60)+' min temu';
+  }
+  function markerIcon(type){
+    const colors = {GBA:'#ef4444',GCBA:'#b91c1c',SD:'#f59e0b',SLRt:'#3b82f6',SLOp:'#8b5cf6',INNY:'#64748b'};
+    const c = colors[type] || colors.INNY;
+    return L.divIcon({className:'', html:`<div style="width:28px;height:28px;border-radius:50%;background:${c};border:3px solid white;box-shadow:0 1px 7px #000;display:flex;align-items:center;justify-content:center;font-size:15px">🚒</div>`, iconSize:[28,28], iconAnchor:[14,14]});
+  }
+
+  async function connectServer(){
+    const cfg = getCfg();
+    if(!cfg.url || !cfg.key){
+      sb=null; $('serverState').innerHTML='<span class="warn">Brak konfiguracji Supabase.</span>'; setStatus('brak serwera'); return false;
+    }
+    try{
+      sb = window.supabase.createClient(cfg.url,cfg.key,{auth:{persistSession:false}});
+      const {error} = await sb.from('vehicles').select('id').limit(1);
+      if(error) throw error;
+      $('serverState').innerHTML='<span style="color:#86efac">Supabase połączony.</span>';
+      await refreshVehicles();
+      subscribeRealtime();
+      setStatus('online',true);
+      return true;
+    }catch(e){
+      console.error(e);
+      $('serverState').innerHTML='<span class="error">Błąd połączenia: '+esc(e.message)+'</span>';
+      setStatus('błąd serwera');
+      return false;
+    }
+  }
+
+  async function refreshVehicles(){
+    if(!sb) return;
+    const cutoff = new Date(Date.now()-MAX_AGE_MS).toISOString();
+    const {data,error} = await sb.from('vehicles').select('*').gte('updated_at',cutoff).order('updated_at',{ascending:false});
+    if(error){ console.error(error); return; }
+    renderVehicles(data || []);
+  }
+
+  function renderVehicles(rows){
+    const nowActive = new Set();
+    rows.forEach(v=>{
+      if(!isInside(v.lat,v.lng)) return;
+      nowActive.add(v.id);
+      let m = markers.get(v.id);
+      const popup = `<strong>${esc(v.unit_name)}</strong><br>${esc(v.call_sign)} · ${esc(v.vehicle_type)}<br><small>${ageText(v.updated_at)}</small>`;
+      if(!m){
+        m=L.marker([v.lat,v.lng],{icon:markerIcon(v.vehicle_type)}).addTo(map);
+        markers.set(v.id,m);
+      }else m.setLatLng([v.lat,v.lng]);
+      m.setPopupContent(popup).bindTooltip(esc(v.call_sign),{permanent:false,className:'map-label'});
+    });
+    for(const [id,m] of markers) if(!nowActive.has(id)){ map.removeLayer(m); markers.delete(id); }
+
+    const active = rows.filter(v=>isInside(v.lat,v.lng));
+    $('count').textContent=`(${active.length})`;
+    $('vehicles').innerHTML = active.length ? active.map(v=>`
+      <div class="vehicle" data-id="${esc(v.id)}">
+        <div class="dot"></div>
+        <div><strong>${esc(v.call_sign)} · ${esc(v.vehicle_type)}</strong>
+        <small>${esc(v.unit_name)} · ${ageText(v.updated_at)}</small></div>
+      </div>`).join('') : '<div class="note">Brak aktywnych pojazdów.</div>';
+
+    [...document.querySelectorAll('.vehicle')].forEach(el=>{
+      el.onclick=()=>{ const m=markers.get(el.dataset.id); if(m){map.setView(m.getLatLng(),14);m.openPopup();} };
+    });
+  }
+
+  function subscribeRealtime(){
+    if(!sb) return;
+    if(channel) sb.removeChannel(channel);
+    channel = sb.channel('vehicles-live')
+      .on('postgres_changes',{event:'*',schema:'public',table:'vehicles'},()=>refreshVehicles())
+      .subscribe();
+    setInterval(refreshVehicles,30000);
+  }
+
+  async function upsertPosition(pos){
+    if(!sb || !myData) return;
+    const lat=pos.coords.latitude, lng=pos.coords.longitude;
+    if(!isInside(lat,lng)){
+      $('myInfo').innerHTML=`<span class="warn">GPS poza dozwolonym obszarem. Pozycja nie jest publikowana.</span><br>${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      return;
+    }
+    const payload = {
+      id:myVehicleId, unit_name:myData.unit, call_sign:myData.callSign, vehicle_type:myData.type,
+      lat, lng, accuracy:Math.round(pos.coords.accuracy||0), updated_at:new Date().toISOString()
+    };
+    const {error}=await sb.from('vehicles').upsert(payload,{onConflict:'id'});
+    if(error){
+      $('myInfo').innerHTML='<span class="error">Błąd zapisu GPS: '+esc(error.message)+'</span>';
+      return;
+    }
+    $('myInfo').innerHTML=`<strong>${esc(myData.callSign)} · ${esc(myData.type)}</strong><br>${esc(myData.unit)}<br><span style="color:#86efac">GPS aktywny</span> · dokładność ~${payload.accuracy} m`;
+  }
+
+  async function startSharing(){
+    if(!sb){
+      $('joinMsg').innerHTML='<span class="error">Najpierw skonfiguruj Supabase.</span>'; return;
+    }
+    const unit=$('unit').value.trim(), callSign=$('callSign').value.trim(), type=$('type').value;
+    if(!unit || !callSign){ $('joinMsg').textContent='Uzupełnij nazwę jednostki i numer operacyjny.'; return; }
+    myData={unit,callSign,type}; localStorage.setItem('vehicleData',JSON.stringify(myData));
+    if(!navigator.geolocation){ $('joinMsg').textContent='Ta przeglądarka nie obsługuje GPS.'; return; }
+    $('joinMsg').textContent='Czekam na zgodę GPS…';
+    watchId=navigator.geolocation.watchPosition(upsertPosition,err=>{
+      $('myInfo').innerHTML='<span class="error">GPS: '+esc(err.message)+'</span>';
+    },{enableHighAccuracy:true,maximumAge:3000,timeout:15000});
+    $('joinBtn').disabled=true; $('stopBtn').disabled=false; joinDialog.close();
+  }
+
+  async function stopSharing(){
+    if(watchId!==null){ navigator.geolocation.clearWatch(watchId); watchId=null; }
+    if(sb) await sb.from('vehicles').delete().eq('id',myVehicleId);
+    $('joinBtn').disabled=false; $('stopBtn').disabled=true; $('myInfo').textContent='Udostępnianie zatrzymane.';
+    refreshVehicles();
+  }
+
+  $('joinBtn').onclick=()=>{
+    if(myData){ $('unit').value=myData.unit||''; $('callSign').value=myData.callSign||''; $('type').value=myData.type||'GBA';}
+    joinDialog.showModal();
+  };
+  $('cancelJoin').onclick=()=>joinDialog.close();
+  $('confirmJoin').onclick=startSharing;
+  $('stopBtn').onclick=stopSharing;
+
+  $('configBtn').onclick=()=>{
+    const c=getCfg(); $('sbUrl').value=c.url; $('sbKey').value=c.key; $('configMsg').textContent=''; configDialog.showModal();
+  };
+  $('cancelConfig').onclick=()=>configDialog.close();
+  $('saveConfig').onclick=async()=>{
+    const url=$('sbUrl').value.trim(), key=$('sbKey').value.trim();
+    if(!url || !key){$('configMsg').textContent='Wpisz oba pola.';return;}
+    if(/service_role/i.test(key)){ $('configMsg').innerHTML='<span class="error">Nie używaj klucza service_role.</span>'; return; }
+    localStorage.setItem('sbUrl',url); localStorage.setItem('sbKey',key); configDialog.close(); await connectServer();
+  };
+
+  window.addEventListener('beforeunload',()=>{});
   connectServer();
 })();
 </script>
