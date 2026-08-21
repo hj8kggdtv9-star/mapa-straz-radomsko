@@ -42,6 +42,7 @@ if(accountError||!account?.enabled){await sb.auth.signOut();location.replace('./
 if(account.role==='SK'){location.replace('./dispatcher.html');return}
 const verifiedUnit=account.unit_name,BOUNDS=L.latLngBounds([[50.58,18.55],[51.55,20.48]]),map=L.map('map',{maxBounds:BOUNDS.pad(.08),minZoom:8,rotate:true,bearing:0,dragRotate:false,touchRotate:false,shiftKeyRotate:false,rotateControl:false}).setView([51.067,19.445],10);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+window.firemapCtx={map,sb,session};
 $('authCover').remove();$('unit').value=verifiedUnit;
 let watchId=null,gpsFallback=null,lastPos=null,lastGpsAt=0,lastPublishedAt=0,gpsBusy=false,autoFollow=true,followTimer=null,connected=false,currentStatus=localStorage.getItem('firemapStatus')||'BASE',myId=localStorage.getItem('firemapVehicleId')||crypto.randomUUID(),myData=JSON.parse(localStorage.getItem('firemapVehicleData')||'null'),markers=new Map(),incidentMarkers=new Map(),incidents=[],ownMarker=null,driveMode=localStorage.getItem('firemapDriveMode')==='1',lastHeading=null;
 let kdrMode=localStorage.getItem('firemapKdrMode')==='1',kdrId=localStorage.getItem('firemapKdrId')||crypto.randomUUID(),kdrName=localStorage.getItem('firemapKdrName')||'',parkedVehiclePos=JSON.parse(localStorage.getItem('firemapParkedVehiclePos')||'null');
@@ -116,5 +117,6 @@ async function init(){await Promise.all([refreshVehicles(),refreshIncidents()]);
 init();
 })();
 </script>
+<script src="tactical-ui.js"></script>
 </body>
 </html>
