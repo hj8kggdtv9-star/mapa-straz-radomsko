@@ -1,1 +1,1 @@
-(()=>{function load(src){const s=document.createElement('script');s.src=src+'?v=20260827-2';s.async=false;document.head.appendChild(s)}load('tactical-ui-core.js');load('tactical-point-drag.js');load('incident-assignment-ui.js')})();
+(()=>{function load(src){const s=document.createElement('script');s.src=src+'?v=20260827-3';s.async=false;document.head.appendChild(s)}load('tactical-ui-core.js');load('tactical-point-drag.js');load('tactical-danger-radius.js');load('incident-assignment-ui.js')})();
