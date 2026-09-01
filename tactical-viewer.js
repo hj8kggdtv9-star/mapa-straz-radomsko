@@ -1,1 +1,1 @@
-(()=>{function load(src){const s=document.createElement('script');s.src=src+'?v=20260827-2';s.async=false;document.head.appendChild(s)}load('tactical-viewer-core.js');load('incident-assignment-sk.js');load('fire-vehicle-icons.js')})();
+(()=>{function load(src){const s=document.createElement('script');s.src=src+'?v=20260901-6';s.async=false;document.head.appendChild(s)}load('tactical-viewer-core.js');load('incident-assignment-sk.js');load('fire-vehicle-icons.js');load('forest-map-layers.js')})();
