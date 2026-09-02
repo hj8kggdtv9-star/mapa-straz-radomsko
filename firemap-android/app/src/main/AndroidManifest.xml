@@ -7,10 +7,10 @@
  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
- <application android:theme="@style/AppTheme" android:label="FIREMAP Zastęp" android:usesCleartextTraffic="false">
+ <application android:theme="@style/AppTheme" android:label="FIREMAP Zastęp" android:usesCleartextTraffic="false" android:allowBackup="false">
   <activity android:name=".MainActivity" android:screenOrientation="unspecified" android:exported="true">
    <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
   </activity>
-  <service android:name=".LocationService" android:foregroundServiceType="location" android:exported="false"/>
+  <service android:name=".LocationService" android:foregroundServiceType="location" android:exported="false" android:stopWithTask="false"/>
  </application>
 </manifest>
