@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#07111f">
+<title>FIREMAP — dołącz do działań</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:#07111f;color:#fff}.cover{position:fixed;inset:0;z-index:1000;background:#07111f;display:grid;place-items:center;padding:16px;overflow:auto}.card{width:min(520px,100%);background:#0b1727;border:1px solid #334155;border-radius:18px;padding:18px}.brand{font-size:24px;font-weight:900}.sub,.hint{color:#94a3b8;font-size:12px}.sub{margin:4px 0 14px}.hint{line-height:1.4}label{display:block;font-size:12px;color:#cbd5e1;margin:9px 0 4px}input,select,button{width:100%;min-height:46px;border-radius:10px;font-size:15px}input,select{background:#111e30;border:1px solid #475569;color:#fff;padding:0 10px}button{border:0;color:#fff;font-weight:900;background:#dc2626;margin-top:9px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.msg{min-height:20px;margin-top:8px;color:#fca5a5;font-size:12px}#live{display:none;height:100%;position:relative}#map{position:absolute;inset:0}.top{position:fixed;z-index:800;left:10px;right:10px;top:max(10px,env(safe-area-inset-top));background:#07111fe8;border:1px solid #ffffff2b;border-radius:14px;padding:10px}.top small{display:block;color:#cbd5e1;margin-top:3px}.status{position:fixed;z-index:850;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:min(620px,calc(100vw - 12px));padding:6px;background:#040c17e8;border-radius:14px}.status button{margin:0;min-height:50px;font-size:10px}.status [data-s=DISPATCHED]{background:#b45309}.status [data-s=ON_SCENE]{background:#b91c1c}.status [data-s=RETURNING]{background:#1d4ed8}.status [data-s=BASE]{background:#475569}.status button.active{outline:2px solid white}.fab{position:fixed;right:12px;z-index:850;width:48px;height:48px;border-radius:50%;background:#07111fe8;border:1px solid #ffffff33;font-size:20px;margin:0}.gps{top:120px}.leave{top:176px;background:#7f1d1d}.badge{display:inline-block;padding:2px 6px;border-radius:999px;background:#7c3aed;font-size:10px;margin-left:5px}.badge.coo{background:#2563eb}.badge.ext{background:#475569}
+</style>
+</head>
+<body>
+<div class="cover" id="joinCover"><div class="card">
+<div class="brand">FIREMAP</div><div class="sub">Dołącz do działań jako zastęp zewnętrzny</div>
+<div class="hint">Kod otrzymujesz od SK. Dostęp dotyczy tylko wskazanego zdarzenia i wygasa automatycznie.</div>
+<label>Kod dołączenia</label><input id="code" inputmode="numeric" maxlength="6" placeholder="np. 847291">
+<label>Pochodzenie sił</label><select id="forceGroup"><option value="WOO">🟣 WOO — Wojewódzki Odwód Operacyjny</option><option value="COO">🔵 COO — Centralny Odwód Operacyjny</option><option value="EXTERNAL">⚪ Inne siły zewnętrzne</option></select>
+<label>Grupa specjalistyczna</label><select id="spec"><option value="">— brak / zwykły zastęp —</option><option value="CHEM_ECO">Ratownictwo chemiczno-ekologiczne</option><option value="WATER_DIVE">Ratownictwo wodno-nurkowe</option><option value="HEIGHT">Ratownictwo wysokościowe</option><option value="TECH_SEARCH">Ratownictwo techniczne / poszukiwawcze</option><option value="USAR">Grupa USAR</option><option value="DRONE">Grupa dronowa</option><option value="OTHER">Inna grupa specjalistyczna</option></select>
+<label>Województwo</label><select id="province"></select>
+<label>Powiat</label><input id="county" placeholder="np. powiat częstochowski">
+<label>Jednostka</label><input id="unit" placeholder="np. OSP Konopiska / JRG 2 Częstochowa">
+<div class="grid"><div><label>Kryptonim</label><input id="call" placeholder="np. 559-21"></div><div><label>Typ pojazdu</label><select id="type"><option>GBA</option><option>GCBA</option><option>GBM</option><option>GLM</option><option>SD</option><option>SLRt</option><option>SLOp</option><option>SLKw</option><option>SLRR</option><option>MIKROBUS</option><option>PRZYCZEPA</option><option>QUAD</option><option>INNY</option></select></div></div>
+<button id="joinBtn">DOŁĄCZ DO ZDARZENIA</button><div id="msg" class="msg"></div>
+</div></div>
+<div id="live"><div id="map"></div><div class="top"><b id="title">FIREMAP — zastęp zewnętrzny</b><small id="info">Łączenie…</small></div><button class="fab gps" id="center">◎</button><button class="fab leave" id="leave">↪</button><div class="status"><button data-s="DISPATCHED">WYJAZD</button><button data-s="ON_SCENE">NA MIEJSCU</button><button data-s="RETURNING">KONIEC</button><button data-s="BASE">OPUŚĆ</button></div></div>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="external-join.js?v=20260908-1"></script>
+</body></html>
