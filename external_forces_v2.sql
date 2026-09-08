@@ -117,7 +117,7 @@ begin
  select * into c from public.incident_join_codes where code=p_code and active=true and expires_at>now() order by created_at desc limit 1;
  if c.id is null then raise exception 'Kod jest nieprawidłowy lub wygasł';end if;
  select * into inc from public.incidents where id=c.incident_id and coalesce(active,true)=true;if inc.id is null then raise exception 'Zdarzenie zostało zakończone';end if;
- s_token:=encode(gen_random_bytes(24),'hex');s_exp:=greatest(c.expires_at,now()+interval '12 hours');
+ s_token:=encode(gen_random_bytes(24),'hex');s_exp:=least(c.expires_at,now()+interval '12 hours');
  insert into public.external_force_sessions(incident_id,join_code_id,token_hash,force_group,specialist_group,origin_voivodeship,origin_county,origin_unit,call_sign,vehicle_type,expires_at)
  values(c.incident_id,c.id,digest(s_token,'sha256'),p_force_group,nullif(p_specialist_group,''),trim(p_voivodeship),trim(p_county),trim(p_unit),trim(p_call_sign),trim(p_vehicle_type),s_exp)
  returning id,vehicle_id into s_id,v_id;
