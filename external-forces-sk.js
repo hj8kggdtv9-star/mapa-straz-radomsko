@@ -12,7 +12,13 @@ function init(){const c=window.firemapSkCtx;if(!c?.map||!c?.sb)return setTimeout
   function render(list,boxId){document.getElementById(boxId).innerHTML=list.length?list.map(v=>{const o=origin(v),age=Math.max(0,Math.round((now-Date.parse(v.updated_at))/1000)),status=v.status==='DISPATCHED'?'Wyjazd':v.status==='ON_SCENE'?'Na miejscu':v.status==='RETURNING'?'Koniec':'Aktywny',dot=o.group==='WOO'?'🟣':o.group==='COO'?'🔵':'⚪';return`<div class="fmForceRow" data-force-id="${esc(key(v))}"><b>${dot} ${esc(v.call_sign)} · ${esc(v.vehicle_type)}</b><small>${esc(o.unit)}</small><small>${esc(o.county)} · woj. ${esc(o.province)}</small>${o.specialist?`<small class="fmSpec">${esc(SPEC[o.specialist]||o.specialist)}</small>`:''}<small>${status} · GPS ${age} s temu</small></div>`}).join(''):'<small>Brak aktywnych zastępów.</small>'}
   render(woo,'fmWooList');render(coo,'fmCooList');render(ext,'fmExtList');const seen=new Set();for(const v of rows){const k=key(v),o=origin(v),lat=+v.lat,lng=+v.lng;if(!Number.isFinite(lat)||!Number.isFinite(lng))continue;seen.add(k);let m=markers.get(k),icon=L.divIcon({className:'',html:`<div class="fmForceBadge ${o.group.toLowerCase()}">${o.group==='EXTERNAL'?'ZEWN':o.group}${o.specialist?' ★':''}</div>`,iconSize:[1,1],iconAnchor:[0,0]});if(!m){m=L.marker([lat,lng],{icon,interactive:false,zIndexOffset:2200}).addTo(map);markers.set(k,m)}else{m.setLatLng([lat,lng]);m.setIcon(icon)}}for(const[k,m]of markers)if(!seen.has(k)){map.removeLayer(m);markers.delete(k)}
   document.querySelectorAll('.fmForceRow').forEach(el=>el.onclick=()=>{const v=rows.find(x=>key(x)===el.dataset.forceId);if(v){try{map.flyTo([+v.lat,+v.lng],15,{duration:.5})}catch{map.setView([+v.lat,+v.lng],15)}}});
-  const calls=new Set(rows.map(v=>String(v.call_sign||'').trim()).filter(Boolean));document.querySelectorAll('#vehicles .vehicle').forEach(el=>{const t=el.textContent||'';el.style.display=[...calls].some(c=>t.includes(c))?'none':''});
+  const norm=s=>String(s??'').trim().toLowerCase().replace(/\s+/g,''),rowKey=v=>norm(v.unit_name)+'|'+norm(v.call_sign);
+  const localKeys=new Set((data||[]).filter(v=>!origin(v)).map(rowKey));
+  const externalKeys=new Set(rows.map(rowKey).filter(k=>!localKeys.has(k)));
+  document.querySelectorAll('#vehicles .vehicle, #vehicles .fm-sk-outside').forEach(el=>{
+   const k=el.dataset.key||el.dataset.fmGlobalKey;
+   el.style.display=k&&externalKeys.has(k)?'none':'';
+  });
  }
  refresh();setInterval(refresh,5000);sb.channel('external-forces-sk-v2').on('postgres_changes',{event:'*',schema:'public',table:'vehicles'},()=>setTimeout(refresh,120)).subscribe();window.addEventListener('focus',refresh);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
 }
