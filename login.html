@@ -17,7 +17,8 @@
   <div class="lock">🔒 Pozycje SIS i zdarzenia operacyjne nie są pobierane przed prawidłowym zalogowaniem. Wybierz swoją jednostkę i podaj jej indywidualne hasło.</div>
   <label for="unit">Jednostka</label>
   <select id="unit"><option value="">Wybierz jednostkę…</option></select>
-  <label for="password">Hasło jednostki</label>
+  <div id="sztabLoginFields" hidden><label for="sztabLoginId">Identyfikator sztabu</label><input id="sztabLoginId" autocomplete="username" autocapitalize="none" maxlength="40" placeholder="np. las-2026"></div>
+  <label for="password">Hasło jednostki / sztabu</label>
   <input id="password" type="password" autocomplete="current-password" placeholder="Hasło">
   <button id="loginBtn" class="btn">Zaloguj do FIREMAP</button>
   <div id="msg" class="err"></div>
@@ -35,6 +36,7 @@
  const unitEl=document.getElementById('unit'),passEl=document.getElementById('password'),btn=document.getElementById('loginBtn'),msg=document.getElementById('msg');
  let registry=[];
  function emailFor(slug){
+   if(slug==='sztab') return 'sztab.'+document.getElementById('sztabLoginId').value.trim().toLowerCase()+'@firemap.local';
    if(slug==='kp-psp-radomsko') return 'sk@firemap.local';
    if(slug==='jrg-radomsko') return 'jrg-radomsko@firemap.local';
    if(slug.startsWith('osp-')) return 'osp.'+slug.slice(4).replaceAll('-','.')+'@firemap.local';
@@ -43,7 +45,7 @@
  async function loadUnits(){
    try{
      const r=await fetch('./firemap_units.json',{cache:'no-store'});const j=await r.json();
-     registry=[...(j.special||[]),...(j.units||[])];
+     registry=[...(j.special||[]),...(j.units||[]),{slug:'sztab',name:'SZTAB — duża akcja'}];
      registry.sort((a,b)=>a.name.localeCompare(b.name,'pl'));
      unitEl.innerHTML='<option value="">Wybierz jednostkę…</option>'+registry.map(u=>`<option value="${u.slug}">${u.name}</option>`).join('');
    }catch(e){msg.textContent='Nie udało się załadować listy jednostek. Odśwież stronę.'}
@@ -60,11 +62,12 @@
    if(!acc){await sb.auth.signOut();return}
    localStorage.setItem('firemapVerifiedUnit',acc.unit_name||'');
    localStorage.setItem('firemapVerifiedRole',acc.role||'UNIT');
-   location.replace(acc.role==='SK'?'./dispatcher.html':'./index.html');
+   location.replace(acc.role==='SZTAB'?'./dispatcher.html?chooseArea=1':acc.role==='SK'?'./dispatcher.html':'./index.html');
  }
  async function login(){
    const slug=unitEl.value,password=passEl.value;
    if(!slug){msg.textContent='Wybierz jednostkę.';return}
+   if(slug==='sztab'&&!/^[a-z0-9][a-z0-9-]{2,39}$/.test(document.getElementById('sztabLoginId').value.trim().toLowerCase())){msg.textContent='Wpisz identyfikator sztabu otrzymany od SK.';return}
    if(!password){msg.textContent='Wpisz hasło.';return}
    btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Weryfikacja…';msg.className='err';msg.textContent='';
    try{
@@ -75,19 +78,21 @@
      const acc=await verifiedAccount({user:data.user});
      if(!acc){await sb.auth.signOut();throw new Error('Konto nie ma aktywnego dostępu do FIREMAP.');}
      const selected=registry.find(x=>x.slug===slug);
-     if(acc.role!=='SK' && selected && acc.unit_name!==selected.name){await sb.auth.signOut();throw new Error('To konto nie jest przypisane do wybranej jednostki.');}
+     if((slug==='sztab')!==(acc.role==='SZTAB')){await sb.auth.signOut();throw new Error('Wybierz właściwy rodzaj konta.');}
+     if(!['SK','SZTAB'].includes(acc.role) && selected && acc.unit_name!==selected.name){await sb.auth.signOut();throw new Error('To konto nie jest przypisane do wybranej jednostki.');}
      if(acc.role==='SK' && slug!=='kp-psp-radomsko'){await sb.auth.signOut();throw new Error('Konto SK może logować się tylko jako KP PSP Radomsko.');}
      localStorage.setItem('firemapVerifiedUnit',acc.unit_name||selected?.name||'');
      localStorage.setItem('firemapVerifiedRole',acc.role||'UNIT');
      const old=JSON.parse(localStorage.getItem('firemapVehicleData')||'null')||{};
      if(acc.unit_name)localStorage.setItem('firemapVehicleData',JSON.stringify({...old,unit:acc.unit_name}));
      msg.className='err ok';msg.textContent='Dostęp potwierdzony. Otwieram FIREMAP…';
-     setTimeout(()=>location.replace(acc.role==='SK'?'./dispatcher.html':'./index.html'),250);
+     setTimeout(()=>location.replace(acc.role==='SZTAB'?'./dispatcher.html?chooseArea=1':acc.role==='SK'?'./dispatcher.html':'./index.html'),250);
    }catch(e){
      msg.className='err';
      msg.textContent=(e.message==='Invalid login credentials'||String(e.message).includes('Invalid login'))?'Nieprawidłowe hasło dla wybranej jednostki.':(e.message||'Nie udało się zalogować.');
    } finally {btn.disabled=false;btn.textContent='Zaloguj do FIREMAP'}
  }
+ unitEl.onchange=()=>{document.getElementById('sztabLoginFields').hidden=unitEl.value!=='sztab';};
  btn.onclick=login;passEl.addEventListener('keydown',e=>{if(e.key==='Enter')login()});
  await loadUnits();await verifyCurrent();
 })();
