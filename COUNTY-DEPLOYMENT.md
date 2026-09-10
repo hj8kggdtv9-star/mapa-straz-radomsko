@@ -1,6 +1,6 @@
 # Powiatowe SK — przygotowane wdrożenie
 
-Status: przygotowane i przetestowane lokalnie. Produkcyjna migracja została dwukrotnie odrzucona przez automatyczną kontrolę ryzyka. Nie zastosowano jej inną drogą. Nie wdrożono funkcji ani interfejsu zależnych od nowego schematu.
+Status: użytkownik zatwierdził wdrożenie. Migracja i poprawka uprawnienia firemap_is_sk zostały wykonane na produkcji 10.09.2026. Test test-counties.sql przeszedł na produkcji z ROLLBACK. Funkcje manage-county i create-sztab są wdrożone.
 
 ## Działanie
 
@@ -26,7 +26,7 @@ node tests/test-county-ui.cjs
 
 Pierwszy test uruchamia PostgreSQL/PGlite z pgcrypto, odtwarza schemat, ograniczenia, RLS, funkcje i triggery z metadanych produkcyjnych oraz stosuje migrację na syntetycznych danych. Nie łączy się z Supabase. Sprawdza tworzenie zdarzeń, izolację SK i jednostek, brak możliwości zmiany właściciela, zapis starego formatu GPS poza dawnym obszarem, przypisanie do zdarzenia, QR LOCAL/WOO, odczyt pozostałych zastępów, izolację sztabu i zakończenie sesji. Drugi sprawdza uprawnienia funkcji tworzącej konta i resetującej hasła oraz integrację skryptów klienta.
 
-Testy lokalne przeszły. Nie wykonano testu na fizycznych terminalach, produkcyjnego Realtime ani pełnego tworzenia konta w produkcyjnym Supabase Auth.
+Testy lokalne oraz testy uprawnień, GPS i QR na produkcyjnej bazie przeszły (dane testowe wycofano). Nie wykonano testu na fizycznych terminalach, produkcyjnego Realtime ani pełnego tworzenia konta w produkcyjnym Supabase Auth.
 
 ## Kolejność po zatwierdzeniu migracji produkcyjnej
 
