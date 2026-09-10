@@ -132,3 +132,6 @@ do $$declare d text;begin
  if position($old$p_force_group not in ('WOO','COO','EXTERNAL')$old$ in d)=0 then raise exception 'Unexpected join definition';end if;
  execute replace(d,$old$p_force_group not in ('WOO','COO','EXTERNAL')$old$,$new$p_force_group not in ('LOCAL','WOO','COO','EXTERNAL')$new$);
 end $$;
+
+-- Production verification: RLS calls this existing helper as authenticated.
+grant execute on function public.firemap_is_sk() to authenticated;
