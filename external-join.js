@@ -40,7 +40,7 @@ function read(){try{return JSON.parse(localStorage.getItem(STORE)||'null')}catch
 function save(){localStorage.setItem(STORE,JSON.stringify(state))}
 function clear(){localStorage.removeItem(STORE)}
 function specLabel(s){return({CHEM_ECO:'chem-eko',WATER_DIVE:'wodno-nurkowa',HEIGHT:'wysokościowa',TECH_SEARCH:'techniczna/poszukiwawcza',USAR:'USAR',DRONE:'dronowa',OTHER:'specjalistyczna'})[s]||''}
-function badge(g){if(g==='WOO')return'<span class="badge">WOO</span>';if(g==='COO')return'<span class="badge coo">COO</span>';return'<span class="badge ext">ZEWN.</span>'}
+function badge(g){if(g==='LOCAL')return'<span class="badge ext">POWIAT</span>';if(g==='WOO')return'<span class="badge">WOO</span>';if(g==='COO')return'<span class="badge coo">COO</span>';return'<span class="badge ext">ZEWN.</span>'}
 function showLive(){
  $('joinCover').style.display='none';$('live').style.display='block';
  if(!map){map=L.map('map',{minZoom:3}).setView([state.incident_lat,state.incident_lng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);incidentMarker=L.marker([state.incident_lat,state.incident_lng]).addTo(map).bindPopup(`<b>${state.incident_kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><br>${esc(state.incident_description||'Zdarzenie')}`)}
@@ -93,3 +93,4 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshPee
 $('showPeers').onclick=()=>{const points=peerRows.map(v=>[+v.lat,+v.lng]);if(lastPos)points.push([lastPos.coords.latitude,lastPos.coords.longitude]);if(points.length)map.fitBounds(L.latLngBounds(points),{padding:[60,100],maxZoom:16})};
 if(state?.session_token)showLive();
 })();
+

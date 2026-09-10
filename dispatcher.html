@@ -7,11 +7,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <title>FIREMAP — SK / SZTAB</title>
 <style>
-*{box-sizing:border-box}html,body,#app{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:#07111f;color:#fff}#app{display:grid;grid-template-columns:390px 1fr}.panel{background:#0a1626;border-right:1px solid #334155;padding:15px;overflow:auto}.logo{font-size:24px;font-weight:900}.sub,.hint,.state{color:#94a3b8;font-size:12px}.sub{margin-bottom:16px}.card{background:#111e30;border:1px solid #334155;border-radius:15px;padding:13px;margin-bottom:12px}.card h3{margin:0 0 8px}.vehicle,.activeIncident,.kdrItem{padding:9px;border-radius:11px;background:#0b1727;margin:7px 0;border:1px solid #26364b}.vehicle,.kdrItem{cursor:pointer}.vehicle small,.activeIncident small,.kdrItem small{display:block;color:#94a3b8;margin-top:3px}.kdrItem{border-color:#facc15;background:#201b08}.kdrItem b{color:#fde68a}button,input{width:100%;min-height:43px;border-radius:10px;font-size:14px}button{border:0;color:#fff;font-weight:800;cursor:pointer;margin-top:8px}.secondary{background:#334155}.fireBtn{background:#dc2626}.mzBtn{background:#d97706}.addGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}input{background:#091525;border:1px solid #475569;color:#fff;padding:0 10px;margin-top:6px}#map{height:100%;width:100%}.login{position:fixed;z-index:2000;inset:0;background:#06101def;display:grid;place-items:center}.loginBox{width:min(420px,92vw);background:#0b1727;border:1px solid #334155;border-radius:18px;padding:22px}.vehicleIcon{width:36px;height:36px;border-radius:11px;border:3px solid #fff;display:grid;place-items:center;font-size:18px;line-height:1;box-shadow:0 3px 12px #0007}.kdrIcon{width:42px;height:42px;border-radius:50%;border:3px solid #fff;background:#ca8a04;display:grid;place-items:center;font-size:23px;line-height:1;box-shadow:0 0 0 5px #facc1540,0 4px 14px #0009;animation:kdrPulse 1.8s infinite}@keyframes kdrPulse{50%{box-shadow:0 0 0 12px #facc1500,0 4px 14px #0009}}.pulseAmber,.pulseRed,.pulseBlue{animation:pulse 1.5s infinite}@keyframes pulse{50%{box-shadow:0 0 0 11px #ffffff00}}.incidentIcon{width:40px;height:40px;border-radius:50%;border:3px solid white;display:grid;place-items:center;font-size:20px}.fire{background:#dc2626}.mz{background:#f59e0b}.searchResults{margin-top:7px}.searchResult{background:#16253a;border:1px solid #334155;border-radius:10px;padding:9px;margin:5px 0;cursor:pointer;font-size:12px}.locBox{background:#0b1727;border:1px solid #334155;border-radius:11px;padding:9px;margin-top:8px}.locBox span{font-size:12px;color:#93c5fd}.sectionLabel{font-size:11px;color:#94a3b8;text-transform:uppercase;margin-top:12px}.clearBtn{background:#475569}@media(max-width:800px){#app{grid-template-columns:1fr;grid-template-rows:42% 58%}.panel{order:2}#map{order:1}}
+*{box-sizing:border-box}html,body,#app{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:#07111f;color:#fff}#app{display:grid;grid-template-columns:390px 1fr}.panel{background:#0a1626;border-right:1px solid #334155;padding:15px;overflow:auto}.logo{font-size:24px;font-weight:900}.sub,.hint,.state{color:#94a3b8;font-size:12px}.sub{margin-bottom:16px}.card{background:#111e30;border:1px solid #334155;border-radius:15px;padding:13px;margin-bottom:12px}.card h3{margin:0 0 8px}.vehicle,.activeIncident,.kdrItem{padding:9px;border-radius:11px;background:#0b1727;margin:7px 0;border:1px solid #26364b}.vehicle,.kdrItem{cursor:pointer}.vehicle small,.activeIncident small,.kdrItem small{display:block;color:#94a3b8;margin-top:3px}.kdrItem{border-color:#facc15;background:#201b08}.kdrItem b{color:#fde68a}button,input{width:100%;min-height:43px;border-radius:10px;font-size:14px}button{border:0;color:#fff;font-weight:800;cursor:pointer;margin-top:8px}.secondary{background:#334155}.fireBtn{background:#dc2626}.mzBtn{background:#d97706}.addGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}input{background:#091525;border:1px solid #475569;color:#fff;padding:0 10px;margin-top:6px}#map{height:100%;width:100%}.login{overflow:auto;padding:16px;position:fixed;z-index:2000;inset:0;background:#06101def;display:grid;place-items:center}.loginBox{width:min(420px,92vw);background:#0b1727;border:1px solid #334155;border-radius:18px;padding:22px}.vehicleIcon{width:36px;height:36px;border-radius:11px;border:3px solid #fff;display:grid;place-items:center;font-size:18px;line-height:1;box-shadow:0 3px 12px #0007}.kdrIcon{width:42px;height:42px;border-radius:50%;border:3px solid #fff;background:#ca8a04;display:grid;place-items:center;font-size:23px;line-height:1;box-shadow:0 0 0 5px #facc1540,0 4px 14px #0009;animation:kdrPulse 1.8s infinite}@keyframes kdrPulse{50%{box-shadow:0 0 0 12px #facc1500,0 4px 14px #0009}}.pulseAmber,.pulseRed,.pulseBlue{animation:pulse 1.5s infinite}@keyframes pulse{50%{box-shadow:0 0 0 11px #ffffff00}}.incidentIcon{width:40px;height:40px;border-radius:50%;border:3px solid white;display:grid;place-items:center;font-size:20px}.fire{background:#dc2626}.mz{background:#f59e0b}.searchResults{margin-top:7px}.searchResult{background:#16253a;border:1px solid #334155;border-radius:10px;padding:9px;margin:5px 0;cursor:pointer;font-size:12px}.locBox{background:#0b1727;border:1px solid #334155;border-radius:11px;padding:9px;margin-top:8px}.locBox span{font-size:12px;color:#93c5fd}.sectionLabel{font-size:11px;color:#94a3b8;text-transform:uppercase;margin-top:12px}.clearBtn{background:#475569}@media(max-width:800px){#app{grid-template-columns:1fr;grid-template-rows:42% 58%}.panel{order:2}#map{order:1}}
 </style>
 </head>
 <body>
-<div class="login" id="login"><div class="loginBox"><h1>FIREMAP</h1><p>Panel SK / SZTAB</p><label>Rodzaj dostępu<select id="accessMode" style="width:100%;min-height:43px;background:#091525;color:#fff"><option value="SK">SK KP PSP Radomsko</option><option value="SZTAB">SZTAB — duża akcja</option></select></label><input id="sztabLoginId" hidden placeholder="Identyfikator sztabu" autocomplete="username" autocapitalize="none" maxlength="40"><input type="password" id="password" placeholder="Hasło dyżurnego"><button class="fireBtn" id="loginBtn">Zaloguj</button><div id="loginErr"></div></div></div>
+<div class="login" id="login"><div class="loginBox"><h1>FIREMAP</h1><p>Panel SK / SZTAB</p><label>Rodzaj dostępu<select id="accessMode" style="width:100%;min-height:43px;background:#091525;color:#fff"><option value="SK">SK powiatowe</option><option value="SZTAB">SZTAB — duża akcja</option></select></label><label id="countyLoginLabel">Powiat SK<select id="skCountyLogin" style="width:100%;min-height:43px;background:#091525;color:#fff"></select></label><input id="sztabLoginId" hidden placeholder="Identyfikator sztabu" autocomplete="username" autocapitalize="none" maxlength="40"><input type="password" id="password" placeholder="Hasło dyżurnego"><button class="fireBtn" id="loginBtn">Zaloguj</button><div id="loginErr"></div></div></div>
 <div id="app"><aside class="panel"><div class="logo">FIREMAP</div><div class="sub">Stanowisko Kierowania KP PSP Radomsko</div>
 <div class="card"><h3>Nowe zdarzenie</h3><div class="sectionLabel">1. Wybierz lokalizację</div><input id="address" placeholder="Adres"><button class="secondary" id="searchAddress">🔎 Wyszukaj adres</button><div id="searchState" class="state"></div><div id="searchResults" class="searchResults"></div><input id="coords" placeholder="19.4425802351836;51.133247036658"><div class="hint">Format SWD ST: długość;szerokość</div><button class="secondary" id="useCoords">📌 Ustaw z koordynatów</button><button class="secondary" id="pickMap">✚ Wskaż na mapie</button><div class="locBox"><b>Wybrana lokalizacja</b><br><span id="locationState">Nie wybrano punktu.</span></div><input id="desc" placeholder="Opis (opcjonalnie)"><div class="sectionLabel">2. Dodaj typ zdarzenia</div><div class="addGrid"><button class="fireBtn" id="addFire">🔥 DODAJ POŻAR</button><button class="mzBtn" id="addMz">⚠️ DODAJ MZ</button></div><button class="clearBtn" id="clearLocation">Wyczyść lokalizację</button></div>
 <div class="card"><h3>Aktywne zdarzenia</h3><div id="incidents"></div></div>
@@ -47,10 +47,15 @@ async function refreshIncidents(){let {data,error}=await sb.from('incidents').se
 async function start(){if(started)return;started=true;await refreshVehicles();await refreshIncidents();sb.channel('sk-live').on('postgres_changes',{event:'*',schema:'public',table:'vehicles'},refreshVehicles).on('postgres_changes',{event:'*',schema:'public',table:'incidents'},refreshIncidents).subscribe();setInterval(refreshVehicles,15000);setInterval(refreshIncidents,30000)}
 async function accountFor(session){
  if(!session?.user?.id)return null;
- const {data,error}=await sb.from('firemap_accounts').select('role,unit_name,enabled').eq('user_id',session.user.id).maybeSingle();
+ const {data,error}=await sb.from('firemap_accounts').select('role,unit_name,enabled,county_id').eq('user_id',session.user.id).maybeSingle();
  return !error&&data?.enabled&&['SK','SZTAB'].includes(data.role)?data:null;
 }
-function openAccount(a){
+async function openAccount(a){
+ if(a.role==='SK'&&a.county_id){
+  const {data:c}=await sb.from('firemap_counties').select('name,province,default_area').eq('id',a.county_id).maybeSingle();
+  if(c&&localStorage.getItem('firemapSkAreaCounty')!==a.county_id){localStorage.setItem('firemapSkDefaultArea',JSON.stringify(c.default_area));localStorage.setItem('firemapSkAreaCounty',a.county_id);window.dispatchEvent(new CustomEvent('firemapSkAreaChanged',{detail:c.default_area}));}
+ }
+
  window.firemapSkCtx.account=a;
  document.querySelector('.sub').textContent=a.role==='SZTAB'?'SZTAB — '+a.unit_name:'Stanowisko Kierowania — '+a.unit_name;
  document.title='FIREMAP — '+(a.role==='SZTAB'?'SZTAB':'SK');
@@ -58,13 +63,14 @@ function openAccount(a){
  history.replaceState(null,'',location.pathname);start();
 }
 let areaSession=null;
-$('accessMode').onchange=()=>{$('sztabLoginId').hidden=$('accessMode').value!=='SZTAB';};
+$('accessMode').onchange=()=>{$('sztabLoginId').hidden=$('accessMode').value!=='SZTAB';$('countyLoginLabel').hidden=$('accessMode').value==='SZTAB';};
+(async()=>{const {data,error}=await sb.from('firemap_counties').select('id,province,name').order('province').order('name');$('skCountyLogin').innerHTML=error?'<option value="">Błąd pobierania powiatów</option>':(data||[]).map(c=>'<option value="'+c.id+'">'+esc(c.province+' — '+c.name)+'</option>').join('');})();
 async function logged(){
  const {data}=await sb.auth.getSession();if(!data.session)return;
  const a=await accountFor(data.session);
  if(!a){await sb.auth.signOut();$('loginErr').textContent='Zaloguj się kontem SK lub SZTAB.';return;}
  if(new URLSearchParams(location.search).get('chooseArea')==='1'){
-  areaSession=a;$('password').hidden=true;$('accessMode').value=a.role;$('accessMode').disabled=true;$('sztabLoginId').hidden=true;
+  areaSession=a;$('password').hidden=true;$('countyLoginLabel').hidden=true;$('accessMode').value=a.role;$('accessMode').disabled=true;$('sztabLoginId').hidden=true;
   $('loginBtn').textContent='Otwórz panel';$('loginErr').textContent='Zalogowano: '+a.unit_name+'. Wybierz domyślny obszar działania.';return;
  }
  openAccount(a);
@@ -73,15 +79,18 @@ $('loginBtn').onclick=async()=>{
  if(areaSession){openAccount(areaSession);return;}
  const mode=$('accessMode').value,slug=$('sztabLoginId').value.trim().toLowerCase();
  if(mode==='SZTAB'&&!/^[a-z0-9][a-z0-9-]{2,39}$/.test(slug)){$('loginErr').textContent='Wpisz identyfikator sztabu.';return;}
- const {data,error}=await sb.auth.signInWithPassword({email:mode==='SZTAB'?'sztab.'+slug+'@firemap.local':EMAIL,password:$('password').value});
+ let email='sztab.'+slug+'@firemap.local';
+ if(mode==='SK'){const {data:rows,error:e}=await sb.rpc('firemap_county_logins',{p_county_id:$('skCountyLogin').value});const sk=(rows||[]).find(a=>a.role==='SK');if(e||!sk){$('loginErr').textContent='Brak aktywnego konta SK dla tego powiatu.';return;}email=sk.login_email;}
+ const {data,error}=await sb.auth.signInWithPassword({email,password:$('password').value});
  if(error){$('loginErr').textContent='Błędny identyfikator lub hasło.';return;}
  const a=await accountFor(data.session);
- if(!a||a.role!==mode){await sb.auth.signOut();$('loginErr').textContent='Brak dostępu do wybranego panelu.';return;}
+ if(!a||a.role!==mode||(mode==='SK'&&a.county_id!==$('skCountyLogin').value)){await sb.auth.signOut();$('loginErr').textContent='Brak dostępu do wybranego panelu.';return;}
  openAccount(a);
 };
 $('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};logged();
 })();
 </script>
-<script src="tactical-viewer.js?v=20260909-sztab-1"></script>
+<script src="tactical-viewer.js?v=20260910-counties-1"></script>
 </body>
 </html>
+

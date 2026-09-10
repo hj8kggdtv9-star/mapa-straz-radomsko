@@ -16,7 +16,7 @@
 <div class="brand">FIREMAP</div><div class="sub">Dołącz do działań jako zastęp zewnętrzny</div>
 <div class="hint">Kod otrzymujesz od SK. Dostęp dotyczy tylko wskazanego zdarzenia i wygasa automatycznie.</div>
 <label>Kod dołączenia</label><input id="code" inputmode="numeric" maxlength="6" placeholder="np. 847291">
-<label>Pochodzenie sił</label><select id="forceGroup"><option value="WOO">🟣 WOO — Wojewódzki Odwód Operacyjny</option><option value="COO">🔵 COO — Centralny Odwód Operacyjny</option><option value="EXTERNAL">⚪ Inne siły zewnętrzne</option></select>
+<label>Pochodzenie sił</label><select id="forceGroup"><option value="LOCAL">🏠 Siły powiatowe — dołączenie przez QR</option><option value="WOO">🟣 WOO — Wojewódzki Odwód Operacyjny</option><option value="COO">🔵 COO — Centralny Odwód Operacyjny</option><option value="EXTERNAL">⚪ Inne siły zewnętrzne</option></select>
 <label>Grupa specjalistyczna</label><select id="spec"><option value="">— brak / zwykły zastęp —</option><option value="CHEM_ECO">Ratownictwo chemiczno-ekologiczne</option><option value="WATER_DIVE">Ratownictwo wodno-nurkowe</option><option value="HEIGHT">Ratownictwo wysokościowe</option><option value="TECH_SEARCH">Ratownictwo techniczne / poszukiwawcze</option><option value="USAR">Grupa USAR</option><option value="DRONE">Grupa dronowa</option><option value="OTHER">Inna grupa specjalistyczna</option></select>
 <label>Województwo</label><select id="province"></select>
 <label>Powiat</label><input id="county" placeholder="np. powiat częstochowski">
@@ -27,5 +27,5 @@
 <div id="live"><div id="map"></div><div class="top"><b id="title">FIREMAP — zastęp zewnętrzny</b><small id="info">Łączenie…</small><small id="peersState">Pobieranie zastępów…</small><details><summary style="font-size:12px;margin-top:5px">Pokaż inne zastępy</summary><div id="peersList" class="peer-list"></div><button id="showPeers" class="peer-row">Pokaż wszystkie na mapie</button></details></div><button class="fab gps" id="center">◎</button><button class="fab leave" id="leave">↪</button><div class="status"><button data-s="DISPATCHED">WYJAZD</button><button data-s="ON_SCENE">NA MIEJSCU</button><button data-s="RETURNING">KONIEC</button><button data-s="BASE">OPUŚĆ</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="external-join.js?v=20260909-peers-1"></script>
+<script src="external-join.js?v=20260910-counties-1"></script>
 </body></html>
