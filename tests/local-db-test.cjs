@@ -28,5 +28,6 @@ const q=s=>'"'+s.replaceAll('"','""')+'"';
  await db.exec('begin;'+fs.readFileSync(path.join(root,'county_access.sql'),'utf8')+'commit;');
  console.log('PASS: complete migration on a local PostgreSQL schema reconstructed from production metadata');
  const result=await db.exec(fs.readFileSync(path.join(__dirname,'test-counties.sql'),'utf8'));console.log(result.at(-1).rows);
+ const legacy=await db.exec(fs.readFileSync(path.join(__dirname,'test-legacy-ownership.sql'),'utf8'));console.log(legacy.at(-1).rows);
  await db.close();
 })().catch(e=>{console.error(e.message,e.detail||'',e.where||'');process.exitCode=1});

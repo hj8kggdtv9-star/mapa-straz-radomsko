@@ -37,3 +37,7 @@ Testy lokalne oraz testy uprawnień, GPS i QR na produkcyjnej bazie przeszły (d
 5. Dopiero wtedy scalić klienta do `main` i poczekać na GitHub Pages. Przetestować logowanie SK, OSP, SZTAB, tworzenie konta jednostki i dołączenie QR na dwóch urządzeniach.
 
 Główne ryzyko: zastąpienie dawnych szerokich praw zapisu pojazdów kontrolą właściciela. Lokalne testy obejmują istniejący format zapisu przeglądarki. Nie należy publikować klienta ani funkcji serwerowych przed wdrożeniem i sprawdzeniem schematu.
+
+## Odbiór i poprawki obsługi błędów
+
+Pakiet poprawek z 14 września i scenariusze testów na urządzeniach: [ACCEPTANCE-2026-09-15.md](ACCEPTANCE-2026-09-15.md). Ten pakiet nie wymaga ponownego wykonywania migracji ani zmian RLS.

@@ -1,6 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 export function makeHandler(factory,env){
- const headers={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'authorization,x-client-info,apikey,content-type','Access-Control-Allow-Methods':'POST,OPTIONS','Content-Type':'application/json'};
+ const headers={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'authorization,x-client-info,apikey,content-type','Access-Control-Allow-Methods':'POST,OPTIONS','Content-Type':'application/json','Cache-Control':'no-store'};
  const reply=(status,data)=>new Response(JSON.stringify(data),{status,headers});
  return async req=>{
   if(req.method==='OPTIONS')return new Response('ok',{headers});
@@ -49,8 +49,14 @@ export function makeHandler(factory,env){
    if(pe)throw Error('Nie udało się przypisać konta do powiatu.');
    return reply(201,{name,role,email,password,county_id:countyId});
   }catch(e){
-   if(createdUser)await admin.auth.admin.deleteUser(createdUser);
-   if(createdCounty)await admin.from('firemap_counties').delete().eq('id',createdCounty);
+   let cleanupFailed=false;
+   if(createdUser){try{const result=await admin.auth.admin.deleteUser(createdUser);if(result?.error)cleanupFailed=true;}catch{cleanupFailed=true;}}
+   // Keep the county if user cleanup failed: a profile may have committed before a timeout.
+   if(createdCounty&&!cleanupFailed){try{const result=await admin.from('firemap_counties').delete().eq('id',createdCounty);if(result?.error)cleanupFailed=true;}catch{cleanupFailed=true;}}
+   if(cleanupFailed){
+    console.error('FIREMAP provisioning cleanup failed',{user_id:createdUser,county_id:createdCounty});
+    return reply(500,{error:'Nie udało się dokończyć tworzenia konta ani potwierdzić wycofania zmian. Administrator musi sprawdzić konto przed ponowną próbą.',code:'PROVISIONING_CLEANUP_REQUIRED'});
+   }
    return reply(400,{error:e instanceof Error?e.message:'Operacja nie powiodła się.'});
   }
  };
