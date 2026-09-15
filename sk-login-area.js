@@ -21,6 +21,6 @@ function init(box,btn){if(document.getElementById('fmSkProvince'))return;const s
  const access=document.getElementById('accessMode');if(access){const sync=()=>wrap.hidden=access.value==='SZTAB';access.addEventListener('change',sync);sync();}
  const original=btn.onclick;btn.onclick=async e=>{if(document.getElementById('accessMode')?.value==='SZTAB'){if(typeof original==='function')return original.call(btn,e);return;}const p=prov.value,i=Number(county.value);if(!p||county.value===''||!Number.isInteger(i)||i<0||!rows[i]){state.textContent='⚠️ Przed logowaniem wybierz województwo i powiat.';return}btn.disabled=true;const old=btn.textContent;btn.textContent='Ustawiam obszar…';try{const area=await resolveArea(p,rows[i]);localStorage.setItem('firemapSkDefaultArea',JSON.stringify(area));window.dispatchEvent(new CustomEvent('firemapSkAreaChanged',{detail:area}));state.textContent=`✓ Domyślny obszar: ${area.county}, ${area.province}`;if(typeof original==='function')await original.call(btn,e)}catch(err){state.textContent='Nie udało się ustawić obszaru: '+(err?.message||err)}finally{btn.disabled=false;if(btn.textContent==='Ustawiam obszar…')btn.textContent=old}};
 }
-wait();})();
+if(document.documentElement.dataset.areaDirectory!=='only')wait();})();
 
 
