@@ -88,7 +88,7 @@ async function join(){
  state={...x,force_group:payload.p_force_group,specialist_group:payload.p_specialist_group,origin_voivodeship:payload.p_voivodeship,origin_county:payload.p_county,origin_unit:payload.p_unit,call_sign:payload.p_call_sign,vehicle_type:payload.p_vehicle_type};save();$('msg').textContent='Dołączono. Uruchamiam GPS…';setTimeout(showLive,250);
 }
 $('joinBtn').onclick=join;$('center').onclick=()=>{if(lastPos)map.flyTo([lastPos.coords.latitude,lastPos.coords.longitude],15,{duration:.4})};$('leave').onclick=()=>{if(confirm('Zakończyć udział tego zastępu w zdarzeniu?'))leaveSession()};document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>setStatus(b.dataset.s));
-window.addEventListener('online',()=>{if(lastPos&&!leaving)send(lastPos,true);refreshPeers()});
+window.addEventListener('online',()=>{if(map&&!leaving)window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});if(lastPos&&!leaving)send(lastPos,true);refreshPeers()});
 window.addEventListener('focus',()=>{refreshPeers();if(map&&!leaving)window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshPeers()});
 $('showPeers').onclick=()=>{const points=peerRows.map(v=>[+v.lat,+v.lng]);if(lastPos)points.push([lastPos.coords.latitude,lastPos.coords.longitude]);if(points.length)map.fitBounds(L.latLngBounds(points),{padding:[60,100],maxZoom:16})};
