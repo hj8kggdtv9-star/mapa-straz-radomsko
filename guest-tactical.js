@@ -12,11 +12,26 @@ window.firemapGuestTacticalAdapter=function(sb,state,onExpired){
  }
  return {from,channel(){const ch={on(){return ch},subscribe(){return ch}};return ch},read};
 };
-window.startFiremapGuestTactical=async function({map,sb,state,onExpired}){
- if(window.firemapGuestTacticalStarted)return;
- const adapter=window.firemapGuestTacticalAdapter(sb,state,onExpired);
- try{await adapter.read()}catch{return}
- window.firemapGuestTacticalStarted=true;window.firemapCtx={map,sb:adapter,session:{user:{id:state.session_id}},guest:true};
- const css=document.createElement('style');css.textContent='.kdr-main-btn{display:none!important}.tactical-main-btn{top:130px!important;width:auto!important}.tactical-sheet button,.tac-mini button,.tac-point-editor button{margin-top:0}.tac-mini button{width:auto}.tac-lock{top:185px!important}';document.head.appendChild(css);
- for(const src of ['tactical-ui-core.js','tactical-point-drag.js','tactical-sector-drag.js','tactical-sector-description.js','tactical-danger-radius.js','tactical-water-distance.js','tactical-shared-viewer.js']){const el=document.createElement('script');el.src=src+'?v=20260915-hq-1';el.async=false;document.head.appendChild(el)}
+// Mount tools independently of the first network response. The editor reports RPC errors.
+const firemapGuestScripts=new Map();
+function loadFiremapGuestScript(src){
+ if(firemapGuestScripts.has(src))return firemapGuestScripts.get(src);
+ const task=new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src+'?v=20260915-qr-2';el.async=false;el.onload=resolve;el.onerror=()=>{el.remove();reject(new Error('Nie pobrano '+src))};document.head.appendChild(el)});
+ firemapGuestScripts.set(src,task);task.catch(()=>firemapGuestScripts.delete(src));return task;
+}
+window.startFiremapGuestTactical=function({map,sb,state,onExpired}){
+ if(window.firemapGuestToolsLoading)return window.firemapGuestToolsLoading;
+ if(window.firemapGuestTacticalStarted)return Promise.resolve();
+ window.firemapCtx={map,sb:window.firemapGuestTacticalAdapter(sb,state,onExpired),session:{user:{id:state.session_id}},guest:true};
+ const notice=document.getElementById('guestToolsState');
+ if(notice){notice.hidden=false;notice.textContent='Ładowanie narzędzi mapy…'}
+ const task=(async()=>{
+  // Layers do not need a database request or a working tactical editor.
+  const layers=loadFiremapGuestScript('forest-map-layers.js');
+  const tactics=(async()=>{for(const src of ['tactical-ui-core.js','tactical-point-drag.js','tactical-sector-drag.js','tactical-sector-description.js','tactical-danger-radius.js','tactical-water-distance.js','tactical-shared-viewer.js'])await loadFiremapGuestScript(src)})();
+  const results=await Promise.allSettled([layers,tactics]);
+  if(results.some(r=>r.status==='rejected')){if(notice){notice.textContent='Nie pobrano wszystkich narzędzi. Dotknij, aby ponowić.';notice.onclick=()=>window.startFiremapGuestTactical({map,sb,state,onExpired})}return}
+  window.firemapGuestTacticalStarted=true;if(notice)notice.hidden=true;
+ })();
+ window.firemapGuestToolsLoading=task;return task.finally(()=>{window.firemapGuestToolsLoading=null});
 };
