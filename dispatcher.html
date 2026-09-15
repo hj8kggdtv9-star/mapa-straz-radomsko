@@ -69,7 +69,7 @@ async function logged(){
  const {data}=await sb.auth.getSession();if(!data.session)return;
  const a=await accountFor(data.session);
  if(!a){await sb.auth.signOut();$('loginErr').textContent='Zaloguj się kontem SK lub SZTAB.';return;}
- if(new URLSearchParams(location.search).get('chooseArea')==='1'){
+ if(new URLSearchParams(location.search).get('chooseArea')==='1'&&a.role!=='SZTAB'){
   areaSession=a;$('password').hidden=true;$('countyLoginLabel').hidden=true;$('accessMode').value=a.role;$('accessMode').disabled=true;$('sztabLoginId').hidden=true;
   $('loginBtn').textContent='Otwórz panel';$('loginErr').textContent='Zalogowano: '+a.unit_name+'. Wybierz domyślny obszar działania.';return;
  }
@@ -90,7 +90,8 @@ $('loginBtn').onclick=async()=>{
 $('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};logged();
 })();
 </script>
-<script src="tactical-viewer.js?v=20260914-errors-1"></script>
+<script src="tactical-viewer.js?v=20260915-hq-1"></script>
+<script src="hq-login-directory.js?v=20260915-hq-1"></script>
 </body>
 </html>
 
