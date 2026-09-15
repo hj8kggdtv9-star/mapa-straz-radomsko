@@ -19,7 +19,7 @@ function provinces(){const rows=counties.filter(c=>c.province===$('loginProvince
 $('loginProvince').onchange=provinces;$('loginCounty').onchange=directory;
 $('countyRole').onchange=()=>{const hq=$('countyRole').value==='SZTAB';$('countyFields').hidden=hq;$('unit').hidden=hq;unitLabel.hidden=hq;$('sztabLoginFields').hidden=!hq;renderAccounts();};
 async function verified(session){if(!session?.user?.id)return null;const{data,error}=await sb.from('firemap_accounts').select('role,unit_name,enabled,county_id,login_email').eq('user_id',session.user.id).maybeSingle();return !error&&data?.enabled?data:null;}
-function route(a){localStorage.setItem('firemapVerifiedUnit',a.unit_name);localStorage.setItem('firemapVerifiedRole',a.role);location.replace(a.role==='SZTAB'?'./dispatcher.html?chooseArea=1':a.role==='SK'?'./dispatcher.html':'./index.html');}
+function route(a){localStorage.setItem('firemapVerifiedUnit',a.unit_name);localStorage.setItem('firemapVerifiedRole',a.role);location.replace(a.role==='SZTAB'?'./dispatcher.html':a.role==='SK'?'./dispatcher.html':'./index.html');}
 async function login(){
  const role=$('countyRole').value,slug=$('sztabLoginId').value.trim().toLowerCase(),email=role==='SZTAB'?'sztab.'+slug+'@firemap.local':$('unit').value;
  if(!email||(role==='SZTAB'&&!/^[a-z0-9][a-z0-9-]{2,39}$/.test(slug))||!$('password').value){$('msg').textContent='Wybierz konto i wpisz hasło; dla sztabu podaj identyfikator.';return;}

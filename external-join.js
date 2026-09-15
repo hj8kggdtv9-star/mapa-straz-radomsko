@@ -45,7 +45,8 @@ function showLive(){
  $('joinCover').style.display='none';$('live').style.display='block';
  if(!map){map=L.map('map',{minZoom:3}).setView([state.incident_lat,state.incident_lng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);incidentMarker=L.marker([state.incident_lat,state.incident_lng]).addTo(map).bindPopup(`<b>${state.incident_kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><br>${esc(state.incident_description||'Zdarzenie')}`)}
  $('title').innerHTML=`FIREMAP ${badge(state.force_group)} · ${esc(state.call_sign)}`;
- $('info').textContent=`${state.origin_unit} · ${state.origin_county}${state.specialist_group?' · '+specLabel(state.specialist_group):''}`;
+ $('info').textContent=`${state.origin_unit} · dostęp do ${new Date(state.expires_at).toLocaleString('pl-PL')}${state.specialist_group?' · '+specLabel(state.specialist_group):''}`;
+ window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});
  setStatus(['DISPATCHED','ON_SCENE','RETURNING'].includes(state.status)?state.status:'DISPATCHED',false);startGps();startPeers();setTimeout(()=>map.invalidateSize(),100);
 }
 function stopGps(){if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}}
@@ -80,15 +81,15 @@ async function leaveSession(){
 }
 function setStatus(s,sendNow=true){if(s==='BASE'){leaveSession();return}currentStatus=s;if(state){state.status=s;save()}document.querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('active',b.dataset.s===s));if(sendNow){if(lastPos)send(lastPos,true);else $('info').textContent='Status oczekuje na pozycję GPS.'}}
 async function join(){
- const payload={p_code:$('code').value.replace(/\D/g,''),p_force_group:$('forceGroup').value,p_specialist_group:$('spec').value||null,p_voivodeship:$('province').value,p_county:$('county').value.trim(),p_unit:$('unit').value.trim(),p_call_sign:$('call').value.trim(),p_vehicle_type:$('type').value};
- if(payload.p_code.length!==6||!payload.p_voivodeship||!payload.p_county||!payload.p_unit||!payload.p_call_sign){$('msg').textContent='Uzupełnij kod, województwo, powiat, jednostkę i kryptonim.';return}
+ const payload={p_code:$('code').value.replace(/\D/g,''),p_force_group:$('forceGroup').value,p_specialist_group:$('spec').value||null,p_voivodeship:$('province').value||'Nie podano',p_county:$('county').value.trim()||'Nie podano',p_unit:$('unit').value.trim(),p_call_sign:$('call').value.trim(),p_vehicle_type:$('type').value};
+ if(payload.p_code.length!==6||!payload.p_unit||!payload.p_call_sign){$('msg').textContent='Uzupełnij kod, jednostkę i kryptonim.';return}
  $('joinBtn').disabled=true;$('msg').textContent='Weryfikuję kod…';const {data,error}=await sb.rpc('external_force_join',payload);$('joinBtn').disabled=false;if(error){$('msg').textContent=error.message||'Nie udało się dołączyć.';return}
  const x=Array.isArray(data)?data[0]:data;if(!x?.session_token){$('msg').textContent='Nieprawidłowa odpowiedź serwera.';return}
  state={...x,force_group:payload.p_force_group,specialist_group:payload.p_specialist_group,origin_voivodeship:payload.p_voivodeship,origin_county:payload.p_county,origin_unit:payload.p_unit,call_sign:payload.p_call_sign,vehicle_type:payload.p_vehicle_type};save();$('msg').textContent='Dołączono. Uruchamiam GPS…';setTimeout(showLive,250);
 }
 $('joinBtn').onclick=join;$('center').onclick=()=>{if(lastPos)map.flyTo([lastPos.coords.latitude,lastPos.coords.longitude],15,{duration:.4})};$('leave').onclick=()=>{if(confirm('Zakończyć udział tego zastępu w zdarzeniu?'))leaveSession()};document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>setStatus(b.dataset.s));
 window.addEventListener('online',()=>{if(lastPos&&!leaving)send(lastPos,true);refreshPeers()});
-window.addEventListener('focus',refreshPeers);
+window.addEventListener('focus',()=>{refreshPeers();if(map&&!leaving)window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshPeers()});
 $('showPeers').onclick=()=>{const points=peerRows.map(v=>[+v.lat,+v.lng]);if(lastPos)points.push([lastPos.coords.latitude,lastPos.coords.longitude]);if(points.length)map.fitBounds(L.latLngBounds(points),{padding:[60,100],maxZoom:16})};
 if(state?.session_token)showLive();

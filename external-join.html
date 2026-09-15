@@ -13,19 +13,20 @@
 </head>
 <body>
 <div class="cover" id="joinCover"><div class="card">
-<div class="brand">FIREMAP</div><div class="sub">Dołącz do działań jako zastęp zewnętrzny</div>
-<div class="hint">Kod otrzymujesz od SK. Dostęp dotyczy tylko wskazanego zdarzenia i wygasa automatycznie.</div>
+<div class="brand">FIREMAP</div><div class="sub">Dołącz do akcji SZTABU / SK</div>
+<div class="hint">Kod otrzymujesz od SZTABU lub SK. Dostęp dotyczy tylko wskazanego zdarzenia i wygasa automatycznie.</div>
 <label>Kod dołączenia</label><input id="code" inputmode="numeric" maxlength="6" placeholder="np. 847291">
-<label>Pochodzenie sił</label><select id="forceGroup"><option value="LOCAL">🏠 Siły powiatowe — dołączenie przez QR</option><option value="WOO">🟣 WOO — Wojewódzki Odwód Operacyjny</option><option value="COO">🔵 COO — Centralny Odwód Operacyjny</option><option value="EXTERNAL">⚪ Inne siły zewnętrzne</option></select>
+<details><summary>Dane organizacyjne (opcjonalnie)</summary><label>Pochodzenie sił</label><select id="forceGroup"><option value="LOCAL">🏠 Siły powiatowe — dołączenie przez QR</option><option value="WOO">🟣 WOO — Wojewódzki Odwód Operacyjny</option><option value="COO">🔵 COO — Centralny Odwód Operacyjny</option><option value="EXTERNAL">⚪ Inne siły zewnętrzne</option></select>
 <label>Grupa specjalistyczna</label><select id="spec"><option value="">— brak / zwykły zastęp —</option><option value="CHEM_ECO">Ratownictwo chemiczno-ekologiczne</option><option value="WATER_DIVE">Ratownictwo wodno-nurkowe</option><option value="HEIGHT">Ratownictwo wysokościowe</option><option value="TECH_SEARCH">Ratownictwo techniczne / poszukiwawcze</option><option value="USAR">Grupa USAR</option><option value="DRONE">Grupa dronowa</option><option value="OTHER">Inna grupa specjalistyczna</option></select>
 <label>Województwo</label><select id="province"></select>
 <label>Powiat</label><input id="county" placeholder="np. powiat częstochowski">
-<label>Jednostka</label><input id="unit" placeholder="np. OSP Konopiska / JRG 2 Częstochowa">
+</details><label>Jednostka</label><input id="unit" placeholder="np. OSP Konopiska / JRG 2 Częstochowa">
 <div class="grid"><div><label>Kryptonim</label><input id="call" placeholder="np. 559-21"></div><div><label>Typ pojazdu</label><select id="type"><option>GBA</option><option>GCBA</option><option>GBM</option><option>GLM</option><option>SD</option><option>SLRt</option><option>SLOp</option><option>SLKw</option><option>SLRR</option><option>MIKROBUS</option><option>PRZYCZEPA</option><option>QUAD</option><option>INNY</option></select></div></div>
 <button id="joinBtn">DOŁĄCZ DO ZDARZENIA</button><div id="msg" class="msg"></div>
 </div></div>
 <div id="live"><div id="map"></div><div class="top"><b id="title">FIREMAP — zastęp zewnętrzny</b><small id="info">Łączenie…</small><small id="peersState">Pobieranie zastępów…</small><details><summary style="font-size:12px;margin-top:5px">Pokaż inne zastępy</summary><div id="peersList" class="peer-list"></div><button id="showPeers" class="peer-row">Pokaż wszystkie na mapie</button></details></div><button class="fab gps" id="center">◎</button><button class="fab leave" id="leave">↪</button><div class="status"><button data-s="DISPATCHED">WYJAZD</button><button data-s="ON_SCENE">NA MIEJSCU</button><button data-s="RETURNING">KONIEC</button><button data-s="BASE">OPUŚĆ</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="external-join.js?v=20260910-counties-1"></script>
+<script src="guest-tactical.js?v=20260915-hq-1"></script>
+<script src="external-join.js?v=20260915-hq-1"></script>
 </body></html>
