@@ -1,0 +1,11 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const src=fs.readFileSync('external-join.js','utf8');new vm.Script(src);const ctx={};vm.createContext(ctx);vm.runInContext(src.slice(0,src.indexOf('(()=>{')),ctx);
+const saved={session_token:'opaque',join_code:'123456',expires_at:'2030-01-01'};
+assert.equal(ctx.shouldResumeGuest(saved,'123456',0),true);
+assert.equal(ctx.shouldResumeGuest(saved,'654321',0),false);
+assert.equal(ctx.shouldResumeGuest({...saved,join_code:undefined},'123456',0),false);
+assert.equal(ctx.shouldResumeGuest(saved,'',0),true);
+assert.equal(ctx.shouldResumeGuest({...saved,expires_at:'invalid'},'',0),false);
+assert.equal(ctx.shouldResumeGuest(saved,'123456',Date.parse('2031-01-01')),false);
+assert.match(src,/join_code:payload.p_code/);
+console.log('PASS: new QR overrides old session; same QR resumes; legacy session cannot override QR; expired session not resumed');

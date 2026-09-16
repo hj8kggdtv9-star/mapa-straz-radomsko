@@ -1,3 +1,4 @@
+function shouldResumeGuest(state,requestedCode,now=Date.now()){return !!(state?.session_token&&Date.parse(state.expires_at)>now&&(!requestedCode||state.join_code===requestedCode));}
 (()=>{
 const URL='https://vqgipvwcvbhabvfipodl.supabase.co';
 const KEY='sb_publishable_BYEVImorGhltw1aCaRXyRQ_pM2hKMkI';
@@ -7,7 +8,8 @@ const optionalNumber=v=>v!==null&&v!==undefined&&Number.isFinite(+v)?+v:null;
 const $=id=>document.getElementById(id),STORE='firemapExternalGuestV2';
 const PROVINCES=['Dolnośląskie','Kujawsko-pomorskie','Lubelskie','Lubuskie','Łódzkie','Małopolskie','Mazowieckie','Opolskie','Podkarpackie','Podlaskie','Pomorskie','Śląskie','Świętokrzyskie','Warmińsko-mazurskie','Wielkopolskie','Zachodniopomorskie'];
 $('province').innerHTML='<option value="">— wybierz województwo —</option>'+PROVINCES.map(x=>`<option>${x}</option>`).join('');
-$('code').value=(new URLSearchParams(location.search).get('code')||'').replace(/\D/g,'').slice(0,6);
+const requestedCode=(new URLSearchParams(location.search).get('code')||'').replace(/\D/g,'').slice(0,6);
+$('code').value=requestedCode;
 let state=read(),map=null,selfMarker=null,incidentMarker=null,watchId=null,lastSend=0,lastPos=null,currentStatus='DISPATCHED',sending=false,pendingSend=false,leaving=false;
 const peerMarkers=new Map();let peersBusy=false,peersTimer=null,peerRows=[];
 const STATUS_VIEW={DISPATCHED:{label:'WYJAZD',color:'#f59e0b'},ON_SCENE:{label:'NA MIEJSCU',color:'#dc2626'},RETURNING:{label:'KONIEC',color:'#2563eb'}};
@@ -85,13 +87,14 @@ async function join(){
  if(payload.p_code.length!==6||!payload.p_unit||!payload.p_call_sign){$('msg').textContent='Uzupełnij kod, jednostkę i kryptonim.';return}
  $('joinBtn').disabled=true;$('msg').textContent='Weryfikuję kod…';const {data,error}=await sb.rpc('external_force_join',payload);$('joinBtn').disabled=false;if(error){$('msg').textContent=error.message||'Nie udało się dołączyć.';return}
  const x=Array.isArray(data)?data[0]:data;if(!x?.session_token){$('msg').textContent='Nieprawidłowa odpowiedź serwera.';return}
- state={...x,force_group:payload.p_force_group,specialist_group:payload.p_specialist_group,origin_voivodeship:payload.p_voivodeship,origin_county:payload.p_county,origin_unit:payload.p_unit,call_sign:payload.p_call_sign,vehicle_type:payload.p_vehicle_type};save();$('msg').textContent='Dołączono. Uruchamiam GPS…';setTimeout(showLive,250);
+ state={...x,join_code:payload.p_code,force_group:payload.p_force_group,specialist_group:payload.p_specialist_group,origin_voivodeship:payload.p_voivodeship,origin_county:payload.p_county,origin_unit:payload.p_unit,call_sign:payload.p_call_sign,vehicle_type:payload.p_vehicle_type};save();$('msg').textContent='Dołączono. Uruchamiam GPS…';setTimeout(showLive,250);
 }
 $('joinBtn').onclick=join;$('center').onclick=()=>{if(lastPos)map.flyTo([lastPos.coords.latitude,lastPos.coords.longitude],15,{duration:.4})};$('leave').onclick=()=>{if(confirm('Zakończyć udział tego zastępu w zdarzeniu?'))leaveSession()};document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>setStatus(b.dataset.s));
 window.addEventListener('online',()=>{if(map&&!leaving)window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});if(lastPos&&!leaving)send(lastPos,true);refreshPeers()});
 window.addEventListener('focus',()=>{refreshPeers();if(map&&!leaving)window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshPeers()});
 $('showPeers').onclick=()=>{const points=peerRows.map(v=>[+v.lat,+v.lng]);if(lastPos)points.push([lastPos.coords.latitude,lastPos.coords.longitude]);if(points.length)map.fitBounds(L.latLngBounds(points),{padding:[60,100],maxZoom:16})};
-if(state?.session_token)showLive();
+if(shouldResumeGuest(state,requestedCode))showLive();
+else if(state?.session_token){$('msg').textContent=requestedCode?'Otworzono kod zdarzenia. Uzupełnij dane i naciśnij DOŁĄCZ — wcześniejsza sesja nie została użyta.':'Poprzednia sesja wygasła. Wpisz aktualny kod zdarzenia.';for(const [id,key] of [['unit','origin_unit'],['call','call_sign'],['type','vehicle_type']])if(state[key])$(id).value=state[key];}
 })();
 
