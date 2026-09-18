@@ -18,7 +18,7 @@
 <div class="card"><h3>⭐ KDR <span id="kdrCount">(0)</span></h3><div class="hint">Pozycja terminala znajdującego się fizycznie przy kierującym działaniem ratowniczym.</div><div id="kdrs"></div></div>
 <div class="card"><h3>Zastępy operacyjne <span id="count">(0)</span></h3><div class="hint">Tylko najnowsze pozycje aktywnych zastępów. Pozycje starsze niż 3 minuty oraz pojazdy „W bazie” są ukryte.</div><div id="vehicles"></div></div>
 <button class="secondary" id="logout">Wyloguj</button></aside><div id="map"></div></div>
-<script src="terminal-contact.js?v=20260916-phone-1"></script>
+<script src="terminal-contact.js?v=20260918-phone-2"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -105,7 +105,7 @@ $('loginBtn').onclick=async()=>{
 $('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};logged();
 })();
 </script>
-<script src="tactical-viewer.js?v=20260916-phone-1"></script>
+<script src="tactical-viewer.js?v=20260918-phone-2"></script>
 <script src="hq-login-directory.js?v=20260915-hq-1"></script>
 </body>
 </html>
