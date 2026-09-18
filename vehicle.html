@@ -31,7 +31,8 @@
 <div class="sheet" id="incidentSheet"><h2>Aktywne zdarzenia</h2><p>Wskazane przez SK KP PSP Radomsko.</p><div id="incidentList"></div><button class="wide secondary" data-close="incidentSheet">Zamknij</button></div>
 <div class="sheet" id="toolsSheet"><h2>Pomiary lokalne</h2><p>Te dane są widoczne wyłącznie na tym urządzeniu.</p><div class="toolGrid"><button class="toolBtn" id="trackBtn">🧭 ŚLAD TRASY</button><button class="toolBtn" id="areaBtn">⬡ POMIAR POWIERZCHNI</button><button class="toolBtn" id="distanceBtn">📐 ODLEGŁOŚĆ</button></div><div class="metric"><small>Długość lokalnego śladu</small><b id="trackMetric">0 m</b></div><div class="metric"><small>Zmierzona powierzchnia</small><b id="areaMetric">0 m²</b><small id="areaExtra">Obejdź granicę obszaru z włączonym pomiarem.</small></div><div class="metric"><small>Pomiar odległości na mapie</small><b id="distanceMetric">0 m</b><small id="distanceExtra">Włącz „Odległość” i klikaj kolejne punkty na mapie.</small></div><div class="localNote">🔒 Ślad, powierzchnia i pomiar odległości pozostają tylko lokalnie.</div><button class="wide secondary" id="clearLocalBtn">🧹 Wyczyść wszystkie pomiary</button><button class="wide secondary" data-close="toolsSheet">Zamknij</button></div>
 <div class="toast" id="toast"></div>
-<script src="terminal-contact.js?v=20260918-follow-1"></script>
+<script src="map-symbols.js?v=20260918-symbols-1"></script>
+<script src="terminal-contact.js?v=20260918-symbols-1"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tomickigrzegorz/leaflet-rotate/dist/leaflet-rotate.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -62,7 +63,7 @@ function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt
 function norm(s=''){return String(s).trim().toLowerCase().replace(/\s+/g,'')}
 function vehicleKey(v){return norm(v.unit_name)+'|'+norm(v.call_sign)}
 function isKdr(v){return String(v.vehicle_type||'').trim().toUpperCase()==='KDR'}
-function vehicleGlyph(type){const t=String(type||'').trim().toUpperCase();if(t==='KDR')return'⭐';if(t==='QUAD'||t.includes('QUAD'))return'🏍️';if(t==='SD'||t.startsWith('SD '))return'🪜';if(t==='SLOP')return'🚗';if(t==='SLKW'||t==='SLRR'||t==='SLRT'||t.startsWith('SLK')||t.startsWith('SLR'))return'🚐';if(t.includes('MIKROBUS'))return'🚌';if(t.includes('PRZYCZEPA'))return'◫';if(t==='GBA'||t==='GCBA'||t==='GBM'||t==='GLM'||t.startsWith('GBA')||t.startsWith('GCBA')||t.startsWith('GBM')||t.startsWith('GLM'))return'🚒';return'🚙'}
+function vehicleGlyph(type){return window.firemapSymbols.glyph(type)}
 function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
 function openSheet(id){document.querySelectorAll('.sheet.open').forEach(x=>x.classList.remove('open'));$(id).classList.add('open')}
 function closeSheet(id){$(id).classList.remove('open')}
@@ -72,9 +73,9 @@ function kdrCall(){return 'KDR'+(kdrName?' – '+kdrName:(myData?.call?' – '+m
 function updateKdrUI(){$('kdrName').value=kdrName;$('kdrBtn').classList.toggle('active',kdrMode);$('kdrBtn').textContent=kdrMode?'⭐ WYŁĄCZ TRYB KDR':'⭐ TEN TERMINAL = KDR';$('kdrState').textContent=kdrMode?'KDR aktywny — GPS terminala śledzi dowodzącego. Pojazd pozostaje w zapamiętanym miejscu.':'Tryb KDR wyłączony.'}
 function statusUI(){let s=STATUS[currentStatus]||STATUS.BASE;$('statusBtn').textContent='● '+s.label;$('miniStatus').textContent=vehicleLabel()+verifiedUnit+' · '+(kdrMode?'⭐ KDR · ':'')+(connected?'GPS · ':'')+s.label+(driveMode?' · TRYB JAZDY':'');document.querySelectorAll('#quick [data-status]').forEach(b=>b.classList.toggle('active',b.dataset.status===currentStatus));$('driveBtn').classList.toggle('active',driveMode);if(ownMarker)ownMarker.setIcon(ownIcon());updateKdrUI()}
 statusUI();
-function vIcon(v){if(isKdr(v))return L.divIcon({className:'',html:'<div class="vehicleIcon kdrOwn">⭐</div>',iconSize:[42,42],iconAnchor:[21,21]});let s=STATUS[v.status]||STATUS.BASE,g=vehicleGlyph(v.vehicle_type);return L.divIcon({className:'',html:`<div class="vehicleIcon ${s.cls}" style="background:${s.color}">${g}</div>`,iconSize:[42,42],iconAnchor:[21,21]})}
-function ownIcon(){if(kdrMode)return L.divIcon({className:'',html:`<div class="ownVehicle kdrOwn"><span class="call">${esc(kdrCall())}</span>⭐</div>`,iconSize:[42,50],iconAnchor:[21,45]});let s=STATUS[currentStatus]||STATUS.BASE,call=myData?.call?esc(myData.call):'',g=vehicleGlyph(myData?.type);return L.divIcon({className:'',html:`<div class="ownVehicle ${s.cls}" style="background:${s.color}">${call?`<span class="call">${call}</span>`:''}${g}</div>`,iconSize:[42,50],iconAnchor:[21,45]})}
-function iIcon(k){return L.divIcon({className:'',html:`<div class="incidentIcon ${k==='FIRE'?'fire':'mz'}">${k==='FIRE'?'🔥':'⚠️'}</div>`,iconSize:[44,44],iconAnchor:[22,22]})}
+function vIcon(v){return window.firemapSymbols.vehicle(v)}
+function ownIcon(){let origin={};try{origin=JSON.parse(localStorage.getItem('firemapForceOrigin')||'{}')}catch{}return window.firemapSymbols.vehicle({force_group:origin.group,specialist_group:origin.specialist,vehicle_type:kdrMode?'KDR':myData?.type,status:currentStatus,call_sign:kdrMode?kdrCall():myData?.call},{own:true})}
+function iIcon(k){return window.firemapSymbols.incident(k)}
 function dist(a,b){const R=6371000,p1=a[0]*Math.PI/180,p2=b[0]*Math.PI/180,dp=(b[0]-a[0])*Math.PI/180,dl=(b[1]-a[1])*Math.PI/180,h=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
 function calcBearing(a,b){const p1=a[0]*Math.PI/180,p2=b[0]*Math.PI/180,dl=(b[1]-a[1])*Math.PI/180,y=Math.sin(dl)*Math.cos(p2),x=Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl);return(Math.atan2(y,x)*180/Math.PI+360)%360}
 function destinationPoint(p,bearing,meters){const R=6371000,d=meters/R,br=bearing*Math.PI/180,p1=p[0]*Math.PI/180,l1=p[1]*Math.PI/180,p2=Math.asin(Math.sin(p1)*Math.cos(d)+Math.cos(p1)*Math.sin(d)*Math.cos(br)),l2=l1+Math.atan2(Math.sin(br)*Math.sin(d)*Math.cos(p1),Math.cos(d)-Math.sin(p1)*Math.sin(p2));return[p2*180/Math.PI,((l2*180/Math.PI+540)%360)-180]}
@@ -161,6 +162,6 @@ async function init(){await Promise.all([refreshVehicles(),refreshIncidents()]);
 init();
 })();
 </script>
-<script src="tactical-ui.js?v=20260918-follow-1"></script>
+<script src="tactical-ui.js?v=20260918-symbols-1"></script>
 </body>
 </html>
