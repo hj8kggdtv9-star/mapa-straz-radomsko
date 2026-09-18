@@ -39,5 +39,7 @@ const q=s=>'"'+s.replaceAll('"','""')+'"';
  const acl=await db.query("select has_function_privilege('anon','public.external_tactical_read(text)','execute') as readable, has_function_privilege('anon','public.external_tactical_write(text,jsonb,uuid[])','execute') as writable, has_function_privilege('authenticated','public.external_tactical_write(text,jsonb,uuid[])','execute') as auth_writable");
  if(!acl.rows[0].readable||acl.rows[0].writable||acl.rows[0].auth_writable)throw Error('QR tactical ACL regression');
  console.log('PASS: QR tactics readable; direct guest writes denied for anon and authenticated');
+ await db.exec(fs.readFileSync(path.join(root,'supabase/migrations/20260918084830_incident_help.sql'),'utf8'));
+ console.log((await db.exec(fs.readFileSync(path.join(__dirname,'test-incident-help.sql'),'utf8'))).at(-1).rows);
  await db.close();
 })().catch(e=>{console.error(e.message,e.detail||'',e.where||'');process.exitCode=1});

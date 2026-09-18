@@ -3,14 +3,10 @@
  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
- <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
- <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
- <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
- <application android:theme="@style/AppTheme" android:label="FIREMAP Zastęp" android:usesCleartextTraffic="false" android:allowBackup="false">
+ <application android:theme="@style/AppTheme" android:label="FIREMAP Zastęp" android:icon="@drawable/firemap_icon" android:usesCleartextTraffic="false" android:allowBackup="false">
   <activity android:name=".MainActivity" android:screenOrientation="unspecified" android:exported="true">
    <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+   <intent-filter><action android:name="android.intent.action.VIEW"/><category android:name="android.intent.category.DEFAULT"/><category android:name="android.intent.category.BROWSABLE"/><data android:scheme="https" android:host="hj8kggdtv9-star.github.io" android:pathPrefix="/mapa-straz-radomsko/external-join.html"/></intent-filter>
   </activity>
-  <service android:name=".LocationService" android:foregroundServiceType="location" android:exported="false" android:stopWithTask="false"/>
  </application>
 </manifest>

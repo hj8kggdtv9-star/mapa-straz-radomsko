@@ -50,6 +50,7 @@ function showLive(){
  $('title').innerHTML=`FIREMAP ${badge(state.force_group)} · ${esc(state.call_sign)}`;
  $('info').textContent=`${state.origin_unit} · dostęp do ${new Date(state.expires_at).toLocaleString('pl-PL')}${state.specialist_group?' · '+specLabel(state.specialist_group):''}`;
  window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});
+ window.firemapHelpCtx={map,sb,state,readSb:window.firemapCtx?.sb};
  setStatus(['DISPATCHED','ON_SCENE','RETURNING'].includes(state.status)?state.status:'DISPATCHED',false);startGps();startPeers();setTimeout(()=>map.invalidateSize(),100);
 }
 function stopGps(){if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}}
