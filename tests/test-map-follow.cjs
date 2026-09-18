@@ -1,0 +1,14 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const handlers={},buttons={},events={},timers=[];let gps,moves=0;
+const container={clientHeight:800,addEventListener:(n,f)=>handlers[n]=f};
+const map={getContainer:()=>container,getZoom:()=>15,setView:()=>moves++,panBy(){}};
+const window={firemapCtx:{map},addEventListener:(n,f)=>events[n]=f,firemapTacticalEditor:{enabled:true}};
+const ctx={window,document:{getElementById:id=>id==='quick'?null:{addEventListener:(n,f)=>buttons[id]=f}},localStorage:{getItem:()=> '1'},navigator:{geolocation:{watchPosition:f=>gps=f}},requestAnimationFrame:f=>f(),setTimeout:f=>timers.push(f),Date:{now:()=>100000},console};
+vm.runInNewContext(fs.readFileSync('drive-focus.js','utf8'),ctx);
+gps({coords:{latitude:51,longitude:19}});assert.equal(moves,1);
+handlers.pointerdown();ctx.Date.now=()=>200000;gps({coords:{latitude:52,longitude:20}});while(timers.length)timers.shift()();assert.equal(moves,1,'no timed return after map interaction');
+buttons.followBtn();while(timers.length)timers.shift()();assert.equal(moves,2,'position button restores centering');
+events['firemap:tactical:change']();ctx.Date.now=()=>300000;gps({coords:{latitude:53,longitude:21}});assert.equal(moves,2,'tactics pauses drive focus');
+const html=fs.readFileSync('vehicle.html','utf8');const pause=html.slice(html.indexOf('function pauseMapFollow()'),html.indexOf('async function init()'));
+assert.match(pause,/autoFollow=false/);assert.doesNotMatch(pause,/setTimeout/);assert.match(pause,/firemap:tactical:change/);
+console.log('PASS: no timed GPS recenter after manual movement or tactical work; location button restores centering');
