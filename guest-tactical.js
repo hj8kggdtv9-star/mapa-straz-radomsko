@@ -5,7 +5,7 @@ window.firemapGuestTacticalAdapter=function(sb,state,onExpired){
  function from(table){let action='read',rows=[],ids=[],filters=[];
   const q={select(){return q},eq(k,v){filters.push([k,v]);return q},in(k,v){if(action==='delete'&&k==='id')ids=v;return q},order(){return q},upsert(v){action='write';rows=v;return q},delete(){action='delete';return q},async then(resolve,reject){
    try{let result;if(action==='read'){const data=await read();result=table==='incidents'?[data.incident]:data.drawings;for(const[k,v]of filters)result=result.filter(x=>x[k]===v);}
-    else{const r=await sb.rpc('external_tactical_write',{p_session_token:state.session_token,p_rows:rows,p_delete_ids:ids});if(r.error)throw r.error;result=r.data;}
+    else{throw new Error('Zastęp po QR ma dostęp do odczytu TAKTYKI KDR.');}
     return resolve({data:result,error:null});
    }catch(error){return resolve({data:null,error})}
   }};return q;
@@ -16,7 +16,7 @@ window.firemapGuestTacticalAdapter=function(sb,state,onExpired){
 const firemapGuestScripts=new Map();
 function loadFiremapGuestScript(src){
  if(firemapGuestScripts.has(src))return firemapGuestScripts.get(src);
- const task=new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src+'?v=20260915-qr-2';el.async=false;el.onload=resolve;el.onerror=()=>{el.remove();reject(new Error('Nie pobrano '+src))};document.head.appendChild(el)});
+ const task=new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src+'?v=20260918-tactics-3';el.async=false;el.onload=resolve;el.onerror=()=>{el.remove();reject(new Error('Nie pobrano '+src))};document.head.appendChild(el)});
  firemapGuestScripts.set(src,task);task.catch(()=>firemapGuestScripts.delete(src));return task;
 }
 window.startFiremapGuestTactical=function({map,sb,state,onExpired}){
@@ -28,7 +28,7 @@ window.startFiremapGuestTactical=function({map,sb,state,onExpired}){
  const task=(async()=>{
   // Layers do not need a database request or a working tactical editor.
   const layers=loadFiremapGuestScript('forest-map-layers.js');
-  const tactics=(async()=>{for(const src of ['tactical-ui-core.js','tactical-point-drag.js','tactical-sector-drag.js','tactical-sector-description.js','tactical-danger-radius.js','tactical-water-distance.js','tactical-shared-viewer.js'])await loadFiremapGuestScript(src)})();
+  const tactics=(async()=>{for(const src of ['tactical-shared-viewer.js','tactical-water-distance.js'])await loadFiremapGuestScript(src)})();
   const results=await Promise.allSettled([layers,tactics]);
   if(results.some(r=>r.status==='rejected')){if(notice){notice.textContent='Nie pobrano wszystkich narzędzi. Dotknij, aby ponowić.';notice.onclick=()=>window.startFiremapGuestTactical({map,sb,state,onExpired})}return}
   window.firemapGuestTacticalStarted=true;if(notice)notice.hidden=true;

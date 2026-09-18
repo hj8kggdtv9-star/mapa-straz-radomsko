@@ -31,7 +31,7 @@
 <div class="sheet" id="incidentSheet"><h2>Aktywne zdarzenia</h2><p>Wskazane przez SK KP PSP Radomsko.</p><div id="incidentList"></div><button class="wide secondary" data-close="incidentSheet">Zamknij</button></div>
 <div class="sheet" id="toolsSheet"><h2>Pomiary lokalne</h2><p>Te dane są widoczne wyłącznie na tym urządzeniu.</p><div class="toolGrid"><button class="toolBtn" id="trackBtn">🧭 ŚLAD TRASY</button><button class="toolBtn" id="areaBtn">⬡ POMIAR POWIERZCHNI</button><button class="toolBtn" id="distanceBtn">📐 ODLEGŁOŚĆ</button></div><div class="metric"><small>Długość lokalnego śladu</small><b id="trackMetric">0 m</b></div><div class="metric"><small>Zmierzona powierzchnia</small><b id="areaMetric">0 m²</b><small id="areaExtra">Obejdź granicę obszaru z włączonym pomiarem.</small></div><div class="metric"><small>Pomiar odległości na mapie</small><b id="distanceMetric">0 m</b><small id="distanceExtra">Włącz „Odległość” i klikaj kolejne punkty na mapie.</small></div><div class="localNote">🔒 Ślad, powierzchnia i pomiar odległości pozostają tylko lokalnie.</div><button class="wide secondary" id="clearLocalBtn">🧹 Wyczyść wszystkie pomiary</button><button class="wide secondary" data-close="toolsSheet">Zamknij</button></div>
 <div class="toast" id="toast"></div>
-<script src="terminal-contact.js?v=20260918-phone-2"></script>
+<script src="terminal-contact.js?v=20260918-tactics-3"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tomickigrzegorz/leaflet-rotate/dist/leaflet-rotate.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -159,6 +159,6 @@ async function init(){await Promise.all([refreshVehicles(),refreshIncidents()]);
 init();
 })();
 </script>
-<script src="tactical-ui.js?v=20260918-phone-2"></script>
+<script src="tactical-ui.js?v=20260918-tactics-3"></script>
 </body>
 </html>
