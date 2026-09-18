@@ -18,7 +18,8 @@
 <div class="card"><h3>⭐ KDR <span id="kdrCount">(0)</span></h3><div class="hint">Pozycja terminala znajdującego się fizycznie przy kierującym działaniem ratowniczym.</div><div id="kdrs"></div></div>
 <div class="card"><h3>Zastępy operacyjne <span id="count">(0)</span></h3><div class="hint">Tylko najnowsze pozycje aktywnych zastępów. Pozycje starsze niż 3 minuty oraz pojazdy „W bazie” są ukryte.</div><div id="vehicles"></div></div>
 <button class="secondary" id="logout">Wyloguj</button></aside><div id="map"></div></div>
-<script src="terminal-contact.js?v=20260918-tactics-3"></script>
+<script src="map-symbols.js?v=20260918-symbols-1"></script>
+<script src="terminal-contact.js?v=20260918-symbols-1"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -29,9 +30,9 @@ window.firemapSkCtx={map,sb};
 let vMarkers=new Map(),iMarkers=new Map(),pickMode=false,locationMarker=null,selectedLocation=null,started=false;
 const STATUS={DISPATCHED:{label:'Wyjazd do akcji',color:'#f59e0b',cls:'pulseAmber'},ON_SCENE:{label:'Na miejscu',color:'#dc2626',cls:'pulseRed'},RETURNING:{label:'Zakończenie działań',color:'#2563eb',cls:'pulseBlue'}},esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),norm=s=>String(s??'').trim().toLowerCase().replace(/\s+/g,''),vehicleKey=v=>norm(v.unit_name)+'|'+norm(v.call_sign);
 function isKdr(v){return String(v.vehicle_type||'').trim().toUpperCase()==='KDR'}
-function vehicleGlyph(type){const t=String(type||'').trim().toUpperCase();if(t==='KDR')return'⭐';if(t==='QUAD'||t.includes('QUAD'))return'🏍️';if(t==='SD'||t.startsWith('SD '))return'🪜';if(t==='SLOP')return'🚗';if(t==='SLKW'||t==='SLRR'||t==='SLRT'||t.startsWith('SLK')||t.startsWith('SLR'))return'🚐';if(t.includes('MIKROBUS'))return'🚌';if(t.includes('PRZYCZEPA'))return'◫';if(t==='GBA'||t==='GCBA'||t==='GBM'||t==='GLM'||t.startsWith('GBA')||t.startsWith('GCBA')||t.startsWith('GBM')||t.startsWith('GLM'))return'🚒';return'🚙'}
-function vIcon(v){if(isKdr(v))return L.divIcon({className:'',html:'<div class="kdrIcon">⭐</div>',iconSize:[46,46],iconAnchor:[23,23]});let s=STATUS[v.status]||STATUS.DISPATCHED,g=vehicleGlyph(v.vehicle_type);return L.divIcon({className:'',html:`<div class="vehicleIcon ${s.cls}" style="background:${s.color}">${g}</div>`,iconSize:[40,40],iconAnchor:[20,20]})}
-function iIcon(k){return L.divIcon({className:'',html:`<div class="incidentIcon ${k==='FIRE'?'fire':'mz'}">${k==='FIRE'?'🔥':'⚠️'}</div>`,iconSize:[44,44],iconAnchor:[22,22]})}
+function vehicleGlyph(type){return window.firemapSymbols.glyph(type)}
+function vIcon(v){return window.firemapSymbols.vehicle(v)}
+function iIcon(k){return window.firemapSymbols.incident(k)}
 function setLocation(lat,lng,label=''){selectedLocation={lat:+lat,lng:+lng};$('coords').value=`${(+lng).toFixed(14)};${(+lat).toFixed(14)}`;$('locationState').textContent=(label?label+' — ':'')+`${(+lat).toFixed(6)}, ${(+lng).toFixed(6)}`;if(locationMarker)map.removeLayer(locationMarker);locationMarker=L.circleMarker([lat,lng],{radius:9,color:'#2563eb',weight:4,fillColor:'#fff',fillOpacity:.9}).addTo(map);map.flyTo([lat,lng],Math.max(map.getZoom(),15))}
 function clearLocation(){selectedLocation=null;$('coords').value='';$('locationState').textContent='Nie wybrano punktu.';if(locationMarker){map.removeLayer(locationMarker);locationMarker=null}}
 $('clearLocation').onclick=clearLocation;
@@ -105,7 +106,7 @@ $('loginBtn').onclick=async()=>{
 $('logout').onclick=async()=>{await sb.auth.signOut();location.reload()};logged();
 })();
 </script>
-<script src="tactical-viewer.js?v=20260918-tactics-3"></script>
+<script src="tactical-viewer.js?v=20260918-symbols-1"></script>
 <script src="hq-login-directory.js?v=20260915-hq-1"></script>
 </body>
 </html>

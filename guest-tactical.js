@@ -16,7 +16,7 @@ window.firemapGuestTacticalAdapter=function(sb,state,onExpired){
 const firemapGuestScripts=new Map();
 function loadFiremapGuestScript(src){
  if(firemapGuestScripts.has(src))return firemapGuestScripts.get(src);
- const task=new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src+'?v=20260918-tactics-3';el.async=false;el.onload=resolve;el.onerror=()=>{el.remove();reject(new Error('Nie pobrano '+src))};document.head.appendChild(el)});
+ const task=new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src+'?v=20260918-symbols-1';el.async=false;el.onload=resolve;el.onerror=()=>{el.remove();reject(new Error('Nie pobrano '+src))};document.head.appendChild(el)});
  firemapGuestScripts.set(src,task);task.catch(()=>firemapGuestScripts.delete(src));return task;
 }
 window.startFiremapGuestTactical=function({map,sb,state,onExpired}){

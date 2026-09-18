@@ -12,8 +12,8 @@ const requestedCode=(new URLSearchParams(location.search).get('code')||'').repla
 $('code').value=requestedCode;
 let state=read(),map=null,selfMarker=null,incidentMarker=null,watchId=null,lastSend=0,lastPos=null,currentStatus='DISPATCHED',sending=false,pendingSend=false,leaving=false;
 const peerMarkers=new Map();let peersBusy=false,peersTimer=null,peerRows=[];
-const STATUS_VIEW={DISPATCHED:{label:'WYJAZD',color:'#f59e0b'},ON_SCENE:{label:'NA MIEJSCU',color:'#dc2626'},RETURNING:{label:'KONIEC',color:'#2563eb'}};
-function vehicleIcon(status,stale=false){const v=STATUS_VIEW[status]||STATUS_VIEW.DISPATCHED;return L.divIcon({className:'',html:`<div style="width:34px;height:34px;border:3px solid white;border-radius:10px;background:${stale?'#64748b':v.color};display:grid;place-items:center;font-size:20px;box-shadow:0 2px 8px #0008">🚒</div>`,iconSize:[38,38],iconAnchor:[19,19]})}
+const STATUS_VIEW=window.firemapSymbols.statuses;
+function vehicleIcon(status,stale=false,type=state?.vehicle_type,own=false){return window.firemapSymbols.vehicle({status,vehicle_type:type,call_sign:state?.call_sign,force_group:state?.force_group,specialist_group:state?.specialist_group},{stale,own})}
 function clearPeers(){for(const m of peerMarkers.values())map.removeLayer(m);peerMarkers.clear();peerRows=[];if($('peersList'))$('peersList').innerHTML=''}
 function expireSession(){stopGps();leaving=true;clear();clearPeers();if(peersTimer){clearInterval(peersTimer);peersTimer=null}$('info').textContent='Sesja wygasła lub zdarzenie zakończone.';setTimeout(()=>{location.href=location.pathname},2500)}
 async function refreshPeers(){
@@ -23,7 +23,7 @@ async function refreshPeers(){
   const rows=(Array.isArray(data)?data:[]).filter(v=>v.id!==state.vehicle_id&&v.status!=='BASE'&&v.lat!==null&&v.lng!==null&&Number.isFinite(+v.lat)&&Number.isFinite(+v.lng));
   peerRows=rows;const seen=new Set();
   rows.forEach((v,index)=>{
-   seen.add(v.id);const age=Math.max(0,Math.round((Date.now()-Date.parse(v.updated_at))/1000)),stale=!Number.isFinite(age)||age>180,style=STATUS_VIEW[v.status]||STATUS_VIEW.DISPATCHED,icon=vehicleIcon(v.status,stale);
+   seen.add(v.id);const age=Math.max(0,Math.round((Date.now()-Date.parse(v.updated_at))/1000)),stale=!Number.isFinite(age)||age>180,style=STATUS_VIEW[v.status]||STATUS_VIEW.DISPATCHED,icon=window.firemapSymbols.vehicle(v,{stale});
    let m=peerMarkers.get(v.id);if(!m){m=L.marker([+v.lat,+v.lng],{icon,zIndexOffset:200}).addTo(map);peerMarkers.set(v.id,m)}else{m.setLatLng([+v.lat,+v.lng]);m.setIcon(icon)}
    m.bindTooltip(esc(v.call_sign),{permanent:true,direction:index%2?'left':'right',offset:[index%2?-22:22,18*Math.floor(index/2)],className:'peer-label'});
    m.bindPopup(`<b>${esc(v.call_sign)} · ${esc(v.vehicle_type)}</b><br>${esc(v.unit_name)}${window.firemapContact.popup(v.contact_phone)}<br>${esc(v.force_group)}${v.specialist_group?' · '+esc(specLabel(v.specialist_group)):''}<br><b>${style.label}</b><br>${stale?'⚠ Ostatnia znana pozycja':'Pozycja'} · ${Number.isFinite(age)?age+' s temu':'brak czasu'}`);
@@ -46,7 +46,7 @@ function badge(g){if(g==='LOCAL')return'<span class="badge ext">POWIAT</span>';i
 function showLive(){
  $('liveContactPhone').value=state.phone||'';if(state.phone_pending)syncContact();
  $('joinCover').style.display='none';$('live').style.display='block';
- if(!map){map=L.map('map',{minZoom:3}).setView([state.incident_lat,state.incident_lng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);incidentMarker=L.marker([state.incident_lat,state.incident_lng]).addTo(map).bindPopup(`<b>${state.incident_kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><br>${esc(state.incident_description||'Zdarzenie')}`)}
+ if(!map){map=L.map('map',{minZoom:3}).setView([state.incident_lat,state.incident_lng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);incidentMarker=L.marker([state.incident_lat,state.incident_lng],{icon:window.firemapSymbols.incident(state.incident_kind)}).addTo(map).bindPopup(`<b>${state.incident_kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><br>${esc(state.incident_description||'Zdarzenie')}`)}
  $('title').innerHTML=`FIREMAP ${badge(state.force_group)} · ${esc(state.call_sign)}`;
  $('info').textContent=`${state.origin_unit} · dostęp do ${new Date(state.expires_at).toLocaleString('pl-PL')}${state.specialist_group?' · '+specLabel(state.specialist_group):''}`;
  window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});
@@ -62,7 +62,7 @@ async function send(pos,force=false){
  try{
   const {error}=await sb.rpc('external_force_update',p);
   if(error)throw error;
-  const ll=[p.p_lat,p.p_lng];if(!selfMarker)selfMarker=L.marker(ll,{icon:vehicleIcon(currentStatus)}).addTo(map).bindTooltip(esc(state.call_sign)+' · TY',{permanent:true,direction:'top',offset:[0,-20]}).bindPopup(`<b>${esc(state.call_sign)}</b><br>${esc(state.origin_unit)}`);else{selfMarker.setLatLng(ll);selfMarker.setIcon(vehicleIcon(currentStatus))}
+  const ll=[p.p_lat,p.p_lng];if(!selfMarker)selfMarker=L.marker(ll,{icon:vehicleIcon(currentStatus,false,state.vehicle_type,true)}).addTo(map).bindTooltip(esc(state.call_sign)+' · TY',{permanent:true,direction:'top',offset:[0,-20]}).bindPopup(`<b>${esc(state.call_sign)}</b><br>${esc(state.origin_unit)}`);else{selfMarker.setLatLng(ll);selfMarker.setIcon(vehicleIcon(currentStatus,false,state.vehicle_type,true))}
   $('info').textContent=`${state.origin_unit} · ${state.origin_county} · pozycja i status wysłane`;
  }catch(error){
   if(error?.code==='P0001'&&/^(Sesja wygasła|Zdarzenie zostało zakończone)[.!]?$/.test(error.message||'')){
