@@ -16,7 +16,7 @@ window.firemapGuestTacticalAdapter=function(sb,state,onExpired){
 const firemapGuestScripts=new Map();
 function loadFiremapGuestScript(src){
  if(firemapGuestScripts.has(src))return firemapGuestScripts.get(src);
- const task=new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src+'?v=20260918-symbols-1';el.async=false;el.onload=resolve;el.onerror=()=>{el.remove();reject(new Error('Nie pobrano '+src))};document.head.appendChild(el)});
+ const task=new Promise((resolve,reject)=>{const el=document.createElement('script');el.src=src+'?v=20260918-android-1';el.async=false;el.onload=resolve;el.onerror=()=>{el.remove();reject(new Error('Nie pobrano '+src))};document.head.appendChild(el)});
  firemapGuestScripts.set(src,task);task.catch(()=>firemapGuestScripts.delete(src));return task;
 }
 window.startFiremapGuestTactical=function({map,sb,state,onExpired}){
@@ -28,7 +28,7 @@ window.startFiremapGuestTactical=function({map,sb,state,onExpired}){
  const task=(async()=>{
   // Layers do not need a database request or a working tactical editor.
   const layers=loadFiremapGuestScript('forest-map-layers.js');
-  const tactics=(async()=>{for(const src of ['tactical-shared-viewer.js','tactical-water-distance.js'])await loadFiremapGuestScript(src)})();
+  const tactics=(async()=>{for(const src of ['tactical-shared-viewer.js','tactical-water-distance.js','incident-help.js','native-offline-maps.js'])await loadFiremapGuestScript(src)})();
   const results=await Promise.allSettled([layers,tactics]);
   if(results.some(r=>r.status==='rejected')){if(notice){notice.textContent='Nie pobrano wszystkich narzędzi. Dotknij, aby ponowić.';notice.onclick=()=>window.startFiremapGuestTactical({map,sb,state,onExpired})}return}
   window.firemapGuestTacticalStarted=true;if(notice)notice.hidden=true;

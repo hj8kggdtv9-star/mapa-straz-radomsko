@@ -1,2 +1,7 @@
 node_modules/
 supabase/.temp/
+
+firemap-android/.gradle/
+firemap-android/**/build/
+firemap-android/app/src/main/assets/www/
+firemap-android/local.properties
