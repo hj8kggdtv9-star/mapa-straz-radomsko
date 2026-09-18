@@ -30,7 +30,7 @@ async function refreshPeers(){
   });
   for(const[id,m]of peerMarkers)if(!seen.has(id)){map.removeLayer(m);peerMarkers.delete(id)}
   $('peersState').textContent='Inne zastępy w zdarzeniu: '+rows.length;
-  $('peersList').innerHTML=rows.length?rows.map(v=>`<button type="button" data-peer-id="${esc(v.id)}" class="peer-row">${esc(v.call_sign)} · ${esc(v.vehicle_type)} · ${(STATUS_VIEW[v.status]||STATUS_VIEW.DISPATCHED).label}</button>`).join(''):'<small>Brak innych zastępów z przesłaną pozycją GPS.</small>';
+  $('peersList').innerHTML=rows.length?rows.map(v=>`<div><button type="button" data-peer-id="${esc(v.id)}" class="peer-row">${esc(v.call_sign)} · ${esc(v.vehicle_type)} · ${(STATUS_VIEW[v.status]||STATUS_VIEW.DISPATCHED).label}</button>${window.firemapContact.popup(v.contact_phone)}</div>`).join(''):'<small>Brak innych zastępów z przesłaną pozycją GPS.</small>';
   $('peersList').querySelectorAll('[data-peer-id]').forEach(b=>b.onclick=()=>{const m=peerMarkers.get(b.dataset.peerId);if(m){map.flyTo(m.getLatLng(),16);m.openPopup()}});
  }catch(error){
   if(error?.code==='P0001'&&error.message==='Sesja wygasła'){expireSession();return}
