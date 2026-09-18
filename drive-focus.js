@@ -2,7 +2,7 @@
 const wait=()=>{const ctx=window.firemapCtx;if(!ctx?.map){setTimeout(wait,250);return}init(ctx.map)};
 function init(map){
   if(window.__firemapDriveFocus)return; window.__firemapDriveFocus=true;
-  let pausedUntil=0,lastFix=null,lastAt=0;
+  let paused=false,lastFix=null,lastAt=0;
   const container=map.getContainer();
   function driveOn(){return localStorage.getItem('firemapDriveMode')==='1'}
   function targetY(){
@@ -13,7 +13,7 @@ function init(map){
     return Math.max(h*0.62,Math.min(h*0.75,y));
   }
   function place(lat,lng){
-    if(!driveOn()||Date.now()<pausedUntil)return;
+    if(!driveOn()||paused)return;
     if(!Number.isFinite(lat)||!Number.isFinite(lng))return;
     const h=container.clientHeight||window.innerHeight;
     const zoom=Math.max(map.getZoom(),15);
@@ -33,13 +33,10 @@ function init(map){
   if(navigator.geolocation){
     navigator.geolocation.watchPosition(onPos,()=>{}, {enableHighAccuracy:true,maximumAge:1000,timeout:15000});
   }
-  ['pointerdown','touchstart','wheel'].forEach(ev=>container.addEventListener(ev,()=>{
-    if(!driveOn())return;
-    pausedUntil=Date.now()+9000;
-    setTimeout(()=>{if(driveOn()&&lastFix&&Date.now()>=pausedUntil)place(lastFix[0],lastFix[1])},9200);
-  },{passive:true}));
-  document.getElementById('driveBtn')?.addEventListener('click',()=>setTimeout(()=>{if(driveOn()&&lastFix)place(lastFix[0],lastFix[1])},250));
-  document.getElementById('followBtn')?.addEventListener('click',()=>{pausedUntil=0;setTimeout(()=>{if(driveOn()&&lastFix)place(lastFix[0],lastFix[1])},100)});
+  ['pointerdown','touchstart','wheel'].forEach(ev=>container.addEventListener(ev,()=>{paused=true},{passive:true}));
+  window.addEventListener('firemap:tactical:change',()=>{if(window.firemapTacticalEditor?.enabled)paused=true});
+  document.getElementById('driveBtn')?.addEventListener('click',()=>{paused=false;setTimeout(()=>{if(driveOn()&&lastFix)place(lastFix[0],lastFix[1])},250)});
+  document.getElementById('followBtn')?.addEventListener('click',()=>{paused=false;setTimeout(()=>{if(driveOn()&&lastFix)place(lastFix[0],lastFix[1])},100)});
 }
 wait();
 })();

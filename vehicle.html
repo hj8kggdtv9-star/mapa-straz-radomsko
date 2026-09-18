@@ -31,7 +31,7 @@
 <div class="sheet" id="incidentSheet"><h2>Aktywne zdarzenia</h2><p>Wskazane przez SK KP PSP Radomsko.</p><div id="incidentList"></div><button class="wide secondary" data-close="incidentSheet">Zamknij</button></div>
 <div class="sheet" id="toolsSheet"><h2>Pomiary lokalne</h2><p>Te dane są widoczne wyłącznie na tym urządzeniu.</p><div class="toolGrid"><button class="toolBtn" id="trackBtn">🧭 ŚLAD TRASY</button><button class="toolBtn" id="areaBtn">⬡ POMIAR POWIERZCHNI</button><button class="toolBtn" id="distanceBtn">📐 ODLEGŁOŚĆ</button></div><div class="metric"><small>Długość lokalnego śladu</small><b id="trackMetric">0 m</b></div><div class="metric"><small>Zmierzona powierzchnia</small><b id="areaMetric">0 m²</b><small id="areaExtra">Obejdź granicę obszaru z włączonym pomiarem.</small></div><div class="metric"><small>Pomiar odległości na mapie</small><b id="distanceMetric">0 m</b><small id="distanceExtra">Włącz „Odległość” i klikaj kolejne punkty na mapie.</small></div><div class="localNote">🔒 Ślad, powierzchnia i pomiar odległości pozostają tylko lokalnie.</div><button class="wide secondary" id="clearLocalBtn">🧹 Wyczyść wszystkie pomiary</button><button class="wide secondary" data-close="toolsSheet">Zamknij</button></div>
 <div class="toast" id="toast"></div>
-<script src="terminal-contact.js?v=20260918-tactics-3"></script>
+<script src="terminal-contact.js?v=20260918-follow-1"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tomickigrzegorz/leaflet-rotate/dist/leaflet-rotate.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -151,7 +151,9 @@ $('statusBtn').onclick=()=>openSheet('statusSheet');$('incBtn').onclick=()=>open
 $('driveBtn').onclick=()=>{driveMode=!driveMode;localStorage.setItem('firemapDriveMode',driveMode?'1':'0');autoFollow=true;clearTimeout(followTimer);if(driveMode){ensureGps();if(lastHeading!=null&&typeof map.setHeading==='function')map.setHeading(lastHeading,{ease:.2,deadzone:1});if(lastPos)forceGpsFix();toast('Tryb jazdy: kierunek ruchu u góry')}else{if(typeof map.stopHeadingUp==='function')map.stopHeadingUp();if(typeof map.setBearing==='function')map.setBearing(0);updateCompass();if(lastPos)map.flyTo(lastPos,Math.max(map.getZoom(),14),{duration:.45});stopGpsIfUnused();toast('Tryb jazdy wyłączony — północ u góry')}statusUI()};
 $('followBtn').onclick=()=>{autoFollow=true;clearTimeout(followTimer);if(lastPos){if(driveMode)forceGpsFix();else map.flyTo(lastPos,Math.max(map.getZoom(),14),{duration:.5})}if(gpsNeeded())forceGpsFix()};
 $('logoutBtn').onclick=async()=>{connected=false;driveMode=false;try{await queueVehicleWrite(async()=>{if(kdrMode)await checkedVehicleWrite(sb.from('vehicles').upsert(kdrBasePayload(),{onConflict:'id'}),[kdrId]);});}catch(e){alert('Nie potwierdzono wyłączenia KDR. Poinformuj SK o ostatniej pozycji.');}stopKdrLocally();if(typeof map.stopHeadingUp==='function')map.stopHeadingUp();stopGpsIfUnused();const {error}=await sb.auth.signOut();if(error){vehicleWriteError(error);return}localStorage.removeItem('firemapVerifiedUnit');localStorage.removeItem('firemapVerifiedRole');location.replace('./login.html')};
-['pointerdown','wheel','touchstart'].forEach(ev=>map.getContainer().addEventListener(ev,()=>{autoFollow=false;clearTimeout(followTimer);followTimer=setTimeout(()=>{autoFollow=true;if(lastPos){if(driveMode)forceGpsFix();else map.flyTo(lastPos,Math.max(map.getZoom(),14),{duration:.6})}},12000)},{passive:true}));
+function pauseMapFollow(){autoFollow=false;clearTimeout(followTimer)}
+['pointerdown','wheel','touchstart'].forEach(ev=>map.getContainer().addEventListener(ev,pauseMapFollow,{passive:true}));
+window.addEventListener('firemap:tactical:change',()=>{if(window.firemapTacticalEditor?.enabled)pauseMapFollow()});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&gpsNeeded()){if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}ensureGps()}});
 window.addEventListener('focus',()=>{if(gpsNeeded())forceGpsFix()});
 $('contactsBtn').onclick=()=>{openSheet('contactsSheet');refreshVehicles()};
@@ -159,6 +161,6 @@ async function init(){await Promise.all([refreshVehicles(),refreshIncidents()]);
 init();
 })();
 </script>
-<script src="tactical-ui.js?v=20260918-tactics-3"></script>
+<script src="tactical-ui.js?v=20260918-follow-1"></script>
 </body>
 </html>
