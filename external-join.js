@@ -19,14 +19,14 @@ function expireSession(){stopGps();leaving=true;clear();clearPeers();if(peersTim
 async function refreshPeers(){
  if(peersBusy||leaving||!map||!state?.session_token)return;peersBusy=true;
  try{
-  const {data,error}=await sb.rpc('external_force_peers',{p_session_token:state.session_token});if(error)throw error;if(leaving)return;
+  const {data,error}=await sb.rpc('external_force_peers_with_contact',{p_session_token:state.session_token});if(error)throw error;if(leaving)return;
   const rows=(Array.isArray(data)?data:[]).filter(v=>v.id!==state.vehicle_id&&v.status!=='BASE'&&v.lat!==null&&v.lng!==null&&Number.isFinite(+v.lat)&&Number.isFinite(+v.lng));
   peerRows=rows;const seen=new Set();
   rows.forEach((v,index)=>{
    seen.add(v.id);const age=Math.max(0,Math.round((Date.now()-Date.parse(v.updated_at))/1000)),stale=!Number.isFinite(age)||age>180,style=STATUS_VIEW[v.status]||STATUS_VIEW.DISPATCHED,icon=vehicleIcon(v.status,stale);
    let m=peerMarkers.get(v.id);if(!m){m=L.marker([+v.lat,+v.lng],{icon,zIndexOffset:200}).addTo(map);peerMarkers.set(v.id,m)}else{m.setLatLng([+v.lat,+v.lng]);m.setIcon(icon)}
    m.bindTooltip(esc(v.call_sign),{permanent:true,direction:index%2?'left':'right',offset:[index%2?-22:22,18*Math.floor(index/2)],className:'peer-label'});
-   m.bindPopup(`<b>${esc(v.call_sign)} · ${esc(v.vehicle_type)}</b><br>${esc(v.unit_name)}<br>${esc(v.force_group)}${v.specialist_group?' · '+esc(specLabel(v.specialist_group)):''}<br><b>${style.label}</b><br>${stale?'⚠ Ostatnia znana pozycja':'Pozycja'} · ${Number.isFinite(age)?age+' s temu':'brak czasu'}`);
+   m.bindPopup(`<b>${esc(v.call_sign)} · ${esc(v.vehicle_type)}</b><br>${esc(v.unit_name)}${window.firemapContact.popup(v.contact_phone)}<br>${esc(v.force_group)}${v.specialist_group?' · '+esc(specLabel(v.specialist_group)):''}<br><b>${style.label}</b><br>${stale?'⚠ Ostatnia znana pozycja':'Pozycja'} · ${Number.isFinite(age)?age+' s temu':'brak czasu'}`);
   });
   for(const[id,m]of peerMarkers)if(!seen.has(id)){map.removeLayer(m);peerMarkers.delete(id)}
   $('peersState').textContent='Inne zastępy w zdarzeniu: '+rows.length;
@@ -44,6 +44,7 @@ function clear(){localStorage.removeItem(STORE)}
 function specLabel(s){return({CHEM_ECO:'chem-eko',WATER_DIVE:'wodno-nurkowa',HEIGHT:'wysokościowa',TECH_SEARCH:'techniczna/poszukiwawcza',USAR:'USAR',DRONE:'dronowa',OTHER:'specjalistyczna'})[s]||''}
 function badge(g){if(g==='LOCAL')return'<span class="badge ext">POWIAT</span>';if(g==='WOO')return'<span class="badge">WOO</span>';if(g==='COO')return'<span class="badge coo">COO</span>';return'<span class="badge ext">ZEWN.</span>'}
 function showLive(){
+ $('liveContactPhone').value=state.phone||'';if(state.phone_pending)syncContact();
  $('joinCover').style.display='none';$('live').style.display='block';
  if(!map){map=L.map('map',{minZoom:3}).setView([state.incident_lat,state.incident_lng],14);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);incidentMarker=L.marker([state.incident_lat,state.incident_lng]).addTo(map).bindPopup(`<b>${state.incident_kind==='FIRE'?'🔥 POŻAR':'⚠️ MZ'}</b><br>${esc(state.incident_description||'Zdarzenie')}`)}
  $('title').innerHTML=`FIREMAP ${badge(state.force_group)} · ${esc(state.call_sign)}`;
@@ -83,18 +84,27 @@ async function leaveSession(){
 }
 function setStatus(s,sendNow=true){if(s==='BASE'){leaveSession();return}currentStatus=s;if(state){state.status=s;save()}document.querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('active',b.dataset.s===s));if(sendNow){if(lastPos)send(lastPos,true);else $('info').textContent='Status oczekuje na pozycję GPS.'}}
 async function join(){
+ let phone;try{phone=window.firemapContact.normalize($('contactPhone').value)}catch(e){$('msg').textContent=e.message;return}
  const payload={p_code:$('code').value.replace(/\D/g,''),p_force_group:$('forceGroup').value,p_specialist_group:$('spec').value||null,p_voivodeship:$('province').value||'Nie podano',p_county:$('county').value.trim()||'Nie podano',p_unit:$('unit').value.trim(),p_call_sign:$('call').value.trim(),p_vehicle_type:$('type').value};
  if(payload.p_code.length!==6||!payload.p_unit||!payload.p_call_sign){$('msg').textContent='Uzupełnij kod, jednostkę i kryptonim.';return}
  $('joinBtn').disabled=true;$('msg').textContent='Weryfikuję kod…';const {data,error}=await sb.rpc('external_force_join',payload);$('joinBtn').disabled=false;if(error){$('msg').textContent=error.message||'Nie udało się dołączyć.';return}
  const x=Array.isArray(data)?data[0]:data;if(!x?.session_token){$('msg').textContent='Nieprawidłowa odpowiedź serwera.';return}
- state={...x,join_code:payload.p_code,force_group:payload.p_force_group,specialist_group:payload.p_specialist_group,origin_voivodeship:payload.p_voivodeship,origin_county:payload.p_county,origin_unit:payload.p_unit,call_sign:payload.p_call_sign,vehicle_type:payload.p_vehicle_type};save();$('msg').textContent='Dołączono. Uruchamiam GPS…';setTimeout(showLive,250);
+ state={...x,phone,phone_pending:true,join_code:payload.p_code,force_group:payload.p_force_group,specialist_group:payload.p_specialist_group,origin_voivodeship:payload.p_voivodeship,origin_county:payload.p_county,origin_unit:payload.p_unit,call_sign:payload.p_call_sign,vehicle_type:payload.p_vehicle_type};save();$('msg').textContent='Dołączono. Uruchamiam GPS…';setTimeout(showLive,250);
 }
+let contactWrite=Promise.resolve();
+function syncContact(){
+ const phone=state.phone||null;
+ contactWrite=contactWrite.then(async()=>{
+ try{const {error}=await sb.rpc('external_force_set_contact',{p_session_token:state.session_token,p_phone:phone});if(error)throw error;if(state.phone===phone||(!state.phone&&!phone)){state.phone_pending=false;save()}$('contactState').textContent=phone?'Telefon udostępniony.':'Numer telefonu usunięty.';}catch{$('contactState').textContent='Nie zapisano telefonu. Spróbuj ponownie.';}
+ });return contactWrite;
+}
+$('saveContactPhone').onclick=async()=>{if(leaving||!state?.session_token)return;let phone;try{phone=window.firemapContact.normalize($('liveContactPhone').value)}catch(e){$('contactState').textContent=e.message;return}state.phone=phone;state.phone_pending=true;save();$('saveContactPhone').disabled=true;try{await syncContact()}finally{$('saveContactPhone').disabled=false}};
 $('joinBtn').onclick=join;$('center').onclick=()=>{if(lastPos)map.flyTo([lastPos.coords.latitude,lastPos.coords.longitude],15,{duration:.4})};$('leave').onclick=()=>{if(confirm('Zakończyć udział tego zastępu w zdarzeniu?'))leaveSession()};document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>setStatus(b.dataset.s));
 window.addEventListener('online',()=>{if(map&&!leaving)window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});if(lastPos&&!leaving)send(lastPos,true);refreshPeers()});
 window.addEventListener('focus',()=>{refreshPeers();if(map&&!leaving)window.startFiremapGuestTactical?.({map,sb,state,onExpired:expireSession});});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshPeers()});
 $('showPeers').onclick=()=>{const points=peerRows.map(v=>[+v.lat,+v.lng]);if(lastPos)points.push([lastPos.coords.latitude,lastPos.coords.longitude]);if(points.length)map.fitBounds(L.latLngBounds(points),{padding:[60,100],maxZoom:16})};
 if(shouldResumeGuest(state,requestedCode))showLive();
-else if(state?.session_token){$('msg').textContent=requestedCode?'Otworzono kod zdarzenia. Uzupełnij dane i naciśnij DOŁĄCZ — wcześniejsza sesja nie została użyta.':'Poprzednia sesja wygasła. Wpisz aktualny kod zdarzenia.';for(const [id,key] of [['unit','origin_unit'],['call','call_sign'],['type','vehicle_type']])if(state[key])$(id).value=state[key];}
+else if(state?.session_token){$('msg').textContent=requestedCode?'Otworzono kod zdarzenia. Uzupełnij dane i naciśnij DOŁĄCZ — wcześniejsza sesja nie została użyta.':'Poprzednia sesja wygasła. Wpisz aktualny kod zdarzenia.';for(const [id,key] of [['unit','origin_unit'],['call','call_sign'],['type','vehicle_type'],['contactPhone','phone']])if(state[key])$(id).value=state[key];}
 })();
 
