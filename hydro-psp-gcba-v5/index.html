@@ -253,7 +253,7 @@
       const crit = pin < -0.45 || nextPin < -0.1;
       if(warn) anyWarn = true;
       if(crit) anyCrit = true;
-      if((!passive && setUsed < s.set - 0.01) || pin < -0.75 || (passive && $('mode').value==='buffer')) good = false;
+      if(pin < -0.75 || (passive && $('mode').value==='buffer')) good = false;
       if(i===stages.length-1) finalPressure = nextPin;
       else finalPressure = nextPin;
       out.push({pin,pout,nextPin,loss,internalLoss,passive,available,warn,crit,setUsed});
@@ -510,7 +510,7 @@
     const t=e.target;
     if(t.dataset && t.dataset.i !== undefined){
       const i = +t.dataset.i, k = t.dataset.k;
-      stages[i][k] = (k==='model' ? t.value : +t.value);
+      stages[i][k] = ((k==='model' || k==='operation') ? t.value : +t.value);
     }
     recalc();
   });
@@ -518,7 +518,7 @@
     const t=e.target;
     if(t.dataset && t.dataset.i !== undefined){
       const i = +t.dataset.i, k = t.dataset.k;
-      stages[i][k] = (k==='model' ? t.value : +t.value);
+      stages[i][k] = ((k==='model' || k==='operation') ? t.value : +t.value);
     }
     recalc();
   });
