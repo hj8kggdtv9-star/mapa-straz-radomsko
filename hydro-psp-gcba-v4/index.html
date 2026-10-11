@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HYDRO PSP GCBA v4</title>
+<style>
+  :root{
+    --bg:#0f1724;
+    --panel:#17304a;
+    --panel2:#203b58;
+    --card:#1f3550;
+    --text:#eef4ff;
+    --muted:#b7cadc;
+    --accent:#3ab7ff;
+    --red:#d21d1d;
+    --red2:#ef4444;
+    --blueplate:#294c88;
+    --yellow:#facc15;
+    --green:#22c55e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0d1722,#122235 30%,#0f1724);color:var(--text)}
+  header{padding:16px 18px;background:#17304a;border-bottom:1px solid #2d4c6d;position:sticky;top:0;z-index:5}
+  header h1{margin:0;font-size:28px;line-height:1.1}
+  header .sub{margin-top:6px;color:#d7e7f7}
+  .page{max-width:1320px;margin:0 auto;padding:14px;display:grid;grid-template-columns:360px 1fr 320px;gap:14px;align-items:start}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid #345675;border-radius:18px;padding:15px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+  .card h2,.card h3{margin:0 0 10px}
+  label{display:block;margin:12px 0 6px;color:#f2f7ff}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .row > *{flex:1}
+  select,input[type=range],button{width:100%;font:inherit}
+  select,button{border-radius:12px;border:1px solid #386488;background:#1e6ba0;color:white;padding:11px 12px}
+  button.secondary{background:#24547c}
+  button.good{background:#176d55}
+  button.warn{background:#8a5c10}
+  .btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .btnrow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+  input[type=range]{accent-color:var(--accent)}
+  .small{font-size:12px;color:var(--muted)}
+  .value{font-weight:700;color:#fff}
+  .resultBig{font-size:34px;font-weight:800;color:#8fe0ff}
+  .resultLine{margin:7px 0}
+  .progressWrap{background:#0e1a28;border-radius:12px;padding:10px;border:1px solid #314b66}
+  progress{width:100%;height:24px}
+  .pump-list{display:flex;flex-direction:column;gap:14px}
+  .pump-card{border:1px solid #3f5f7e;border-radius:20px;overflow:hidden;background:#182d44;position:relative}
+  .pump-card.warning{animation:flashWarn 1s infinite}
+  .pump-card.critical{animation:flashCritical .6s infinite}
+  @keyframes flashWarn{0%,100%{box-shadow:0 0 0 0 rgba(250,204,21,.1);border-color:#eab308;background:#243749}50%{box-shadow:0 0 0 3px rgba(250,204,21,.55);border-color:#fde047;background:#32421d}}
+  @keyframes flashCritical{0%,100%{box-shadow:0 0 0 0 rgba(250,204,21,.2);border-color:#eab308}50%{box-shadow:0 0 0 4px rgba(250,204,21,.9);border-color:#fff38a;background:#4a3500}}
+
+  /* MT style head */
+  .mt-head{background:linear-gradient(180deg,#e92929,#bc1010);padding:12px 12px 10px;position:relative}
+  .gauge-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start}
+  .gwrap{text-align:center}
+  .gauge{position:relative;width:106px;height:106px;border-radius:50%;margin:0 auto;background:radial-gradient(circle at 50% 50%, #fefaf0 0 56%, #f8f1df 57% 70%, #d6d6d6 71% 72%, #f8f8f8 73% 76%, #8f8f8f 77% 80%, #d7d7d7 81%);box-shadow:inset 0 1px 4px rgba(0,0,0,.45),0 2px 7px rgba(0,0,0,.25)}
+  .gauge .center{position:absolute;left:50%;top:50%;width:12px;height:12px;border-radius:50%;background:#222;transform:translate(-50%,-50%);z-index:4}
+  .gauge svg{position:absolute;inset:0}
+  .needle{position:absolute;left:50%;top:50%;width:42%;height:3px;background:#1e293b;transform-origin:0% 50%;transform:translateY(-50%) rotate(-120deg);border-radius:2px;z-index:3}
+  .needle:after{content:"";position:absolute;right:-4px;top:-3px;border-left:12px solid #1e293b;border-top:4.5px solid transparent;border-bottom:4.5px solid transparent}
+  .gbrand{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:8px;color:#2b4ea2;font-weight:800;letter-spacing:.5px}
+  .gsmalltxt{position:absolute;top:27px;left:0;right:0;text-align:center;font-size:7px;color:#4b5563;line-height:1.05}
+  .gunit{position:absolute;bottom:21px;left:0;right:0;text-align:center;font-size:9px;color:#444}
+  .gticks text{font-size:10px;fill:#333;font-weight:600}
+  .plate-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px}
+  .plate{background:linear-gradient(180deg,#315ca0,#27457a);border:1px solid #6f8fcb;color:#fff;border-radius:4px;padding:4px 3px;line-height:1.1;text-align:center;font-size:10px;font-weight:700;min-height:34px;display:flex;align-items:center;justify-content:center}
+  
+  .pump-body{padding:12px;background:linear-gradient(180deg,#344250,#232f39)}
+  .pump-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:12px}
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+  .controls .full{grid-column:1/-1}
+  .digital{background:#e9ebef;border:2px solid #ef6b63;border-radius:10px;padding:8px;color:#39414c;min-height:98px;display:grid;grid-template-columns:58px 1fr;gap:6px}
+  .digital .screenbig{font-size:38px;font-weight:800;color:#111;line-height:1}
+  .digital .screenbig small{font-size:18px;font-weight:600}
+  .digital .mut{font-size:12px;color:#48515d}
+  .waterbars{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end;margin-bottom:12px}
+  .barCol{background:#2b3641;border-radius:14px;padding:8px 10px;min-height:128px;position:relative;border:1px solid #4d5a67}
+  .barTitle{text-align:center;font-weight:800;margin-bottom:4px}
+  .steps{display:flex;flex-direction:column-reverse;gap:3px}
+  .steps div{height:11px;border-radius:6px;background:#405261;opacity:.25}
+  .steps div.onWater{background:#3b82f6;opacity:1}
+  .steps div.onFoam{background:#facc15;opacity:1}
+  .lamp-row{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
+  .lamp{display:flex;gap:8px;align-items:center;font-size:12px}
+  .led{width:16px;height:16px;border-radius:4px;background:#43576d;border:1px solid rgba(255,255,255,.15);box-shadow:inset 0 0 5px rgba(0,0,0,.35)}
+  .led.on.green{background:#22c55e;box-shadow:0 0 10px rgba(34,197,94,.8)}
+  .led.on.red{background:#ef4444;box-shadow:0 0 10px rgba(239,68,68,.8)}
+  .led.on.yellow{background:#facc15;box-shadow:0 0 10px rgba(250,204,21,.9)}
+  .statchips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .chip{background:#25435f;border:1px solid #3d668d;border-radius:999px;padding:5px 9px;font-size:12px}
+  .side-block{border:1px solid #36597a;border-radius:14px;padding:12px;background:rgba(10,18,28,.18);margin-bottom:12px}
+  .auto-stage{border-top:1px dashed #50739a;padding-top:10px;margin-top:10px}
+  .goodtxt{color:#86efac}.warntxt{color:#fde047}.badtxt{color:#fca5a5}
+  .kpi{font-size:13px;color:#d9e8f7;margin-top:4px}
+  .pipeAnim{height:12px;border-radius:999px;background:repeating-linear-gradient(90deg,#0ea5e9 0 18px,#67e8f9 18px 34px);background-size:48px 100%;animation:flow 1s linear infinite;animation-play-state:paused;margin:10px 0;border:1px solid #2d6489}
+  @keyframes flow{to{background-position:48px 0}}
+  .note{font-size:12px;color:#d3e5f4;line-height:1.45}
+  @media (max-width:1100px){.page{grid-template-columns:1fr}.rightcol{order:2}.midcol{order:3}.leftcol{order:1}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚒 HYDRO PSP GCBA v4</h1>
+  <div class="sub">Przetłaczanie i przepompowywanie • W52 / W75 / W110 • manometry MT • AUTO nastawy</div>
+</header>
+<div class="page">
+  <div class="leftcol">
+    <div class="card">
+      <h2>Konfiguracja</h2>
+      <label>Tryb</label>
+      <select id="mode">
+        <option value="relay">Przetłaczanie bezpośrednie</option>
+        <option value="buffer">Przepompowywanie przez zbiornik pośredni</option>
+      </select>
+      <label>Źródło wody</label>
+      <select id="source">
+        <option value="open">Zbiornik otwarty</option>
+        <option value="hydrant">Hydrant</option>
+        <option value="vehicle">Zbiornik samochodu</option>
+      </select>
+      <label>Głębokość / wysokość ssania <span class="value" id="liftVal"></span></label>
+      <input id="lift" type="range" min="0" max="8" step="0.5" value="2">
+      <label>Ciśnienie hydrantu <span class="value" id="hydrantVal"></span></label>
+      <input id="hydrant" type="range" min="1" max="8" step="0.5" value="3">
+      <label>Wymagane ciśnienie końcowe <span class="value" id="needVal"></span></label>
+      <input id="need" type="range" min="0" max="10" step="0.5" value="0.5">
+      <div class="btnrow3">
+        <button id="add">+ Pompa</button>
+        <button id="remove" class="secondary">− Pompa</button>
+        <button id="preset" class="good">GCBA 8/x</button>
+      </div>
+      <div class="btnrow">
+        <button id="applyAuto" class="warn">Zastosuj AUTO</button>
+        <button id="reset" class="secondary">Reset zbiornika</button>
+      </div>
+      <div class="btnrow">
+        <button id="run">▶ Start / pauza</button>
+        <button id="example" class="secondary">Przykład 2 pomp</button>
+      </div>
+      <p class="small">AUTO proponuje nastawy pomp dla maksymalnego wydatku przy bieżącej konfiguracji. Profil pomp GCBA 8/x jest szkoleniowy.</p>
+    </div>
+
+    <div class="card">
+      <h2>Wyniki bieżącej konfiguracji</h2>
+      <div class="resultBig" id="flowNow">0 l/min</div>
+      <div class="resultLine">Ciśnienie końcowe: <b id="endNow">0.0 bar</b></div>
+      <div class="resultLine">Czas napełnienia zbiornika 13 m³: <b id="etaNow">—</b></div>
+      <div class="resultLine">Czas symulacji: <b id="clock">0 s</b></div>
+      <div class="pipeAnim" id="pipeAnim"></div>
+      <div class="progressWrap">
+        <div class="resultLine">Zbiornik końcowy: <b id="tankText">0 / 13000 l</b></div>
+        <progress id="tankProgress" max="13000" value="0"></progress>
+      </div>
+      <p id="globalStatus" class="kpi"></p>
+    </div>
+  </div>
+
+  <div class="midcol">
+    <div id="pumpList" class="pump-list"></div>
+  </div>
+
+  <div class="rightcol">
+    <div class="card">
+      <h2>Propozycja AUTO nastaw</h2>
+      <div class="side-block">
+        <div class="resultBig" id="flowAuto">0 l/min</div>
+        <div class="kpi">Maksymalny wydatek dla tej konfiguracji</div>
+        <div class="resultLine">Szacowane ciśnienie końcowe: <b id="endAuto">0.0 bar</b></div>
+        <div class="resultLine">Ocena układu: <b id="autoStatus">—</b></div>
+      </div>
+      <div id="autoStages"></div>
+    </div>
+    <div class="card note">
+      <h3>Jak czytać wskaźniki</h3>
+      <p><b>Lewy manometr</b> – obwód wysokiego ciśnienia, pokazany poglądowo.</p>
+      <p><b>Środkowy manometr</b> – obwód niskiego ciśnienia / tłoczenie magistrali.</p>
+      <p><b>Prawy manowakuometr</b> – zasilanie ssawne; wartości ujemne oznaczają ssanie, dodatnie zasilanie z poprzedniej pompy.</p>
+      <p><b>Miganie na żółto</b> – ryzyko kawitacji lub za niskie ciśnienie zasilania na ssaniu.</p>
+      <p>Model dydaktyczny: straty liczone w przybliżeniu (Darcy–Weisbach), krzywe pomp uproszczone, a profile GCBA 8/x szkoleniowe.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(()=>{
+  const $ = id => document.getElementById(id);
+  const MODELS = {
+    r25:{name:'Rosenbauer N25', q:2500, p:10},
+    r35:{name:'Rosenbauer NH35', q:3500, p:10},
+    rub:{name:'Wawrzaszek / Ruberg A32/8', q:3200, p:8},
+    sto:{name:'Stolarczyk A24/8 — profil szkoleniowy', q:2400, p:8},
+    gcba40:{name:'GCBA 8/x Wawrzaszek — 4000 l/min (profil)', q:4000, p:8},
+    gcba50:{name:'GCBA 8/x Wawrzaszek — 5000 l/min (profil)', q:5000, p:8},
+    gcba60:{name:'GCBA 8/x Wawrzaszek — 6000 l/min (profil)', q:6000, p:8}
+  };
+
+  let stages = [
+    {model:'gcba60', set:10, len:300, d:110, n:2, dz:0, waterPct:100, foamPct:100},
+    {model:'gcba50', set:9, len:300, d:110, n:2, dz:0, waterPct:100, foamPct:100},
+    {model:'gcba40', set:8, len:200, d:110, n:2, dz:0, waterPct:100, foamPct:100}
+  ];
+  let running = false, elapsed = 0, tankLitres = 0, lastTs = 0, latestFlow = 0;
+
+  const diamM = d => ({52:0.052,75:0.075,110:0.110})[d] || 0.075;
+  const fmt = (x,n=1)=> Number(x).toFixed(n);
+
+  function pumpHead(modelKey,q){
+    const m = MODELS[modelKey];
+    const r = q / m.q;
+    const head = m.p * Math.max(0, 1.20 - 0.20 * r * r); // simplistic curve
+    return head;
+  }
+
+  function lineLossBar(qLmin, stage){
+    const q_m3s = qLmin / 60000;
+    const d = diamM(stage.d);
+    const area = Math.PI * d * d / 4;
+    const v = q_m3s / Math.max(1,stage.n) / area;
+    const f = 0.021;
+    const lossPa = f * (stage.len / d) * (1000 * v * v / 2) * 1.10; // + local losses
+    return lossPa / 100000;
+  }
+
+  function sourcePressure(qLmin){
+    const src = $('source').value;
+    if(src === 'hydrant') return +$('hydrant').value - 0.00000005*qLmin*qLmin;
+    if(src === 'vehicle') return -0.03 - 0.00000001*qLmin*qLmin;
+    return -0.0981*(+$('lift').value) - 0.00000001*qLmin*qLmin;
+  }
+
+  function analyzeManual(q){
+    let pin = sourcePressure(q);
+    const out = [];
+    let finalPressure = pin;
+    let good = true;
+    let anyWarn = false;
+    let anyCrit = false;
+
+    for(let i=0;i<stages.length;i++){
+      const s = stages[i];
+      if(i>0 && $('mode').value==='buffer') pin = -0.04 - 0.000000006*q*q; // suction from buffer tank
+      const available = pumpHead(s.model,q);
+      const setUsed = Math.min(s.set, available);
+      const pout = pin + Math.max(0,setUsed);
+      const loss = lineLossBar(q,s);
+      const nextPin = pout - loss - s.dz*0.0981;
+      const warn = pin < -0.20 || (i>0 && $('mode').value==='relay' && pin < 0.3);
+      const crit = pin < -0.45 || nextPin < -0.1;
+      if(warn) anyWarn = true;
+      if(crit) anyCrit = true;
+      if(setUsed < s.set - 0.01 || pin < -0.75) good = false;
+      if(i===stages.length-1) finalPressure = nextPin;
+      else finalPressure = nextPin;
+      out.push({pin,pout,nextPin,loss,available,warn,crit,setUsed});
+      pin = nextPin;
+    }
+    if(finalPressure < +$('need').value) good = false;
+    return {flow:q, stages:out, finalPressure, good, anyWarn, anyCrit};
+  }
+
+  function solveManual(){
+    let lo=0, hi=7000;
+    for(let i=0;i<42;i++){
+      const mid = (lo+hi)/2;
+      if(analyzeManual(mid).good) lo = mid; else hi = mid;
+    }
+    return analyzeManual(lo);
+  }
+
+  function analyzeAutoAt(q){
+    const reserveRelay = 0.8; // desired inlet reserve at next pump
+    const reserveBuffer = 0.2; // line arriving to open buffer
+    let pin = sourcePressure(q);
+    let rec=[];
+    let feasible=true;
+    let finalPressure=0;
+    for(let i=0;i<stages.length;i++){
+      const s = stages[i];
+      if(i>0 && $('mode').value==='buffer') pin = -0.04 - 0.000000006*q*q;
+      const available = pumpHead(s.model,q);
+      const loss = lineLossBar(q,s);
+      const desiredEnd = (i===stages.length-1) ? +$('need').value : ($('mode').value==='relay' ? reserveRelay : reserveBuffer);
+      const requiredPout = desiredEnd + loss + s.dz*0.0981;
+      const recSet = Math.max(0, requiredPout - pin);
+      const pout = pin + Math.min(recSet, available);
+      const nextPin = pout - loss - s.dz*0.0981;
+      const warn = pin < -0.20 || ($('mode').value==='relay' && i>0 && pin < 0.3);
+      const crit = pin < -0.45 || nextPin < -0.1;
+      if(recSet > available + 0.0001 || pin < -0.75) feasible = false;
+      if(i===stages.length-1 && nextPin < +$('need').value - 0.0001) feasible = false;
+      if(i<stages.length-1 && $('mode').value==='relay' && nextPin < reserveRelay - 0.0001) feasible = false;
+      rec.push({pin,available,requiredPout,recSet,pout,nextPin,loss,warn,crit});
+      pin = nextPin;
+      finalPressure = nextPin;
+    }
+    return {flow:q, feasible, rec, finalPressure};
+  }
+
+  function solveAuto(){
+    let lo=0, hi=7000;
+    for(let i=0;i<42;i++){
+      const mid=(lo+hi)/2;
+      if(analyzeAutoAt(mid).feasible) lo=mid; else hi=mid;
+    }
+    return analyzeAutoAt(lo);
+  }
+
+  function gaugeSVG(maxVal, negative=false){
+    let labels='';
+    const min=negative?-1:0;
+    const ticks=5;
+    for(let i=0;i<=ticks;i++){
+      const frac=i/ticks;
+      const val=min + frac*(maxVal-min);
+      const ang=(-120 + frac*240)*Math.PI/180;
+      const x1=53 + Math.cos(ang)*39, y1=53 + Math.sin(ang)*39;
+      const x2=53 + Math.cos(ang)*46, y2=53 + Math.sin(ang)*46;
+      const xt=53 + Math.cos(ang)*29, yt=53 + Math.sin(ang)*29 + 3;
+      labels += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#222" stroke-width="1.8"/>`;
+      labels += `<text x="${xt.toFixed(1)}" y="${yt.toFixed(1)}" text-anchor="middle">${negative? (Math.round(val*10)/10).toString().replace('.0',''): Math.round(val)}</text>`;
+    }
+    return `<svg viewBox="0 0 106 106" aria-hidden="true"><g class="gticks">${labels}</g></svg>`;
+  }
+
+  function waterSteps(pct, kind){
+    const on = Math.round(pct/10);
+    let html='';
+    for(let i=1;i<=10;i++) html += `<div class="${i<=on ? (kind==='water'?'onWater':'onFoam') : ''}"></div>`;
+    return html;
+  }
+
+  function renderPumps(){
+    const holder = $('pumpList');
+    holder.innerHTML='';
+    stages.forEach((s,i)=>{
+      const card = document.createElement('div');
+      card.className='pump-card';
+      card.id='pumpCard'+i;
+      card.innerHTML = `
+        <div class="mt-head">
+          <div class="gauge-row">
+            <div class="gwrap"><div class="gauge">${gaugeSVG(60,false)}<div class="gsmalltxt">S<br>EN 837-1</div><div class="gunit">bar</div><div class="gbrand">MT</div><div class="needle" id="needle-wc-${i}"></div><div class="center"></div></div></div>
+            <div class="gwrap"><div class="gauge">${gaugeSVG(25,false)}<div class="gsmalltxt">S<br>EN 837-1</div><div class="gunit">bar</div><div class="gbrand">MT</div><div class="needle" id="needle-nc-${i}"></div><div class="center"></div></div></div>
+            <div class="gwrap"><div class="gauge">${gaugeSVG(15,true)}<div class="gsmalltxt">S<br>EN 837-1</div><div class="gunit">bar</div><div class="gbrand">MT</div><div class="needle" id="needle-ss-${i}"></div><div class="center"></div></div></div>
+          </div>
+          <div class="plate-row">
+            <div class="plate">MANOMETR<br>WYSOKIEGO CIŚNIENIA</div>
+            <div class="plate">MANOMETR<br>NISKIEGO CIŚNIENIA</div>
+            <div class="plate">MANOWAKUOMETR</div>
+          </div>
+        </div>
+        <div class="pump-body">
+          <div class="pump-grid">
+            <div>
+              <div class="controls">
+                <div class="full">
+                  <label>Model</label>
+                  <select data-i="${i}" data-k="model">${Object.entries(MODELS).map(([k,m])=>`<option value="${k}" ${s.model===k?'selected':''}>${m.name}</option>`).join('')}</select>
+                </div>
+                <div class="full">
+                  <label>Nastawa [bar] <span class="value" id="val-set-${i}">${fmt(s.set)}</span></label>
+                  <input data-i="${i}" data-k="set" type="range" min="1" max="15" step="0.5" value="${s.set}">
+                </div>
+                <div>
+                  <label>Długość linii [m] <span class="value" id="val-len-${i}">${s.len}</span></label>
+                  <input data-i="${i}" data-k="len" type="range" min="20" max="1500" step="10" value="${s.len}">
+                </div>
+                <div>
+                  <label>Węże</label>
+                  <select data-i="${i}" data-k="d">
+                    <option value="52" ${s.d===52?'selected':''}>W52</option>
+                    <option value="75" ${s.d===75?'selected':''}>W75</option>
+                    <option value="110" ${s.d===110?'selected':''}>W110</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Liczba linii <span class="value" id="val-n-${i}">${s.n}</span></label>
+                  <input data-i="${i}" data-k="n" type="range" min="1" max="5" step="1" value="${s.n}">
+                </div>
+                <div>
+                  <label>Przewyższenie [m] <span class="value" id="val-dz-${i}">${s.dz}</span></label>
+                  <input data-i="${i}" data-k="dz" type="range" min="-40" max="80" step="5" value="${s.dz}">
+                </div>
+              </div>
+              <div class="statchips" id="stats-${i}"></div>
+            </div>
+            <div>
+              <div class="waterbars">
+                <div class="barCol"><div class="barTitle">WODA</div><div class="steps">${waterSteps(100,'water')}</div></div>
+                <div class="barCol"><div class="barTitle">PIANA</div><div class="steps">${waterSteps(100,'foam')}</div></div>
+              </div>
+              <div class="digital">
+                <div class="mut">Nastawa</div>
+                <div><div class="screenbig" id="screen-${i}">0.0 <small>bar</small></div><div class="mut" id="screen-sub-${i}">AUTO • 0 rpm</div><div class="mut" id="screen-mode-${i}">NISKI POZIOM WODY</div></div>
+              </div>
+              <div class="lamp-row">
+                <div class="lamp"><span class="led on green"></span> START</div>
+                <div class="lamp"><span class="led ${i===0?'on yellow':''}" id="led-auto-${i}"></span> AUTOPOMPA</div>
+                <div class="lamp"><span class="led" id="led-warn-${i}"></span> KAWITACJA</div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      holder.appendChild(card);
+    });
+  }
+
+  function setNeedle(el, value, min, max){
+    const frac = Math.max(0, Math.min(1, (value-min)/(max-min)));
+    const deg = -120 + frac * 240;
+    el.style.transform = `translateY(-50%) rotate(${deg}deg)`;
+  }
+
+  function applyVisuals(manual, auto){
+    $('liftVal').textContent = fmt(+$('lift').value)+' m';
+    $('hydrantVal').textContent = fmt(+$('hydrant').value)+' bar';
+    $('needVal').textContent = fmt(+$('need').value)+' bar';
+
+    $('flowNow').textContent = Math.round(manual.flow)+' l/min';
+    $('endNow').textContent = fmt(manual.finalPressure)+' bar';
+    $('etaNow').textContent = manual.flow>1 ? fmt((13000-tankLitres)/manual.flow)+' min' : 'brak przepływu';
+    $('flowAuto').textContent = Math.round(auto.flow)+' l/min';
+    $('endAuto').textContent = fmt(auto.finalPressure)+' bar';
+    $('autoStatus').textContent = auto.feasible ? 'możliwy' : 'niemożliwy';
+
+    const statusText = manual.anyCrit ? '⛔ Kawitacja / zbyt niskie ciśnienie ssania w układzie.' : manual.anyWarn ? '⚠ Ryzyko kawitacji lub zbyt niskie ciśnienie zasilania.' : '✓ Układ pracuje stabilnie.';
+    $('globalStatus').textContent = statusText;
+    $('globalStatus').className = 'kpi ' + (manual.anyCrit ? 'badtxt' : manual.anyWarn ? 'warntxt' : 'goodtxt');
+
+    $('pipeAnim').style.animationPlayState = running && manual.flow>1 ? 'running' : 'paused';
+    $('tankText').textContent = `${Math.round(tankLitres)} / 13000 l`;
+    $('tankProgress').value = tankLitres;
+    $('clock').textContent = Math.round(elapsed)+' s';
+
+    const autoWrap = $('autoStages');
+    autoWrap.innerHTML = auto.rec.map((r,i)=>{
+      const rank = r.crit ? 'badtxt' : r.warn ? 'warntxt' : 'goodtxt';
+      return `<div class="side-block auto-stage">
+        <div><b>Pompa ${i+1}</b> — ${MODELS[stages[i].model].name}</div>
+        <div class="resultLine">Proponowana nastawa: <b>${fmt(Math.min(r.recSet,r.available))} bar</b></div>
+        <div class="resultLine">Dostępna charakterystyka przy tym wydatku: <b>${fmt(r.available)} bar</b></div>
+        <div class="resultLine">Ciśnienie na ssaniu: <b>${fmt(r.pin)} bar</b></div>
+        <div class="resultLine">Straty odcinka: <b>${fmt(r.loss)} bar</b></div>
+        <div class="small ${rank}">${r.crit?'Kawitacja / brak rezerwy ssawnej':r.warn?'Ryzyko kawitacji — rozważ niższy wydatek, większą średnicę lub więcej linii':'Bezpieczna rezerwa pracy'}</div>
+      </div>`;
+    }).join('');
+
+    stages.forEach((s,i)=>{
+      const st = manual.stages[i];
+      const autoSt = auto.rec[i];
+      const card = $('pumpCard'+i);
+      card.classList.remove('warning','critical');
+      if(st.crit) card.classList.add('critical');
+      else if(st.warn) card.classList.add('warning');
+
+      // gauged values: HP is illustrative
+      setNeedle($('needle-wc-'+i), Math.max(0, Math.min(60, st.pout*2.2)), 0, 60);
+      setNeedle($('needle-nc-'+i), Math.max(0, Math.min(25, st.pout)), 0, 25);
+      setNeedle($('needle-ss-'+i), Math.max(-1, Math.min(15, st.pin)), -1, 15);
+
+      $('screen-'+i).innerHTML = `${fmt(s.set)} <small>bar</small>`;
+      $('screen-sub-'+i).textContent = `AUTO • ${Math.round(900 + manual.flow*0.55)} rpm`;
+      $('screen-mode-'+i).textContent = st.warn ? 'UWAGA: SSANIE / KAWITACJA' : 'NISKI POZIOM WODY';
+      $('val-set-'+i).textContent = fmt(s.set);
+      $('val-len-'+i).textContent = s.len;
+      $('val-n-'+i).textContent = s.n;
+      $('val-dz-'+i).textContent = s.dz;
+      $('led-warn-'+i).className = 'led ' + (st.crit || st.warn ? 'on yellow' : '');
+      $('led-auto-'+i).className = 'led ' + (s.set>0 ? 'on yellow' : '');
+      $('stats-'+i).innerHTML = `
+        <span class="chip">ssanie: ${fmt(st.pin)} bar</span>
+        <span class="chip">tłoczenie NC: ${fmt(st.pout)} bar</span>
+        <span class="chip">straty: ${fmt(st.loss)} bar</span>
+        <span class="chip">dostępne z krzywej: ${fmt(st.available)} bar</span>
+        <span class="chip">AUTO propozycja: ${fmt(Math.min(autoSt.recSet,autoSt.available))} bar</span>`;
+    });
+  }
+
+  function recalc(){
+    const auto = solveAuto();
+    const manual = solveManual();
+    latestFlow = manual.flow;
+    applyVisuals(manual, auto);
+  }
+
+  function addStage(){ if(stages.length<5){ stages.push({model:'r25', set:8, len:200, d:75, n:2, dz:0, waterPct:100, foamPct:100}); renderPumps(); recalc(); } }
+  function removeStage(){ if(stages.length>1){ stages.pop(); renderPumps(); recalc(); } }
+  function presetGCBA(){ stages=[{model:'gcba60',set:10,len:300,d:110,n:2,dz:0},{model:'gcba50',set:9,len:300,d:110,n:2,dz:0},{model:'gcba40',set:8,len:200,d:110,n:2,dz:0}]; $('mode').value='relay'; $('source').value='open'; renderPumps(); recalc(); }
+  function example2(){ stages=[{model:'rub',set:8,len:400,d:110,n:2,dz:0},{model:'r35',set:8.5,len:250,d:75,n:3,dz:0}]; $('mode').value='relay'; $('source').value='open'; renderPumps(); recalc(); }
+  function applyAuto(){ const auto = solveAuto(); stages.forEach((s,i)=> s.set = +Math.min(auto.rec[i].recSet, auto.rec[i].available).toFixed(1)); renderPumps(); recalc(); }
+  function resetTank(){ tankLitres=0; elapsed=0; recalc(); }
+
+  document.addEventListener('input', e=>{
+    const t=e.target;
+    if(t.dataset && t.dataset.i !== undefined){
+      const i = +t.dataset.i, k = t.dataset.k;
+      stages[i][k] = (k==='model' ? t.value : +t.value);
+    }
+    recalc();
+  });
+  document.addEventListener('change', e=>{
+    const t=e.target;
+    if(t.dataset && t.dataset.i !== undefined){
+      const i = +t.dataset.i, k = t.dataset.k;
+      stages[i][k] = (k==='model' ? t.value : +t.value);
+    }
+    recalc();
+  });
+
+  $('add').addEventListener('click', addStage);
+  $('remove').addEventListener('click', removeStage);
+  $('preset').addEventListener('click', presetGCBA);
+  $('example').addEventListener('click', example2);
+  $('applyAuto').addEventListener('click', applyAuto);
+  $('reset').addEventListener('click', resetTank);
+  $('run').addEventListener('click', ()=>{ running = !running; $('run').textContent = running ? '⏸ Pauza' : '▶ Start / pauza'; recalc(); });
+
+  function tick(ts){
+    if(!lastTs) lastTs = ts;
+    const dt = Math.min(0.2,(ts-lastTs)/1000);
+    lastTs = ts;
+    if(running){
+      elapsed += dt*8;
+      if(latestFlow>0) tankLitres = Math.min(13000, tankLitres + latestFlow * dt * 8 / 60);
+      if(tankLitres >= 13000){ running=false; $('run').textContent='▶ Start / pauza'; }
+      recalc();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  renderPumps();
+  recalc();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
