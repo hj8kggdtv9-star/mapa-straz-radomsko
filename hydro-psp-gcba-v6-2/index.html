@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HYDRO PSP GCBA v6.2 — ssanie</title>
+<style>
+:root{
+  --bg:#0c1420; --panel:#17304a; --panel2:#22405d; --card:#1c3450; --line:#375c7d;
+  --text:#eef6ff; --muted:#b8cce0; --cyan:#54d5ff; --green:#22c55e;
+  --yellow:#facc15; --red:#ef4444; --reddeep:#c21b1b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:linear-gradient(180deg,#0d1622,#122235 35%,#0b1420);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:20;background:#17304a;border-bottom:1px solid #355879;padding:15px 18px;box-shadow:0 4px 20px rgba(0,0,0,.18)}
+header h1{margin:0;font-size:28px;line-height:1.05}
+header .sub{margin-top:5px;color:#d8e7f7}
+.page{max-width:1440px;margin:0 auto;padding:14px;display:grid;grid-template-columns:340px 1fr 320px;gap:14px;align-items:start}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 10px 32px rgba(0,0,0,.2)}
+.card h2,.card h3{margin:0 0 10px}
+label{display:block;margin:11px 0 6px}
+select,input[type=range],button{width:100%;font:inherit}
+select,button{padding:11px 12px;border-radius:12px;border:1px solid #43709a;background:#196ea6;color:#fff}
+button.secondary{background:#2b5076} button.good{background:#1c7257} button.warn{background:#8c6314}
+.btnrow,.btnrow3{display:grid;gap:10px}.btnrow{grid-template-columns:1fr 1fr}.btnrow3{grid-template-columns:1fr 1fr 1fr}
+input[type=range]{accent-color:var(--cyan)}
+.small{font-size:12px;color:var(--muted)} .value{font-weight:800;color:#fff}
+.resultBig{font-size:34px;font-weight:900;color:#8de0ff;line-height:1}
+.kpi{font-size:13px;margin:7px 0;color:#d8e7f5}
+.note{font-size:12px;line-height:1.45;color:#dbe9f4}
+.goodtxt{color:#86efac}.warntxt{color:#fde047}.badtxt{color:#fca5a5}
+.side-block{border:1px solid #3c607f;border-radius:14px;padding:12px;background:rgba(10,18,28,.18);margin-bottom:12px}
+.auto-stage{border-top:1px dashed #5e7ea2;padding-top:10px;margin-top:10px}
+.pipeAnim{height:12px;border-radius:999px;background:repeating-linear-gradient(90deg,#0ea5e9 0 16px,#7dd3fc 16px 34px);background-size:48px 100%;animation:flowStrip .8s linear infinite;animation-play-state:paused;border:1px solid #2d6489;margin:10px 0}
+@keyframes flowStrip{to{background-position:48px 0}}
+progress{width:100%;height:24px}
+.scheme-wrap{overflow:auto;padding-bottom:4px}
+.scheme{min-width:760px;display:flex;align-items:center;gap:10px;padding:6px 2px 10px}
+.truck{width:110px;min-width:110px;background:linear-gradient(180deg,#f13535,#ba1111);border:2px solid #8d0f0f;border-radius:14px;padding:10px;position:relative;box-shadow:0 10px 18px rgba(0,0,0,.25)}
+.truck:before,.truck:after{content:"";position:absolute;bottom:-10px;width:18px;height:18px;background:#243447;border:3px solid #b7c7d8;border-radius:50%}
+.truck:before{left:14px}.truck:after{right:14px}
+.truck .cab{position:absolute;top:12px;right:8px;width:22px;height:18px;border-radius:4px;background:#dbe9f7}
+.truck .name{font-size:11px;font-weight:800;line-height:1.15;padding-right:18px}
+.truck .mode{margin-top:8px;font-size:11px;background:rgba(0,0,0,.18);border-radius:999px;padding:3px 7px;display:inline-block}
+.scheme-hose{flex:1;min-width:80px;height:14px;border-radius:999px;background:repeating-linear-gradient(90deg,#0ea5e9 0 18px,#7dd3fc 18px 34px);background-size:48px 100%;animation:flowStrip .7s linear infinite;border:1px solid #2d6489;position:relative}
+.scheme-hose .meta{position:absolute;top:-18px;left:0;font-size:11px;color:#d6e7f8}.scheme-hose .meta2{position:absolute;bottom:-18px;left:0;font-size:11px;color:#b8cce0}
+.sourceBox,.sinkBox{min-width:120px;padding:12px;border-radius:16px;background:#123049;border:1px solid #456583;font-weight:700;text-align:center}
+.pump-list{display:flex;flex-direction:column;gap:14px}
+.pump-card{border-radius:20px;overflow:hidden;border:1px solid #3f607e;background:#1a2d44;box-shadow:0 10px 22px rgba(0,0,0,.18)}
+.pump-card.warning{animation:flashWarn 1s infinite}.pump-card.critical{animation:flashCrit .65s infinite}
+@keyframes flashWarn{0%,100%{box-shadow:0 0 0 0 rgba(250,204,21,.08);border-color:#facc15}50%{box-shadow:0 0 0 3px rgba(250,204,21,.6);border-color:#fff18a;background:#32421d}}
+@keyframes flashCrit{0%,100%{box-shadow:0 0 0 0 rgba(250,204,21,.2)}50%{box-shadow:0 0 0 4px rgba(250,204,21,.95);border-color:#fff58a;background:#4e3700}}
+.mt-head{background:linear-gradient(180deg,#ec2d2d,#b50f0f);padding:12px 12px 10px}
+.gauge-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.gwrap{text-align:center}
+.gauge{position:relative;width:106px;height:106px;border-radius:50%;margin:0 auto;background:radial-gradient(circle,#fffdf7 0 57%,#f4ecd8 58% 70%,#e4e4e4 71% 73%,#f8f8f8 74% 76%,#8e8e8e 77% 80%,#d6d6d6 81%);box-shadow:inset 0 1px 4px rgba(0,0,0,.45),0 2px 7px rgba(0,0,0,.25)}
+.gauge svg{position:absolute;inset:0}.gsmalltxt{position:absolute;top:27px;left:0;right:0;text-align:center;font-size:7px;color:#4b5563;line-height:1.05}.gunit{position:absolute;bottom:21px;left:0;right:0;text-align:center;font-size:9px;color:#444}.gbrand{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:8px;color:#2b4ea2;font-weight:800}.center{position:absolute;left:50%;top:50%;width:12px;height:12px;border-radius:50%;background:#222;transform:translate(-50%,-50%);z-index:4}.needle{position:absolute;left:50%;top:50%;width:42%;height:3px;background:#1e293b;transform-origin:0% 50%;transform:translateY(-50%) rotate(-120deg);border-radius:2px;z-index:3}.needle:after{content:"";position:absolute;right:-4px;top:-3px;border-left:12px solid #1e293b;border-top:4.5px solid transparent;border-bottom:4.5px solid transparent}.gticks text{font-size:10px;fill:#333;font-weight:600}
+.plate-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px}.plate{background:linear-gradient(180deg,#315ca0,#27457a);border:1px solid #6f8fcb;color:#fff;border-radius:4px;padding:4px 3px;line-height:1.1;text-align:center;font-size:10px;font-weight:700;min-height:34px;display:flex;align-items:center;justify-content:center}
+.pump-body{padding:12px;background:linear-gradient(180deg,#344250,#232f39)}
+.pump-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:12px}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}.controls .full{grid-column:1/-1}
+.statchips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.chip{background:#26425d;border:1px solid #41688e;border-radius:999px;padding:5px 9px;font-size:12px}
+.digital{background:#e9ebef;border:2px solid #ef6b63;border-radius:10px;padding:8px;color:#39414c;min-height:96px;display:grid;grid-template-columns:58px 1fr;gap:6px}.digital .screenbig{font-size:34px;font-weight:800;color:#111;line-height:1}.digital .screenbig small{font-size:18px}.digital .mut{font-size:12px;color:#48515d}
+.waterbars{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end;margin-bottom:12px}.barCol{background:#2b3641;border-radius:14px;padding:8px 10px;min-height:128px;border:1px solid #4d5a67}.barTitle{text-align:center;font-weight:800;margin-bottom:4px}.steps{display:flex;flex-direction:column-reverse;gap:3px}.steps div{height:11px;border-radius:6px;background:#405261;opacity:.25}.steps div.onWater{background:#3b82f6;opacity:1}.steps div.onFoam{background:#facc15;opacity:1}
+.lamp-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.lamp{display:flex;gap:8px;align-items:center;font-size:12px}.led{width:16px;height:16px;border-radius:4px;background:#43576d;border:1px solid rgba(255,255,255,.15);box-shadow:inset 0 0 5px rgba(0,0,0,.35)}.led.on.green{background:#22c55e;box-shadow:0 0 10px rgba(34,197,94,.8)}.led.on.red{background:#ef4444;box-shadow:0 0 10px rgba(239,68,68,.8)}.led.on.yellow{background:#facc15;box-shadow:0 0 10px rgba(250,204,21,.9)}
+.pump-svg{width:100%;height:auto;display:block;background:linear-gradient(180deg,#112235,#0e1c2d);border:1px solid #365c81;border-radius:14px}
+.flowing{stroke-dasharray:12 10;animation:dash 1s linear infinite}.flowSlow{animation-duration:1.7s}.paused{animation-play-state:paused}.spin{transform-box:fill-box;transform-origin:center;animation:spin 1.2s linear infinite}.hidden{display:none}.legendInline{font-size:11px;fill:#dce7f3}
+@keyframes dash{to{stroke-dashoffset:-44}} @keyframes spin{to{transform:rotate(360deg)}}
+@media (max-width:1180px){.page{grid-template-columns:1fr}.rightcol{order:2}.midcol{order:3}.leftcol{order:1}}
+
+.topScheme{max-width:1440px;margin:12px auto 0;padding:0 14px}
+.topScheme .card{padding:19px}
+.topScheme .scheme{min-width:800px;padding:25px 0 28px}
+.topScheme .truck{z-index:1}
+.topScheme .scheme-warning{outline:3px solid #facc15;animation:flashTruck 1s infinite}
+@keyframes flashTruck{50%{filter:brightness(1.65)}}
+.topScheme .scheme-hose{animation-play-state:paused}
+.topScheme .sourceBox,.topScheme .sinkBox{flex-shrink:0}
+.pump-svg .flow-pulse{animation:dash 1s linear infinite;animation-play-state:paused}
+.pump-svg .spin{transform-box:view-box;transform-origin:280px 131px}
+.cav-bubbles{fill:#ffe46b;filter:drop-shadow(0 0 5px #facc15);animation:cavFloat .75s ease-in-out infinite alternate}
+@keyframes cavFloat{to{transform:translate(2px,-9px);opacity:.3}}
+.hydroDrawing{margin-top:14px}
+.controls input[disabled]{opacity:.35}
+@media(max-width:480px){.page{padding:8px;gap:9px}.topScheme{padding:0 8px;margin-top:8px}.card{padding:11px}.gauge{width:88px;height:88px}.gauge-row,.plate-row{gap:5px}.plate{font-size:8px}.pump-grid{grid-template-columns:1fr}.pump-body{padding:8px}.truck{min-width:130px}.scheme{min-width:880px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚒 HYDRO PSP GCBA v6.2</h1>
+  <div class="sub">Animowany model szkoleniowy • przekrój hydrauliczny • bilans ciśnienia i wydatku</div>
+</header>
+<div class="topScheme"><div class="card">
+      <h2>Schemat całego układu</h2>
+      <div class="scheme-wrap"><div id="scheme" class="scheme"></div></div>
+      <p class="small">U góry widzisz cały układ: źródło wody, kolejne samochody, odcinki magistrali i odbiór na końcu. Schemat aktualizuje się przy każdej zmianie konfiguracji.</p>
+    </div></div>
+<div class="page">
+  <div class="leftcol">
+    <div class="card">
+      <h2>Konfiguracja</h2>
+      <label>Tryb</label>
+      <select id="mode"><option value="relay">Przetłaczanie bezpośrednie</option><option value="buffer">Przepompowywanie przez zbiornik pośredni</option></select>
+      <label>Źródło wody</label>
+      <select id="source"><option value="open">Zbiornik otwarty</option><option value="hydrant">Hydrant</option><option value="vehicle">Zbiornik samochodu</option></select>
+      <label>Wysokość lustra wody PONIŻEJ osi pompy <span class="value" id="liftVal"></span></label><input id="lift" type="range" min="0" max="8" step="0.5" value="2">
+      <div class="small">To różnica wysokości lustra wody i osi wirnika; zanurzenie smoka pod wodą nie jest wysokością ssania.</div>
+      <div class="side-block" id="suctionControls" style="margin-top:12px">
+        <b>💧 Układ ssawny pierwszego samochodu</b>
+        <label>Średnica przewodu ssawnego</label>
+        <select id="suctDia"><option value="110">DN110</option><option value="125" selected>DN125</option><option value="150">DN150</option></select>
+        <label>Liczba równoległych przewodów <span class="value" id="suctCountVal"></span></label>
+        <input id="suctCount" type="range" min="1" max="4" step="1" value="2">
+        <label>Długość każdego przewodu <span class="value" id="suctLenVal"></span></label>
+        <input id="suctLen" type="range" min="2" max="20" step="1" value="6">
+        <label>Łączny współczynnik oporów miejscowych (smok, kolana, armatura) <span class="value" id="suctKVal"></span></label>
+        <input id="suctK" type="range" min="0.5" max="8" step="0.5" value="2.5">
+        <label>Temperatura wody <span class="value" id="waterTempVal"></span></label>
+        <input id="waterTemp" type="range" min="5" max="40" step="1" value="20">
+        <label>Założony NPSH wymagany przy wydatku nominalnym <span class="value" id="npshNomVal"></span></label>
+        <input id="npshNom" type="range" min="2" max="8" step="0.5" value="4">
+        <div class="small">NPSHr = założenie szkoleniowe, nie pomiar ani dane producenta. Zmień tę wartość, gdy masz kartę konkretnej autopompy.</div>
+      </div>
+      <label>Ciśnienie hydrantu <span class="value" id="hydrantVal"></span></label><input id="hydrant" type="range" min="1" max="8" step="0.5" value="3">
+      <label>Wymagane ciśnienie końcowe <span class="value" id="needVal"></span></label><input id="need" type="range" min="0" max="10" step="0.5" value="0.5">
+      <div class="btnrow3"><button id="add">+ Pompa</button><button id="remove" class="secondary">− Pompa</button><button id="preset" class="good">GCBA 8/x</button></div>
+      <div class="btnrow"><button id="applyAuto" class="warn">Zastosuj AUTO</button><button id="reset" class="secondary">Reset zbiornika</button></div>
+      <div class="btnrow"><button id="run">▶ Start / pauza</button><button id="example" class="secondary">Przykład 2 pomp</button></div>
+      <p class="small">AUTO proponuje nastawy dla największego wydatku w bieżącej konfiguracji. Animacje pokazują kierunek przepływu, obrót wirnika i miejsca poboru sygnału do manometrów.</p>
+    </div>
+    <div class="card">
+      <h2>Wyniki bieżącej konfiguracji</h2>
+      <div class="resultBig" id="flowNow">0 l/min</div>
+      <div class="kpi">Ciśnienie końcowe: <b id="endNow">0.0 bar</b></div>
+      <div class="kpi">Czas napełnienia zbiornika 13 m³: <b id="etaNow">—</b></div>
+      <div class="kpi">Czas symulacji: <b id="clock">0 s</b></div>
+      <div class="pipeAnim" id="pipeAnim"></div>
+      <div class="side-block"><div class="kpi">Zbiornik końcowy: <b id="tankText">0 / 13000 l</b></div><progress id="tankProgress" max="13000" value="0"></progress></div>
+      <p id="globalStatus" class="kpi"></p>
+      <div class="side-block" id="suctionResults">
+        <b>Parametry ssania – pierwsza pompa</b>
+        <div class="kpi">Straty w przewodach ssawnych i armaturze: <b id="suctionLoss">—</b></div>
+        <div class="kpi">Ciśnienie statyczne przy króćcu ssawnym: <b id="suctionPressure">—</b></div>
+        <div class="kpi">NPSH dostępny (NPSHa): <b id="suctionNpsha">—</b></div>
+        <div class="kpi">NPSH wymagany – założenie (NPSHr): <b id="suctionNpshr">—</b></div>
+        <div class="kpi">Margines NPSH: <b id="suctionMargin">—</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="midcol">
+    <div id="pumpList" class="pump-list"></div>
+  </div>
+  <div class="rightcol">
+    <div class="card">
+      <h2>Propozycja AUTO nastaw</h2>
+      <div class="side-block"><div class="resultBig" id="flowAuto">0 l/min</div><div class="kpi">Maksymalny wydatek dla tej konfiguracji</div><div class="kpi">Szacowane ciśnienie końcowe: <b id="endAuto">0.0 bar</b></div><div class="kpi">Ocena układu: <b id="autoStatus">—</b></div></div>
+      <div id="autoStages"></div>
+    </div>
+    <div class="card note">
+      <h3>Założenia i realizm</h3>
+      <p><b>Hydrodynamika:</b> straty w wężach liczone są w uproszczeniu wzorem Darcy’ego–Weisbacha, z dodatkowym oporem lokalnym.</p>
+      <p><b>Krzywe pomp:</b> każda pompa ma uproszczoną charakterystykę wydajność–ciśnienie. To model szkoleniowy.</p>
+      <p><b>Manowakuometr:</b> pokazuje punkt po stronie ssawnej. W przetłaczaniu bezpośrednim dalsze pompy mogą mieć dodatnie zasilanie; przy zasysaniu ze zbiornika wartości ujemne są naturalne.</p>
+      <p><b>Manometr WC:</b> obwód wysokiego ciśnienia nie jest włączony do symulacji — wskazuje 0 bar. Nie wyliczamy wartości WC z pomiaru NC.</p><p><b>Swobodny przepływ:</b> pompa w trybie przelotowym nie podbija ciśnienia, lecz stawia opór wewnętrzny. To opór poglądowy.</p>
+      <p><b>Uwaga:</b> pokazany przelot zależy od rzeczywistych zaworów, armatury i możliwości danego modelu pompy. Szybkości animacji są poglądowe. Układ ssawny liczymy z energii przepływu (Darcy–Weisbach oraz K armatury), a NPSH z ciśnienia atmosferycznego, parowania, wysokości ssania i strat. NPSHr i krzywe pomp nadal są założeniami szkoleniowymi bez danych katalogowych – uzyskanego wydatku nie można traktować jako rzeczywistej wydajności urządzenia.</p><p><b>Miganie na żółto:</b> ostrzega o ryzyku kawitacji lub zbyt niskiej rezerwie ciśnienia na ssaniu.</p>
+    </div>
+  </div>
+</div>
+<script>
+(()=>{
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const MODELS = {
+    r25:{name:'Rosenbauer N25', q:2500, p:10},
+    r35:{name:'Rosenbauer NH35', q:3500, p:10},
+    rub:{name:'Wawrzaszek / Ruberg A32/8', q:3200, p:8},
+    sto:{name:'Stolarczyk A24/8 — profil szkoleniowy', q:2400, p:8},
+    gcba40:{name:'GCBA 8/x Wawrzaszek — 4000 l/min (profil)', q:4000, p:8},
+    gcba50:{name:'GCBA 8/x Wawrzaszek — 5000 l/min (profil)', q:5000, p:8},
+    gcba60:{name:'GCBA 8/x Wawrzaszek — 6000 l/min (profil)', q:6000, p:8}
+  };
+  const defaults=()=>[
+    {model:'gcba60',operation:'boost',set:10,len:300,d:110,n:2,dz:0},
+    {model:'gcba50',operation:'boost',set:9,len:300,d:110,n:2,dz:0},
+    {model:'gcba40',operation:'pass',set:8,len:200,d:110,n:2,dz:0}
+  ];
+  let stages=defaults();
+  let running=false, tankLitres=0, elapsed=0, lastTs=null, latestFlow=0;
+  let latestManual=null, latestAuto=null;
+  const fmt=(v,d=1)=>Number.isFinite(v)?Number(v).toFixed(d):'—';
+  const lineDiameter=d=>({52:.052,75:.075,110:.110})[d]||.075;
+  const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+
+  // Educational hydraulic model: nominal points are not full vendor pump curves.
+  function pumpHead(key,q){const m=MODELS[key];const ratio=q/m.q;return m.p*Math.max(0,1.20-.20*ratio*ratio)}
+  function passiveLoss(q){return .08*Math.pow(q/1000,2)} // illustrative equivalent resistance, not a vendor specification
+  function segmentLoss(q,s){
+    const d=lineDiameter(s.d),area=Math.PI*d*d/4,v=q/60000/(s.n*area);
+    return .021*s.len/d*1000*v*v/2*1.1/100000; // Darcy-Weisbach +10% local losses, bar
+  }
+  // Height of atmospheric pressure head, at ~1013 hPa; assumes sea-level conditions.
+  const G=9.81, RHO=1000, ATM_HEAD=101325/(RHO*G);
+  function waterVaporHead(){
+    const temp=+$('waterTemp').value;
+    const vaporKPa=.61078*Math.exp((17.27*temp)/(temp+237.3));
+    return vaporKPa*1000/(RHO*G);
+  }
+  function suctionMetrics(q){
+    const d=+$('suctDia').value/1000,n=+$('suctCount').value,L=+$('suctLen').value,k=+$('suctK').value;
+    const area=Math.PI*d*d/4,velocity=(q/60000)/(n*area);
+    const velocityHead=velocity*velocity/(2*G);
+    const friction=.022*L/d*velocityHead;
+    const local=k*velocityHead;
+    const hLoss=friction+local;
+    const staticLift=+$('lift').value;
+    const npsha=ATM_HEAD-waterVaporHead()-staticLift-hLoss;
+    // Static gauge pressure at the pump inlet includes the velocity head.
+    const pin=-(staticLift+hLoss+velocityHead)*RHO*G/100000;
+    return {pin,npsha,hLoss,friction,local,velocity,velocityHead};
+  }
+  function sourcePressure(q){
+    switch($('source').value){
+      case 'hydrant': return +$('hydrant').value-0.00000005*q*q;
+      case 'vehicle': return -.03-0.00000001*q*q;
+      default: return suctionMetrics(q).pin;
+    }
+  }
+  function npsha(pin){return (1.01325+pin)*100000/(RHO*G)-waterVaporHead()} // approximation for pressure-fed inlets
+  function npshr(q,modelKey){
+    // Model assumption only: calibrate against measured pump NPSHr curve before operational use.
+    const nominal=+$('npshNom').value;
+    return 1.5+(nominal-1.5)*Math.pow(q/MODELS[modelKey].q,2);
+  }
+
+  // Required discharge pressure from each working pump to the next working pump
+  // (or the final outlet). Consecutive passive stages must be traversed too.
+  function autoTargets(q){
+    // Reverse hydraulic balance. A downstream pump may require MORE than 0.8 bar
+    // at its inlet to reach its own required outlet pressure at high flow.
+    // A passive pump still consumes head and cannot magically re-pressurize water.
+    const outReq=new Array(stages.length).fill(0);
+    let downstream=+$('need').value;
+    const buffer=$('mode').value==='buffer';
+    for(let i=stages.length-1;i>=0;i--){
+      if(buffer && i<stages.length-1)downstream=.2; // the buffer is open to atmosphere
+      const s=stages[i];
+      outReq[i]=downstream+segmentLoss(q,s)+s.dz*.0981;
+      const inletMin=i===0?-.75:(buffer?-.75:.8);
+      if(s.operation==='pass') downstream=Math.max(inletMin,outReq[i]+passiveLoss(q));
+      else downstream=Math.max(inletMin,outReq[i]-pumpHead(s.model,q));
+    }
+    return outReq;
+  }
+
+  function analyze(kind,q){
+    const buffer=$('mode').value==='buffer';
+    const target=kind==='auto'?autoTargets(q):null;
+    let pin=sourcePressure(q), feasible=true, anyWarn=false, anyCritical=false;
+    const result=[];
+    for(let i=0;i<stages.length;i++){
+      const s=stages[i],passive=s.operation==='pass',m=MODELS[s.model];
+      if(i>0 && buffer)pin=-.04-.000000006*q*q; // idealized full intermediate tank with separate suction
+      const deltaAvailable=pumpHead(s.model,q);
+      const lossHose=segmentLoss(q,s);
+      const lossPass=passive?passiveLoss(q):0;
+      let setTarget=passive?null:(kind==='auto'?target[i]:s.set);
+      const outlet=passive?pin-lossPass:Math.max(pin,Math.min(setTarget,pin+deltaAvailable));
+      const gain=Math.max(0,outlet-pin);
+      const end=outlet-lossHose-.0981*s.dz;
+      const npsAvailable=(i===0 && $('source').value==='open')?suctionMetrics(q).npsha:npsha(pin);
+      const npsRequired=npshr(q,s.model);
+      const npsMargin=passive?Infinity:npsAvailable-npsRequired;
+      // Inlet pressure and NPSH warnings are not interchangeable; relay inlet reserve is separate.
+      const warn=passive?(pin<.2 || outlet<.1):(
+        npsMargin<1.5 || (i>0 && !buffer && pin<1.0)
+      );
+      const critical=passive?(pin<0 || outlet<0):(
+        npsMargin<0.5 || pin<-.78 || (i>0 && !buffer && pin<.3)
+      );
+      anyWarn ||= warn; anyCritical ||= critical;
+      if(passive && buffer)feasible=false; // not a meaningful open-tank relay without actively pumping
+      if(!passive && q>m.q*1.25)feasible=false;
+      if(!passive && npsMargin<.5)feasible=false;
+      if(!passive && outlet>15.0)feasible=false;
+      if(passive && (pin<.2 || outlet<.1))feasible=false;
+      if(i>0 && !buffer && pin<.8-1e-6)feasible=false;
+      if(kind==='auto' && !passive && outlet+0.0001<setTarget)feasible=false;
+      if(i===stages.length-1 && end+.0001<+$('need').value)feasible=false;
+      result.push({pin,outlet,end,lossHose,lossPass,deltaAvailable,gain,passive,requested:setTarget,npsMargin,npsAvailable,npsRequired,warn,critical});
+      pin=end;
+    }
+    return {flow:q,stages:result,finalPressure:pin,feasible,anyWarn,anyCritical};
+  }
+  function solve(kind){
+    // This fixed-network model has monotone hydraulic losses for a fixed configuration.
+    let low=0,high=7000;
+    for(let i=0;i<44;i++){
+      const q=(low+high)/2;
+      if(analyze(kind,q).feasible)low=q;else high=q;
+    }
+    if(low<.01)return analyze(kind,0);
+    return analyze(kind,low);
+  }
+  function gaugeSVG(max,hasNegative=false){
+    let ticks=''; const min=hasNegative?-1:0;
+    for(let i=0;i<=5;i++){
+      const f=i/5, value=min+(max-min)*f,a=(-120+240*f)*Math.PI/180;
+      const x1=53+39*Math.cos(a),y1=53+39*Math.sin(a),x2=53+46*Math.cos(a),y2=53+46*Math.sin(a),xt=53+29*Math.cos(a),yt=53+29*Math.sin(a)+3;
+      ticks+=`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#222" stroke-width="1.7"/><text x="${xt.toFixed(1)}" y="${yt.toFixed(1)}" text-anchor="middle">${hasNegative?fmt(value,1):Math.round(value)}</text>`;
+    }
+    return `<svg viewBox="0 0 106 106" aria-hidden="true"><g class="gticks">${ticks}</g></svg>`;
+  }
+  function waterSteps(type){return Array.from({length:10},()=>`<div class="${type}"></div>`).join('')}
+  function pumpSvg(i,passive){
+    // Curves indicate routes through impeller or a nominal hydraulic passage.
+    // Sensor taps are educational conceptual locations, NOT technical drawings.
+    return `<svg class="pump-svg" viewBox="0 0 560 260" role="img" aria-label="Animowany przekrój hydrauliczny pompy ${i+1} z oznaczeniem króćców pomiarowych">
+      <defs><linearGradient id="w${i}" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#1279c1"/><stop offset="1" stop-color="#8ae7ff"/></linearGradient></defs>
+      <rect width="560" height="260" rx="12" fill="#102033"/>
+      <text x="17" y="25" font-size="17" font-weight="700" fill="#f1f7ff">Pompa ${i+1}: <tspan id="hydroMode${i}">${passive?'przelot':'tłoczenie'}</tspan></text>
+      <text x="17" y="45" font-size="12" fill="#a8c3d7">Niebieskie impulsy: kierunek i względna prędkość przepływu</text>
+      <rect x="172" y="74" width="215" height="114" rx="24" fill="#3c4d5c" stroke="#a5b8c8" stroke-width="3"/>
+      <circle cx="280" cy="131" r="45" fill="#172534" stroke="#90a5bb" stroke-width="3"/>
+      <circle cx="280" cy="131" r="31" fill="#234963" stroke="#66bfe9" stroke-width="2"/>
+      <g id="rotor${i}" class="spin" style="transform-origin:280px 131px">
+        <path d="M280 131 L307 115 Q305 135 306 144 Z" fill="#d2edfa"/>
+        <path d="M280 131 L307 115 Q305 135 306 144 Z" fill="#d2edfa" transform="rotate(120 280 131)"/>
+        <path d="M280 131 L307 115 Q305 135 306 144 Z" fill="#d2edfa" transform="rotate(240 280 131)"/>
+        <circle cx="280" cy="131" r="5" fill="#e1f1ff"/>
+      </g>
+      <path d="M18 131 H218" stroke="url(#w${i})" stroke-width="21" fill="none" stroke-linecap="round"/>
+      <path d="M18 131 H218" class="flow-pulse" stroke="#e6fbff" stroke-width="3" stroke-dasharray="10 15" fill="none"/>
+      <path d="M340 131 H542" stroke="url(#w${i})" stroke-width="21" fill="none" stroke-linecap="round"/>
+      <path d="M340 131 H542" class="flow-pulse" stroke="#e6fbff" stroke-width="3" stroke-dasharray="10 15" fill="none"/>
+      <path id="pathImp${i}" d="M218 131 Q238 111 251 131 M310 131 Q325 108 340 131" stroke="#6bd8ff" stroke-width="13" fill="none" class="flow-pulse"/>
+      <path id="pathPass${i}" d="M218 131 H340" stroke="#80e3ff" stroke-width="13" fill="none" class="flow-pulse"/>
+      <path d="M110 131 V77 H60" stroke="#f7cc53" stroke-width="2" stroke-dasharray="5 4" fill="none"/>
+      <circle cx="110" cy="131" r="5" fill="#f7cc53"/>
+      <text x="15" y="69" fill="#ffea96" font-size="12">SSANIE</text>
+      <path d="M435 131 V80 H476" stroke="#f7cc53" stroke-width="2" stroke-dasharray="5 4" fill="none"/>
+      <circle cx="435" cy="131" r="5" fill="#f7cc53"/>
+      <text x="455" y="72" fill="#ffea96" font-size="12">NC</text>
+      <path d="M385 96 V54 H501" stroke="#a8b6c5" stroke-width="2" stroke-dasharray="4 5" fill="none"/>
+      <text x="427" y="47" fill="#d4e0eb" font-size="11">WC: obwód wył.</text>
+      <g id="bubbles${i}" class="cav-bubbles"><circle cx="247" cy="115" r="5"/><circle cx="259" cy="101" r="4"/><circle cx="271" cy="111" r="3"/><circle cx="245" cy="140" r="3"/></g>
+      <polygon points="201,121 219,131 201,141" fill="#b7efff"/><polygon points="520,121 538,131 520,141" fill="#b7efff"/>
+      <text x="18" y="168" fill="#d0e5f4" font-size="12">p na ssaniu</text>
+      <text x="438" y="168" fill="#d0e5f4" font-size="12">p na tłoczeniu</text>
+      <text x="18" y="213" fill="#e8f4fe" font-size="13" font-weight="700">Pomiar rzeczywistych punktów modelu</text>
+      <text x="18" y="231" fill="#d2e4f1" font-size="12">Manowakuometr: króciec ssawny • NC: kolektor tłoczny</text>
+      <text x="18" y="247" fill="#b7cde0" font-size="11">WC: oddzielny obwód wysokociśnieniowy; tutaj wyłączony (0 bar)</text>
+    </svg>`;
+  }
+  function renderPumps(){
+    $('pumpList').innerHTML=stages.map((s,i)=>`<div class="pump-card" id="pumpCard${i}">
+      <div class="mt-head"><div class="gauge-row">
+        <div class="gwrap"><div class="gauge">${gaugeSVG(60)}<div class="gsmalltxt">HP</div><div class="gunit">bar</div><div class="gbrand">MT</div><div class="needle" id="needle-wc-${i}"></div><div class="center"></div></div></div>
+        <div class="gwrap"><div class="gauge">${gaugeSVG(25)}<div class="gsmalltxt">LP</div><div class="gunit">bar</div><div class="gbrand">MT</div><div class="needle" id="needle-nc-${i}"></div><div class="center"></div></div></div>
+        <div class="gwrap"><div class="gauge">${gaugeSVG(15,true)}<div class="gsmalltxt">ssanie</div><div class="gunit">bar</div><div class="gbrand">MT</div><div class="needle" id="needle-ss-${i}"></div><div class="center"></div></div></div>
+      </div><div class="plate-row"><div class="plate">MANOMETR<br>WYSOKIEGO CIŚNIENIA</div><div class="plate">MANOMETR<br>NISKIEGO CIŚNIENIA</div><div class="plate">MANOWAKUOMETR</div></div></div>
+      <div class="pump-body"><div class="pump-grid"><div><div class="controls">
+        <div class="full"><label>Model samochodu / pompy</label><select data-i="${i}" data-k="model">${Object.keys(MODELS).map(k=>`<option value="${k}" ${s.model===k?'selected':''}>${MODELS[k].name}</option>`).join('')}</select></div>
+        <div class="full"><label>Tryb pompy</label><select data-i="${i}" data-k="operation"><option value="boost" ${s.operation==='boost'?'selected':''}>⚙️ Pompa tłoczy</option><option value="pass" ${s.operation==='pass'?'selected':''}>💧 Swobodny przepływ, bez podbicia</option></select></div>
+        <div class="full"><label>Ciśnienie zadane na tłoczeniu [bar] <span id="val-set-${i}" class="value">${fmt(s.set)}</span></label><input type="range" data-i="${i}" data-k="set" min="0" max="15" step="0.5" value="${s.set}" ${s.operation==='pass'?'disabled':''}></div>
+        <div><label>Linia za pompą [m] <span id="val-len-${i}" class="value">${s.len}</span></label><input type="range" data-i="${i}" data-k="len" min="20" max="1500" step="10" value="${s.len}"></div>
+        <div><label>Średnica</label><select data-i="${i}" data-k="d"><option value="52" ${s.d===52?'selected':''}>W52</option><option value="75" ${s.d===75?'selected':''}>W75</option><option value="110" ${s.d===110?'selected':''}>W110</option></select></div>
+        <div><label>Liczba linii <span id="val-n-${i}" class="value">${s.n}</span></label><input type="range" data-i="${i}" data-k="n" min="1" max="5" step="1" value="${s.n}"></div>
+        <div><label>Przewyższenie [m] <span id="val-dz-${i}" class="value">${s.dz}</span></label><input type="range" data-i="${i}" data-k="dz" min="-40" max="80" step="5" value="${s.dz}"></div>
+      </div><div id="stats-${i}" class="statchips"></div></div>
+      <div><div class="digital"><div class="mut">Nastawa</div><div><div class="screenbig" id="screen-${i}">0.0</div><div class="mut" id="screen-sub-${i}">—</div><div class="mut" id="screen-mode-${i}">—</div></div></div>
+      <div class="lamp-row"><div class="lamp"><span class="led" id="led-work-${i}"></span> PRACA</div><div class="lamp"><span class="led" id="led-cav-${i}"></span> OSTRZEŻENIE</div></div>
+      <div class="kpi">Przyrost ciśnienia pompy: <b id="gain${i}">0 bar</b></div>
+      <div class="kpi">Prędkość w wężach: <b id="vel${i}">0 m/s</b></div>
+      </div></div><div class="hydroDrawing">${pumpSvg(i,s.operation==='pass')}</div>
+      </div></div>`).join('');
+  }
+  function setNeedle(id,v,min,max){const el=$(id);if(!el)return;const a=-120+240*clamp((v-min)/(max-min),0,1);el.style.transform=`translateY(-50%) rotate(${a}deg)`}
+  function renderScheme(){
+    const src={open:'Zbiornik otwarty',hydrant:'Hydrant',vehicle:'Zbiornik auta'}[$('source').value];
+    let h=`<div class="sourceBox">🌊 Źródło<br>${src}</div><div class="scheme-hose intake"><span class="meta">Zasilanie ssawne</span></div>`;
+    stages.forEach((s,i)=>{
+      h+=`<div class="truck" id="truck${i}"><div class="cab"></div><div class="name">🚒 Pompa ${i+1}<br>${MODELS[s.model].name.split(' — ')[0]}</div><div class="mode">${s.operation==='pass'?'💧 PRZELOT':'⚙️ TŁOCZENIE'}</div><div class="mode" id="schemP${i}"></div></div>`;
+      h+=`<div class="scheme-hose" id="schemeHose${i}"><span class="meta" id="schemMeta${i}">${s.len} m • W${s.d} × ${s.n}</span><span class="meta2" id="schemH${i}"></span></div>`;
+      if($('mode').value==='buffer' && i<stages.length-1)h+='<div class="sourceBox">🛢️ Zbiornik<br>pośredni</div>';
+    });
+    h+='<div class="sinkBox">🎯 Odbiór<br>zbiornik 13 m³</div>';
+    $('scheme').innerHTML=h;
+  }
+  function renderAuto(auto){
+    $('flowAuto').textContent=Math.round(auto.flow)+' l/min';
+    $('endAuto').textContent=fmt(auto.finalPressure)+' bar';
+    $('autoStatus').textContent=auto.feasible?'Warunki spełnione':'Brak rozwiązania przy założeniach';
+    $('autoStages').innerHTML=auto.stages.map((r,i)=>`<div class="side-block auto-stage"><b>Pompa ${i+1} — ${MODELS[stages[i].model].name}</b>
+      <div class="kpi">Rekomendowane ciśnienie tłoczenia: <b>${r.passive?'PRZELOT':fmt(r.requested)+' bar'}</b></div>
+      <div class="kpi">Przyrost w pompie: <b>${fmt(r.gain)} bar</b></div>
+      <div class="kpi">Ciśnienie ssania: <b>${fmt(r.pin)} bar</b></div>
+      <div class="kpi">Strata w linii: <b>${fmt(r.lossHose)} bar</b></div>
+      <div class="small ${r.critical?'badtxt':r.warn?'warntxt':'goodtxt'}">${r.critical?'Niedopuszczalny zapas ssania':r.warn?'Mała rezerwa ciśnienia / NPSH':'Rezerwa dodatnia (model szkoleniowy)'}</div></div>`).join('');
+  }
+  function renderResults(manual,auto){
+    latestManual=manual; latestAuto=auto; latestFlow=manual.feasible?manual.flow:0;
+    $('liftVal').textContent=fmt(+$('lift').value)+' m';
+    $('hydrantVal').textContent=fmt(+$('hydrant').value)+' bar';
+    $('needVal').textContent=fmt(+$('need').value)+' bar';
+    $('suctCountVal').textContent=$('suctCount').value;
+    $('suctLenVal').textContent=$('suctLen').value+' m';
+    $('suctKVal').textContent=fmt(+$('suctK').value);
+    $('waterTempVal').textContent=$('waterTemp').value+' °C';
+    $('npshNomVal').textContent=fmt(+$('npshNom').value)+' m';
+    const intake=suctionMetrics(latestFlow),first=manual.stages[0];
+    const open=$('source').value==='open';
+    $('suctionControls').style.display=open?'':'none';
+    $('suctionResults').style.display=open?'':'none';
+    $('suctionLoss').textContent=fmt(intake.hLoss,2)+' m słupa wody';
+    $('suctionPressure').textContent=fmt(first.pin,2)+' bar';
+    $('suctionNpsha').textContent=fmt(first.npsAvailable,2)+' m';
+    $('suctionNpshr').textContent=fmt(first.npsRequired,2)+' m (hipoteza)';
+    $('suctionMargin').textContent=fmt(first.npsMargin,2)+' m';
+    $('flowNow').textContent=Math.round(latestFlow)+' l/min';
+    $('endNow').textContent=fmt(manual.finalPressure)+' bar';
+    $('etaNow').textContent=latestFlow>1?fmt((13000-tankLitres)/latestFlow)+' min':'brak dopływu';
+    const incompatible=$('mode').value==='buffer'&&stages.some((s,i)=>i>0&&s.operation==='pass');
+    $('globalStatus').textContent=incompatible?'⛔ W trybie zbiornika pośredniego kolejna pompa nie może być wyłączona i ustawiona na przelot w tym modelu. Włącz tłoczenie albo wybierz przetłaczanie bezpośrednie.':manual.anyCritical?'⛔ Krytycznie mała rezerwa na ssaniu — ograniczenie wydatku.':manual.anyWarn?'⚠ Mała rezerwa ssawna / możliwe ryzyko kawitacji.':!manual.feasible?'⛔ Ta konfiguracja nie dostarcza wymaganego ciśnienia końcowego.':'✓ Bilans przepływu spełniony w modelu szkoleniowym.';
+    $('globalStatus').className='kpi '+(incompatible||manual.anyCritical||!manual.feasible?'badtxt':manual.anyWarn?'warntxt':'goodtxt');
+    renderAuto(auto);
+    stages.forEach((s,i)=>{
+      const a=manual.stages[i],card=$('pumpCard'+i);card.classList.toggle('warning',a.warn&&!a.critical);card.classList.toggle('critical',a.critical);
+      // HP circuit not modeled/engaged; never invent a coupled 2.2× reading.
+      setNeedle(`needle-wc-${i}`,0,0,60);
+      setNeedle(`needle-nc-${i}`,clamp(a.outlet,0,25),0,25);
+      setNeedle(`needle-ss-${i}`,clamp(a.pin,-1,15),-1,15);
+      $(`screen-${i}`).textContent=s.operation==='pass'?'PRZELOT':fmt(s.set)+' bar';
+      $(`screen-sub-${i}`).textContent=s.operation==='pass'?'Silnik autopompy: 0 rpm (umownie)':'Regulator ciśnienia NC';
+      $(`screen-mode-${i}`).textContent=s.operation==='pass'?'Bez zwiększania ciśnienia':'Tłoczenie magistrali';
+      $(`led-work-${i}`).className='led '+(s.operation==='pass'?'':'on green');
+      $(`led-cav-${i}`).className='led '+(a.warn||a.critical?'on yellow':'');
+      $(`gain${i}`).textContent=fmt(a.gain)+' bar';
+      const area=Math.PI*Math.pow(lineDiameter(s.d),2)/4,vel=latestFlow/60000/(s.n*area);
+      $(`vel${i}`).textContent=fmt(vel,2)+' m/s';
+      $(`val-set-${i}`).textContent=fmt(s.set);$(`val-len-${i}`).textContent=s.len;
+      $(`val-n-${i}`).textContent=s.n;$(`val-dz-${i}`).textContent=s.dz;
+      $(`stats-${i}`).innerHTML=`<span class="chip">ssanie ${fmt(a.pin)} bar</span><span class="chip">NC ${fmt(a.outlet)} bar</span><span class="chip">po linii ${fmt(a.end)} bar</span><span class="chip">strata W${s.d} ${fmt(a.lossHose)} bar</span>${a.passive?`<span class="chip">opór przelotu ${fmt(a.lossPass)} bar</span>`:`<span class="chip">NPSH zapas ${fmt(a.npsMargin)} m (proxy)</span>`}`;
+      $(`schemP${i}`).textContent=fmt(a.pin)+' → '+fmt(a.outlet)+' bar';
+      $(`schemH${i}`).textContent=fmt(a.end)+' bar • '+fmt(vel,1)+' m/s';
+      $(`schemMeta${i}`).textContent=`${s.len} m • W${s.d} × ${s.n}`;
+      $(`truck${i}`).classList.toggle('scheme-warning',a.warn||a.critical);
+      const svg=$(`pumpCard${i}`).querySelector('.pump-svg');
+      const active=running&&latestFlow>1;
+      svg.querySelectorAll('.flow-pulse').forEach(p=>{p.style.animationPlayState=active?'running':'paused';p.style.animationDuration=fmt(clamp(2.8/(vel+0.25),.22,5),2)+'s';});
+      const rot=$(`rotor${i}`);rot.style.display=a.passive?'none':'';
+      rot.style.animationPlayState=active&&!a.passive?'running':'paused';
+      rot.style.animationDuration=fmt(clamp(1.4*MODELS[s.model].q/Math.max(latestFlow,150),.3,3),2)+'s';
+      $(`pathImp${i}`).style.display=a.passive?'none':'';
+      $(`pathPass${i}`).style.display=a.passive?'':'none';
+      $(`bubbles${i}`).style.display=a.warn&&!a.passive?'':'none';
+    });
+    setAnimations();
+    tickUI();
+  }
+  function setAnimations(){
+    const active=running&&latestFlow>1;
+    $('pipeAnim').style.animationPlayState=active?'running':'paused';
+    $('scheme').querySelectorAll('.scheme-hose').forEach((el)=>{
+      el.style.animationPlayState=active?'running':'paused';
+      const dur=latestFlow>0?clamp(1600/latestFlow,.23,4):4;
+      el.style.animationDuration=fmt(dur,2)+'s';
+    });
+    stages.forEach((s,i)=>{
+      const svg=$(`pumpCard${i}`).querySelector('.pump-svg');
+      if(svg) svg.querySelectorAll('.flow-pulse').forEach(p=>p.style.animationPlayState=active?'running':'paused');
+      const rot=$(`rotor${i}`); if(rot)rot.style.animationPlayState=(active&&s.operation!=='pass')?'running':'paused';
+    });
+  }
+  function tickUI(){
+    $('clock').textContent=Math.round(elapsed)+' s (czas symulowany ×8)';
+    $('tankText').textContent=Math.round(tankLitres)+' / 13000 l';
+    $('tankProgress').value=tankLitres;
+    $('etaNow').textContent=latestFlow>1?fmt((13000-tankLitres)/latestFlow)+' min':'brak dopływu';
+  }
+  function refresh(rebuild=false){
+    const manual=solve('manual'),auto=solve('auto');
+    if(rebuild){renderPumps();renderScheme();}
+    renderResults(manual,auto);
+  }
+  function addStage(){if(stages.length<5){stages.push({model:'r25',operation:'boost',set:8,len:200,d:75,n:2,dz:0});refresh(true)}}
+  function removeStage(){if(stages.length>1){stages.pop();refresh(true)}}
+  function presetGCBA(){stages=defaults();$('mode').value='relay';$('source').value='open';refresh(true)}
+  function example2(){stages=[{model:'rub',operation:'boost',set:8,len:400,d:110,n:2,dz:0},{model:'r35',operation:'boost',set:8.5,len:250,d:75,n:3,dz:0}];$('mode').value='relay';$('source').value='open';refresh(true)}
+  function applyAuto(){const a=solve('auto');stages.forEach((s,i)=>{if(s.operation==='boost')s.set=clamp(Math.ceil((a.stages[i].requested+0.00001)*2)/2,0,15)});refresh(true)}
+  function resetTank(){tankLitres=0;elapsed=0;tickUI()}
+  document.addEventListener('input',e=>{
+    const t=e.target;
+    if(t.dataset.i!==undefined){const i=+t.dataset.i,k=t.dataset.k;stages[i][k]=(k==='model'||k==='operation')?t.value:+t.value;
+      if(k==='model'||k==='operation'){refresh(true);return;}}
+    if(t.id==='source'||t.id==='mode'){refresh(true);return;}
+    refresh(false);
+  });
+  document.addEventListener('change',e=>{
+    const t=e.target;
+    if(t.dataset.i!==undefined){const i=+t.dataset.i,k=t.dataset.k;stages[i][k]=(k==='model'||k==='operation')?t.value:+t.value;
+      if(k==='model'||k==='operation'){refresh(true);return;}}
+    if(t.id==='source'||t.id==='mode'){refresh(true);return;}
+    refresh(false);
+  });
+  $('add').addEventListener('click',addStage);
+  $('remove').addEventListener('click',removeStage);
+  $('preset').addEventListener('click',presetGCBA);
+  $('example').addEventListener('click',example2);
+  $('applyAuto').addEventListener('click',applyAuto);
+  $('reset').addEventListener('click',resetTank);
+  $('run').addEventListener('click',()=>{
+    running=!running;
+    $('run').textContent=running?'⏸ Pauza':'▶ Start';
+    setAnimations();
+  });
+  function animate(ts){
+    if(lastTs!==null&&running){
+      const dt=Math.min(.2,(ts-lastTs)/1000);
+      elapsed+=dt*8; // accelerated simulation, explicitly labeled
+      tankLitres=Math.min(13000,tankLitres+latestFlow*dt*8/60);
+      if(tankLitres>=13000){running=false;$('run').textContent='▶ Start';setAnimations();}
+      tickUI(); // no DOM rebuild on animation frames
+    }
+    lastTs=ts;
+    requestAnimationFrame(animate);
+  }
+  refresh(true);
+  requestAnimationFrame(animate);
+  // Test hooks are inert and readable; no external calls.
+  window.HydroPSPTest={getState:()=>({stages:stages.map(x=>({...x})),flow:latestFlow,tankLitres,running,manual:latestManual,auto:latestAuto}),analyze,autoTargets};
+})();
+
+</script>
+</body>
+</html>
