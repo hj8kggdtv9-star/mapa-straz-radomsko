@@ -1,0 +1,425 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>HYDRO PSP v10 — zbiorniki pośrednie</title><style>
+:root{--bg:#0b1725;--panel:#1b3149;--panel2:#223e59;--stroke:#395b78;--txt:#eef7ff;--muted:#bcd2e3;--a:#57d3fb;--green:#61e7a7;--yellow:#ffe17c;--red:#ff9292}*{box-sizing:border-box}body{margin:0;background:linear-gradient(#0d1e30,#0b1725);color:var(--txt);font:15px system-ui,-apple-system,Arial}header{padding:18px max(16px,calc((100vw - 1390px)/2));background:#19324b;border-bottom:1px solid #466582}h1{font-size:26px;margin:0}h2{font-size:19px;margin:0 0 14px}h3{font-size:16px;margin:0 0 9px}.sub{font-size:13px;color:var(--muted);margin-top:5px}.wrap{max-width:1390px;margin:auto;padding:12px;display:grid;grid-template-columns:minmax(290px,320px) minmax(370px,1fr) minmax(265px,305px);gap:12px;align-items:start}.card{background:linear-gradient(155deg,var(--panel),var(--panel2));border:1px solid var(--stroke);border-radius:17px;padding:15px;box-shadow:0 7px 28px #0003}.top{grid-column:1/-1}.kpi{border-radius:12px;padding:12px;background:#10283d;border:1px solid #476580}.big{font-size:31px;color:#8ce9ff;font-weight:850;line-height:1.1}label{display:block;margin:12px 0 5px;font-weight:650}select,input[type=range],button{font:inherit;width:100%}select,button{border-radius:10px;border:1px solid #487296;background:#1b679b;color:#fff;padding:10px 11px}button{cursor:pointer}button:active{filter:brightness(1.3)}button.ghost{background:#2b5275}button.green{background:#176d59}.btns{display:flex;gap:8px;margin-top:9px}.btns>*{flex:1;min-width:0}input[type=range]{accent-color:#60d9ff;height:23px;touch-action:pan-x}details{margin-top:12px;border:1px solid #426787;background:#10263b;border-radius:11px;padding:9px}summary{cursor:pointer;font-weight:700}.small{font-size:12px;color:var(--muted);line-height:1.45}.muted{color:var(--muted)}.number{color:#8de6ff;font-weight:800}.unitbox{background:#152a41;border:1px solid #365b7d;border-radius:15px;overflow:hidden;margin-bottom:12px}.unitbox.alert{animation:blink 1.2s infinite}@keyframes blink{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 3px #ffe382;border-color:#ffe382}}.unitHead{display:flex;gap:9px;align-items:center;background:#23415e;padding:12px}.unitIcon{width:94px;flex-shrink:0}.grow{flex:1;min-width:0}.unitSettings{padding:12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.two label{margin-top:8px}.gaugePanel{background:linear-gradient(145deg,#df2727,#a41313);padding:12px;border-top:2px solid #fc6c6c}.gauges{display:grid;grid-template-columns:1fr 1fr;gap:12px}.gaugeCard{text-align:center}.dial{width:158px;max-width:100%;height:auto;margin:auto;display:block;filter:drop-shadow(0 2px 6px #0005)}.gaugeName{font-size:12px;font-weight:850;background:#325993;border:1px solid #7799d5;border-radius:6px;padding:5px;margin-top:6px}.read{font-size:21px;font-weight:850;text-shadow:0 1px 2px #0005}.hint{font-size:11px;color:#fffddd}.diag{background:#18334c;padding:12px;border-top:1px solid #385d7b;font-size:13px;line-height:1.45}.warn{color:var(--yellow)}.danger{color:var(--red)}.ok{color:var(--green)}.dash{height:8px;border-radius:20px;background:repeating-linear-gradient(90deg,#06a8e4 0 15px,#a7edff 15px 28px);background-size:42px 100%;animation:dash .9s linear infinite;animation-play-state:paused;margin:10px 0}@keyframes dash{to{background-position:42px 0}}.tank{height:18px;border-radius:10px;background:#102236;overflow:hidden;border:1px solid #53738d}.tankFill{height:100%;background:linear-gradient(90deg,#1d9fe6,#7cdeff);width:0}.stat{margin:8px 0}.stat b{color:#fff}.schemeScroll{overflow:auto;padding:10px 0 3px}.scheme{display:flex;align-items:center;gap:10px;min-width:max-content;padding:28px 10px 30px}.sourceShape{min-width:190px;max-width:202px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative}.sourceLabel{text-align:center;font-size:12px;font-weight:750;margin-top:4px}.hose{position:relative;min-width:100px;width:clamp(100px,13vw,185px);height:45px;display:flex;align-items:center}.hoseCore{width:100%;border-radius:40px;animation:dash .7s linear infinite;animation-play-state:paused;box-shadow:0 0 8px #0005}.hose[data-d='52'] .hoseCore{height:7px;background:repeating-linear-gradient(90deg,#e9ad47 0 13px,#fff0a3 13px 25px);background-size:38px 100%}.hose[data-d='75'] .hoseCore{height:12px;background:repeating-linear-gradient(90deg,#c63e42 0 13px,#ffaaaa 13px 25px);background-size:38px 100%}.hose[data-d='110'] .hoseCore{height:18px;background:repeating-linear-gradient(90deg,#0878af 0 13px,#79d9ff 13px 25px);background-size:38px 100%}.hoseTag{position:absolute;top:-17px;white-space:nowrap;text-align:center;width:100%;font-size:12px;font-weight:850}.hosePressure{position:absolute;bottom:-17px;white-space:nowrap;text-align:center;width:100%;font-size:10px;color:#d7e5f5}.schemeUnit{min-width:135px;width:135px;border-radius:12px;background:#2c4356;border:1px solid #7090a8;padding:6px;text-align:center}.schemeUnit .name{font-size:12px;font-weight:850;line-height:1.2;min-height:28px}.schemeUnit .mode{font-size:11px;color:#cfeeff;margin-top:2px}.schemeUnit .press{font-size:10px;color:#fff}.schemeUnit.problem{box-shadow:0 0 0 3px #ffd45a}.sourceDepth{height:93px;position:relative;width:120px;border-bottom:23px solid #126f9b;overflow:hidden}.lake{position:absolute;bottom:0;width:100%;height:24px;background:repeating-linear-gradient(90deg,#127fc0,#6bdcff 20px,#0a6b9c 40px);background-size:80px 100%;animation:dash 3s linear infinite;animation-play-state:paused}.bank{position:absolute;width:100%;bottom:24px;height:20px;background:#8c7746;clip-path:polygon(0 0,100% 80%,100% 100%,0 100%)}.liftArrow{position:absolute;right:0;bottom:33px;border-right:2px dashed #ffd77c;height:30px;min-height:10px;max-height:52px;font-size:10px;color:#ffe3a8;text-align:right;padding-right:5px;z-index:3}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.legend span{display:inline-flex;gap:5px;align-items:center}.swatch{width:20px;border-radius:5px;background:#ddd}.chartLine{font-size:12px;color:#c7deed}a{color:#8fe5ff}.sourceFoot{margin-top:8px;line-height:1.4}.footnote{font-size:11px;line-height:1.4;color:#a9c5d9}.sourceLink{display:inline-block;margin-top:6px;font-size:12px}.callout{border-left:4px solid #ffe17c;background:#2d3c48;border-radius:8px;padding:8px 10px;font-size:13px;line-height:1.4;margin-top:9px}@media(max-width:1130px){.wrap{grid-template-columns:minmax(260px,340px) 1fr}.rightCol{grid-column:1/-1}.top{grid-column:1/-1}}@media(max-width:740px){.wrap{display:block;padding:9px}.card{margin-bottom:10px}.top{margin-bottom:10px}.gaugePanel{padding:10px}.dial{width:145px}.two{gap:7px}header h1{font-size:23px}.big{font-size:28px}}
+
+/* HYDRO PSP v8: transparent pump curves and visual safety diagnoses */
+.problemBanner{border-radius:13px;border:2px solid #b9dbea;padding:12px 14px;margin:14px 0 2px;background:#16354f;scroll-margin-top:80px}
+.problemBanner.critical{border-color:#ff8989;background:#562630;box-shadow:0 0 0 2px #f8717142}
+.problemBanner.warning{border-color:#f0d27a;background:#423b2a}
+.problemBanner.ok{border-color:#79d9a5;background:#173d3c}
+.problemTitle{font-size:17px;font-weight:850;margin-bottom:4px}
+.problemLink{display:block;color:inherit;text-decoration:none;font-size:13px;margin-top:6px;padding:6px 8px;background:#ffffff12;border-radius:7px;line-height:1.42}
+.problemLink:hover{background:#ffffff20}
+.unitbox.criticalUnit{border:2px solid #ff8888;box-shadow:0 0 0 2px #fc858533;scroll-margin-top:80px}
+.unitbox.warningUnit{border:2px solid #e7c76c;scroll-margin-top:80px}
+.hose.criticalHose .hoseCore{outline:3px solid #ff7d85;box-shadow:0 0 14px #f87171aa}
+.hose.warningHose .hoseCore{outline:2px solid #facc15;box-shadow:0 0 12px #facc1588}
+.sourceShape.criticalSource,.sourceShape.warningSource{border:2px solid #ff9696;border-radius:11px;scroll-margin-top:80px}
+.sourceShape.warningSource{border-color:#f3ce73}.schemeUnit.criticalNode{border:3px solid #fc8b8b;box-shadow:0 0 0 3px #ef444433}.schemeUnit.warningNode{border:3px solid #e9c763}.sourceShape.outputCritical{border:3px solid #fc8b8b;border-radius:12px;box-shadow:0 0 0 3px #ef444433}
+.chartBox{background:#0c263d;border:1px solid #436a87;padding:10px;border-radius:10px;margin-top:8px}
+.chartBox svg{display:block;width:100%;max-width:620px;margin:auto;height:auto}
+.curveLabel{font-size:12px;font-weight:700}
+.curvePoints{font-size:12px;color:#d6e9f5;line-height:1.45}
+.curvePoints strong{color:#98eaff}
+.referenceTables{min-width:0}
+.tableScroller{overflow:auto;max-width:100%}
+.lossTable{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
+.lossTable th{background:#244663;color:#e9f8ff;text-align:right;position:sticky;top:0}
+.lossTable th:first-child,.lossTable td:first-child{text-align:left;position:sticky;left:0;background:#213e58;z-index:1}
+.lossTable td,.lossTable th{padding:9px 11px;border-bottom:1px solid #41607b;text-align:right}
+.lossTable tr:nth-child(even) td{background:#19334b}
+.lossTable tr:nth-child(even) td:first-child{background:#254660}
+.lossTable tbody tr:hover td{background:#304f6a}
+.lossMetric{font-weight:800;color:#8fe5ff}
+.smallSelect{max-width:180px}
+.stageBadge{font-size:12px;margin:8px 0;color:#f7ebaa}
+@media (max-width:740px){.problemTitle{font-size:15px}.lossTable th,.lossTable td{padding:8px}}
+.miniInfo{padding:6px 9px;margin:7px 0;background:#10263b;border:1px solid #385877;border-radius:9px}.miniInfo summary{cursor:pointer;color:#beeaff;font-size:12px;font-weight:700}.miniInfo[open] .small{margin-top:8px}.lossPanel>summary{font-size:18px;font-weight:850;cursor:pointer;list-style:none}.lossPanel>summary:before{content:"▸ ";color:#75d5ff}.lossPanel[open]>summary:before{content:"▾ "}.lossPanel .refBody{margin-top:16px}.sourceShape svg{overflow:visible}@media(max-width:740px){.sourceShape{min-width:190px}.lossPanel>summary{font-size:15px}}
+/* v10 interactive intermediate tanks */
+.modeBanner{padding:9px 10px;background:#12354e;border:1px solid #407fa4;border-radius:10px;font-weight:750;color:#a8efff;margin:8px 0}
+.bufferToolbar{display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid #416884;background:linear-gradient(110deg,#0e2b41,#183e57);border-radius:13px;padding:11px;margin:12px 0 6px}
+.bufferToolbar b{font-size:15px}.bufferToolbar .small{margin-top:3px;max-width:700px}
+.bufferPalette{display:flex;align-items:center;gap:6px;cursor:grab;touch-action:none;user-select:none;background:linear-gradient(160deg,#308bba,#166090);border:1px solid #8de4ff;color:#fff;font-size:15px;font-weight:800;border-radius:12px;padding:9px 14px;box-shadow:0 3px 12px #0004}
+.bufferPalette:active{cursor:grabbing}.bufferPalette.armed{background:#ab7225;outline:2px solid #ffe58b}.tankSymbol{font-size:24px}.dragDots{color:#d8edfd;font-size:19px}
+.dragStatus{font-size:12px;color:#bad2e5;margin:5px 0 2px;min-height:18px}
+.dropSlot{display:flex;flex-direction:column;align-items:center;justify-content:center;width:102px;min-width:102px;min-height:88px;padding:8px;border:2px dashed #659dc3;border-radius:14px;color:#bde7ff;background:#15314c;cursor:pointer;font-size:12px;font-weight:800;touch-action:manipulation;transition:background .12s,border-color .12s,transform .12s}
+.dropSlot .plus{font-size:24px;line-height:1.1}.dropSlot:hover,.dropSlot.target,.dropSlot:focus-visible{background:#1d658a;border-color:#f8d97b;color:#fff;transform:scale(1.04)}
+.dropSlot .small{font-size:10px;text-align:center}.dragGhost{position:fixed;left:0;top:0;z-index:99999;pointer-events:none;background:#195b83;border:2px solid #f1de90;border-radius:12px;padding:11px 14px;color:#fff;box-shadow:0 12px 35px #0009;font-size:16px;font-weight:800;transform:translate(-50%,-50%)}
+.schemeTank{position:relative;flex:0 0 175px;width:175px;background:#13354b;border:2px solid #71beec;border-radius:15px;padding:8px;text-align:center;box-shadow:0 8px 22px #0005}
+.schemeTank .tankHeadline{font-weight:900;color:#d8f3ff;font-size:13px}.schemeTank .tankViz{position:relative;width:102px;height:100px;background:linear-gradient(90deg,#5a7488,#8eafbf 15%,#5c7587 85%,#344f67);border:3px solid #c4d3de;border-radius:9px 9px 15px 15px;margin:7px auto;overflow:hidden}
+.schemeTank .tankWater{position:absolute;bottom:0;left:0;width:100%;height:0%;transition:height .25s linear;background:linear-gradient(180deg,#75e1ff,#167daf);border-top:3px solid #a1eeff}
+.schemeTank .tankPct{position:absolute;top:38px;left:0;width:100%;font-size:21px;font-weight:900;text-shadow:0 2px 4px #021727,0 0 3px #021727;color:#fff}
+.schemeTank .tankLit{font-size:13px;font-weight:850}.schemeTank .tankRates{font-size:11px;color:#cceafa;line-height:1.5;margin-top:5px}.schemeTank .tankRates b{color:white}
+.schemeTank select{padding:6px 4px;background:#164665;border:1px solid #69a6c8;font-size:12px;border-radius:8px;max-width:100%}.schemeTank .removeTank{position:absolute;right:-9px;top:-9px;border-radius:50%;background:#a91d28;border:2px solid #fff6;color:white;padding:0;font-size:16px;font-weight:900;width:27px;height:27px;line-height:23px}
+.schemeTank .tankStatus{font-size:10px;line-height:1.3;margin-top:4px;color:#d0e9f9}.schemeTank.tankAlert{border-color:#ffd15e;box-shadow:0 0 0 3px #b95d36}
+.tankReadout{font-size:12px;margin:7px 0;padding:8px;border-radius:8px;background:#0f2b40;line-height:1.5}.tankReadout.warn{border-left:4px solid #facc72}
+@media(max-width:740px){.bufferToolbar{align-items:stretch}.bufferPalette{justify-content:center;min-width:142px;align-self:flex-start}.schemeTank{width:168px;flex-basis:168px}.dropSlot{width:85px;min-width:85px}}
+</style></head><body><header><h1>🚒 HYDRO PSP <span style="color:#77ddff">v10</span> — zasilanie wodne</h1><div class="sub">Przeciągaj zbiorniki • przepompowuj wodę • kontroluj dopływ i odpływ</div></header>
+<main class="wrap"><section class="card top"><div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap"><h2 style="margin:0">🚒 Schemat zasilania</h2><div class="kpi" style="min-width:185px"><div class="small">WYDATEK NA KOŃCU</div><div class="big" id="qTop">— l/min</div><div class="small" id="pTop">— bar na końcu</div></div></div><div class="problemBanner ok" id="problemBanner" role="status" aria-live="polite"><div class="problemTitle">Trwa analiza układu…</div></div><div class="bufferToolbar"><div><b>Dodaj zbiornik pośredni</b><div class="small">Przeciągnij zbiornik na miejsce <strong>+ Zbiornik</strong> między pompami albo dotknij zbiornika i miejsca docelowego.</div></div><div id="bufferPalette" class="bufferPalette" role="button" tabindex="0" aria-label="Przeciągnij lub kliknij, aby wstawić zbiornik pośredni"><span class="tankSymbol">🛢️</span><span> Zbiornik +</span><span class="dragDots">⠿</span></div></div><div class="dragStatus" id="dragStatus" aria-live="polite">Możesz wstawić zbiornik między dowolnymi sąsiadującymi pompami.</div><div class="schemeScroll" id="schemeScroll"><div class="scheme" id="scheme"></div></div><details class="miniInfo"><summary>ⓘ Zasada przepompowywania</summary><div class="small">Otwarty zbiornik oddziela ciśnienia pomp. Pierwsza pompa napełnia zbiornik, a kolejna zasysa wodę z niego i tłoczy dalej. Każdy zbiornik ma osobny dopływ, odpływ i poziom. Jeśli pompa za zbiornikiem pobiera szybciej, niż wpływa woda, zbiornik się opróżni. W modelu przyjęto zbiornik o wysokości wody do 1,2 m i uproszczony pobór przez DN125; po osiągnięciu rezerwy 18 l pobór jest odcinany do ponownego napełnienia.</div></details><div class="legend"><span><i class="swatch" style="height:7px;background:#edba4d"></i> W52</span><span><i class="swatch" style="height:12px;background:#e85a60"></i> W75</span><span><i class="swatch" style="height:17px;background:#49c5ff"></i> W110</span></div></section>
+<aside class="card leftCol"><h2>⚙️ Układ</h2><select id="mode" hidden><option value="relay">Przetłaczanie</option><option value="buffer">Przepompowywanie</option></select><div class="modeBanner" id="modeStatus">Przetłaczanie bezpośrednie</div><label>Źródło wody</label><select id="source"><option value="open">Jezioro / rzeka / zbiornik otwarty</option><option value="hydrant">Hydrant</option><option value="tank">Zbiornik samochodu</option></select><div id="liftWrap"><label>Wysokość ssania <span class="number" id="liftV">3 m</span></label><input type="range" id="lift" min="0" max="8" value="3" step=".5"><details class="miniInfo"><summary>ⓘ Co to jest wysokość ssania?</summary><div class="small">To odległość pionowa osi pompy od lustra wody, a nie głębokość zanurzenia smoka.</div></details></div><div id="hydrantWrap" hidden><label>Ciśnienie zasilania hydrantu (przyjęte) <span class="number" id="hydrantV">4 bar</span></label><input type="range" id="hydrant" min="1" max="8" value="4" step=".5"></div><label>Wymagane ciśnienie na końcu <span class="number" id="needV">0,5 bar</span></label><input type="range" id="need" min="0" max="10" value="0.5" step=".5"><label>Wymagany wydatek (opcjonalny cel szkolenia)</label><select id="minFlow"><option value="0">Brak wymaganego minimum</option><option value="400">Minimum 400 l/min</option><option value="800">Minimum 800 l/min</option><option value="1000">Minimum 1000 l/min</option><option value="1600">Minimum 1600 l/min</option><option value="2400">Minimum 2400 l/min</option><option value="3200">Minimum 3200 l/min</option><option value="5000">Minimum 5000 l/min</option></select><details class="miniInfo"><summary>ⓘ O wymaganym wydatku</summary><div class="small">Możesz wybrać cel szkoleniowy, żeby zobaczyć ostrzeżenia przy zbyt małym przepływie.</div></details><div class="btns"><button class="green" id="start">▶ Start</button><button class="ghost" id="reset">↺ Reset</button></div><div class="btns"><button id="add">+ Pompa</button><button class="ghost" id="remove">− Pompa</button></div><div class="btns"><button class="ghost" id="exampleTruck">🚒 3 GCBA</button><button class="ghost" id="exampleFloat">🌊 Niagara</button></div><details id="advanced"><summary>Opcjonalnie: przewody ssawne i teren</summary><div id="suctionSettings"><label>Średnica przewodów ssawnych</label><select id="suctDia"><option value="110">DN110</option><option value="125">DN125</option><option value="150" selected>DN150</option></select><label>Liczba przewodów ssawnych</label><select id="suctN"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select><label>Długość każdego [m]</label><select id="suctL"><option value="3">3</option><option value="6" selected>6</option><option value="9">9</option><option value="12">12</option></select></div><div class="small" style="margin-top:7px">Straty ssania: Darcy–Weisbach, współczynnik tarcia 0,022 i opory miejscowe K=2,5. Dodatkowy szacowany opór wejścia uwzględnia średnicę nasady, jeśli jest podana w źródle. Obliczenia te nie są krzywą producenta.</div></details><details class="miniInfo"><summary>ⓘ Jak interpretować układ?</summary><div class="small">Pompy pływające pracują na powierzchni wody; układ ssania z brzegu dotyczy pomp stojących wyżej niż lustro. Przelot nie podnosi ciśnienia.</div></details></aside>
+<section class="midCol" id="units"></section>
+<aside class="card rightCol"><h2>📊 Wynik i diagnoza</h2><div class="kpi"><div class="small">Rzeczywisty wydatek w MODELU</div><div class="big" id="flow">—</div><div id="end" class="stat">—</div><div class="stat">13 m³: <b id="timeToTank">—</b></div><div class="stat">Napełniono: <b id="litres">0 / 13000 l</b></div><div class="tank"><div class="tankFill" id="tankfill"></div></div><div class="stat small" id="elapsed">0 s • czas symulacji ×8</div><div class="dash" id="flowing"></div></div><div id="diagnoses" style="margin-top:12px"></div><div class="btns"><button id="auto" class="green">⚙ Dobierz nastawy AUTO</button></div><div class="small" id="autoInfo" style="margin-top:7px"></div><details><summary>Jak wiarygodne są obliczenia?</summary><p class="small">Punkty Q–p oznaczone jako producent/karta są przepisane z opublikowanych danych. Pomiędzy nimi stosujemy interpolację. W miejscach, gdzie brak pełnej krzywej, stosujemy wyraźnie oznaczone punkty szacunkowe – nie są to wartości gwarantowane.</p><p class="small">Oznaczenie M16/8 oznacza 1600 l/min przy 8 bar, a nie 8/16. Nazwa zwyczajowa Polonia P05 odnosi się do motopompy M8/8-PO5. Dane i producent mogą różnić się zależnie od serii (Polmo/GZUT); nie należy traktować interpolowanej charakterystyki jako pomiarów konkretnego egzemplarza.</p><p class="small">NPSHr (wymagane ciśnienie antykawitacyjne) jest przybliżeniem — bez krzywej producenta wynik dla ssania z 4–5 m nie może być dokładną prognozą. Straty węży liczone z nominalnych średnic i współczynnika tarcia 0,021; rzeczywiste zależą od typu węża i armatury. Wyniki nie służą do określania nastaw operacyjnych.</p></details><details class="miniInfo"><summary>ⓘ Źródła parametrów pomp</summary><div class="small sourceFoot">Źródła modeli: <a href="https://www.rosenbauer.com/pl/produkty/systemy-gasnicze/mobilne-systemy-gasnicze/motopompy-pozarnicze/fox" target="_blank" rel="noopener">Rosenbauer</a>, <a href="https://www.tohatsu.com/ffdp/int/pump/all.html" target="_blank" rel="noopener">Tohatsu</a>, <a href="https://www.ogniochron.eu/oferta/motopompy/motopompa-plywajaca-niagara-2-plus/motopompa-plywajaca-niagara-2" target="_blank" rel="noopener">Ogniochron</a>. Dodatkowe źródła przy poszczególnych modelach.</div></details></aside>
+<details class="card top referenceTables lossPanel" id="lossReference">
+  <summary>📏 Tabele strat węży W52 / W75 / W110 (rozwiń)</summary><div class="refBody">
+  <p class="small">Przepływ jest łączny dla wybranej liczby linii równoległych, dzielony na równe części. Liczymy opory przepływu w prostych odcinkach, a nie różnicę wysokości terenu. <b>Równanie Darcy’ego–Weisbacha</b>, średnice wewnętrzne przyjęte 52/75/110 mm, współczynnik tarcia Darcy f = 0,021 oraz 10% umownego dodatku na opory miejscowe. W konkretnym wężu straty mogą być inne.</p>
+  <div class="two" style="max-width:520px;margin:8px 0 14px"><div><label>Wydajność całego układu do porównania</label><select id="refQ"><option value="200">200 l/min</option><option value="500">500 l/min</option><option value="800">800 l/min</option><option value="1000" selected>1000 l/min</option><option value="1500">1500 l/min</option><option value="2000">2000 l/min</option><option value="3000">3000 l/min</option><option value="4000">4000 l/min</option></select></div><div><label>Równoległe linie</label><select id="refN"><option value="1" selected>1 linia</option><option value="2">2 linie</option><option value="3">3 linie</option><option value="4">4 linie</option></select></div></div>
+  <div class="tableScroller"><table class="lossTable"><thead><tr><th>Wąż</th><th>20 m</th><th>40 m</th><th>100 m</th><th>200 m</th><th>300 m</th><th>500 m</th><th>1000 m</th><th>Prędkość wody</th></tr></thead><tbody id="lossReferenceRows"></tbody></table></div>
+  <div class="kpi" style="margin-top:11px"><b>Przykład kontrolny:</b> przy 1000 l/min w jednej linii W75 na długości 100 m wychodzi około <b id="controlLoss">2,2 bar</b> strat w przyjętym modelu. Zwiększenie długości 2× daje 2× większą stratę, zwiększenie przepływu 2× daje w przybliżeniu 4× większą stratę.</div>
+  <h3 style="margin-top:17px">Straty na odcinkach Twojego aktualnego układu</h3>
+  <div class="tableScroller"><table class="lossTable"><thead><tr><th>Odcinek</th><th>Wąż</th><th>Długość</th><th>Przepływ / linię</th><th>Prędkość</th><th>Strata tarcia + miejscowa</th><th>Wpływ wysokości</th><th>Łączna zmiana ciśnienia</th></tr></thead><tbody id="actualLossRows"></tbody></table></div>
+  <p class="small">Uwaga: dodatnia wysokość terenu zwiększa potrzebne ciśnienie, a opad terenu może je zmniejszyć. Straty w armaturze autopompy i przewodach ssawnych są liczone oddzielnie. Tabela nie zastępuje pomiaru na miejscu.</p>
+</div></details></main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),F=v=>Number.isFinite(v)?v.toFixed(1).replace('.',','):'—',FG=v=>Math.round(v).toLocaleString('pl-PL'),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const RO='https://www.rosenbauer.com/pl/produkty/systemy-gasnicze/wbudowane-systemy-gasnicze/autopompy',FOX='https://www.rosenbauer.com/pl/produkty/systemy-gasnicze/mobilne-systemy-gasnicze/motopompy-pozarnicze/fox',FOXS='https://www.rosenbauer.com/pl/produkty/systemy-gasnicze/mobilne-systemy-gasnicze/motopompy-pozarnicze/fox-s';
+const MODELS={
+ n25:{name:'GCBA • Rosenbauer N25',short:'GCBA N25',kind:'truck',points:[[0,12,0],[2500,10,1],[3050,0,0]],nom:2500,npsh:4.2,url:RO,note:'2500 l/min przy 10 bar i 3 m ssania – dane Rosenbauer. Pozostałe punkty krzywej są szacunkowe.'},
+ n35:{name:'GCBA • Rosenbauer N35',short:'GCBA N35',kind:'truck',points:[[0,12,0],[3500,10,1],[4300,0,0]],nom:3500,npsh:4.7,url:RO,note:'3500 l/min przy 10 bar i 3 m ssania – dane Rosenbauer. Pozostałe punkty szacunkowe.'},
+ n55:{name:'GCBA 8/x • Rosenbauer N55',short:'GCBA N55',kind:'truck',points:[[0,12,0],[5500,10,1],[6700,0,0]],nom:5500,npsh:4.9,url:RO,note:'5500 l/min przy 10 bar i 3 m ssania – dane Rosenbauer. GCBA 8/x to poglądowa zabudowa, nie identyfikacja konkretnego pojazdu.'},
+ n65:{intake:[150,2],name:'GCBA 8/x • Rosenbauer N65',short:'GCBA N65',kind:'truck',points:[[0,12,0],[6500,10,1],[7800,0,0]],nom:6500,npsh:5,url:RO,note:'6500 l/min przy 10 bar i 3 m ssania, 2×DN150 – Rosenbauer. Zabudowa GCBA 8/x poglądowa.'},
+ n80:{intake:[150,2],name:'GCBA 8/x • Rosenbauer N80',short:'GCBA N80',kind:'truck',points:[[0,12,0],[8000,10,1],[9600,0,0]],nom:8000,npsh:5.3,url:RO,note:'8000 l/min przy 10 bar, 3 m ssania i 2×DN150 – Rosenbauer. Zabudowa poglądowa.'},
+ p05:{intake:[110,1],name:'Polonia P05 (M8/8)',short:'Polonia P05',kind:'portable',points:[[0,10.5,0],[800,8,1],[1200,0,0]],nom:800,npsh:4,url:'https://www.osplyse.pl/index.php?Itemid=58&catid=36:wyposaenie&id=114:motopompa-m88-p05&option=com_content&view=article',note:'Popularna nazwa w straży: Polonia P05, typ M8/8-P05. W dokumentach historycznych pojawiają się także oznaczenia producentów Polmo/GZUT. 800 l/min nominalnie, do 1200 l/min maks. Pełna krzywa Q–p nie jest dostępna.'},
+ toh8:{intake:[75,1],name:'Tohatsu VC52AS • ok. klasa M8/8',short:'Tohatsu VC52AS',kind:'portable',points:[[0,11,0],[600,10,1],[1000,8,1],[1300,6,1],[1700,0,0]],nom:1000,npsh:4,url:'https://www.tohatsu.com/ffdp/int/pump/img/VC52AS_VC72AS_catalogue_2025-2026.pdf',note:'Producent (katalog VC52AS 2025–2026, ssanie 3 m): 600 l/min przy 10 bar, 1000 przy 8 bar, 1300 przy 6 bar. Klasa M8/8 jest poglądowa, nie jest oficjalnym symbolem tego modelu.'},
+ toh16:{intake:[90,1],name:'Tohatsu VE1500W • M16/8',short:'Tohatsu VE1500',kind:'portable',points:[[0,14.5,0],[1500,10,1],[1800,8,1],[2050,6,1],[2410,0,0]],nom:1800,npsh:4.7,url:'https://www.tohatsu.com/ffdp/int/pump/big_flow/ve1500-w.html',note:'Producent: 1500 l/min przy 10 bar, 1800 przy 8 bar, 2050 przy 6 bar. M16/8 to kolejność wydajność/ciśnienie; określenia M8/16 nie potwierdzono.'},
+ foxs:{intake:[110,1],name:'Rosenbauer FOX S',short:'Rosenbauer FOX S',kind:'portable',points:[[0,15.5,1],[1050,10,1],[1200,8,1],[2000,2,1],[2110,0,0]],nom:1200,npsh:4.3,url:FOXS,note:'Producent, ssanie 3 m: 1050 l/min przy 10 bar, 1200 przy 8 bar, 2000 przy 2 bar; 15,5 bar ciśnienie zamknięcia.'},
+ fox:{intake:[110,1],name:'Rosenbauer FOX',short:'Rosenbauer FOX',kind:'portable',points:[[0,16.7,1],[2050,10,1],[2300,4,1],[2480,0,0]],nom:2050,npsh:4.6,url:FOX,note:'Producent, ssanie 3 m: 2050 l/min przy 10 bar, 2300 przy 4 bar, 16,7 bar zamknięcia. 2450 przy 4 bar wymaga niższego ssania 1,5 m.'},
+ niagara:{name:'Niagara 2 • pompa pływająca',short:'Niagara 2',kind:'float',points:[[0,2.94,1],[450,2,1],[1200,0,0]],nom:450,npsh:0,url:'https://www.ogniochron.eu/oferta/motopompy/motopompa-plywajaca-niagara-2-plus/motopompa-plywajaca-niagara-2',note:'Ogniochron: maks. 1200 l/min (bez podanego ciśnienia), ok. 450–459 l/min przy 2 bar, maks. podnoszenie 30 m. Połączenie punktów to interpolacja.'},
+ mamut:{name:'Mamut 2400 • pompa pływająca',short:'Mamut 2400',kind:'float',points:[[0,2.16,1],[2400,0,0]],nom:1200,npsh:0,url:'https://sklep.arpapol.pl/plywajace/5046-motopompa-plywajaca-mamut-2400lmin.html',note:'Karta produktu: maksymalnie 2400 l/min i wysokość podnoszenia do 22 m. Brak opublikowanej krzywej Q–p; między tymi granicami wynik jest szacunkiem, nie danymi producenta.'}
+};
+let stages=[{model:'n65',mode:'boost',set:10,len:300,d:110,n:2,dz:0},{model:'n55',mode:'boost',set:10,len:300,d:110,n:2,dz:0},{model:'n25',mode:'pass',set:10,len:200,d:110,n:2,dz:0}];let running=false,litres=0,elapsed=0,lastFrame=null,lastFlow=0,lastResult=null,autoText='';
+let buffers=[];let nextBufferId=1;let paletteArmed=false;let dragState=null;let lastTankDisplay=0;
+const BUF_PRIME=180,BUF_MIN=18;
+function bufferAfter(index){return buffers.find(b=>b.after===index)}
+function sortBuffers(){buffers.sort((a,b)=>a.after-b.after)}
+function modeSync(){sortBuffers();$('mode').value=buffers.length?'buffer':'relay';$('modeStatus').textContent=buffers.length?`Przepompowywanie • ${buffers.length} zbiornik${buffers.length===1?'':buffers.length<5?'i':'ów'} pośredni${buffers.length===1?'':'e'}`:'Przetłaczanie bezpośrednie'}
+function addBuffer(after){if(after<0||after>=stages.length-1||bufferAfter(after))return false;buffers.push({id:nextBufferId++,after,capacity:5000,volume:0,primed:false});modeSync();paletteArmed=false;dragStatus('Zbiornik dodany między pompami '+(after+1)+' i '+(after+2)+'.');build();const node=$('buffer'+buffers.find(b=>b.after===after).id);node?.scrollIntoView({block:'nearest',inline:'center',behavior:'instant'});return true}
+function removeBuffer(id){const i=buffers.findIndex(b=>b.id===id);if(i<0)return;buffers.splice(i,1);modeSync();build();dragStatus('Zbiornik usunięty — połączono odcinki magistrali.');}
+function dragStatus(t){if($('dragStatus'))$('dragStatus').textContent=t}
+
+function dh(p){const a=MODELS[p].points;return a[a.length-1][0]}
+function head(p,q){const pts=MODELS[p].points;if(q>=pts[pts.length-1][0])return 0;if(q<=0)return pts[0][1];for(let i=1;i<pts.length;i++){if(q<=pts[i][0]){const a=pts[i-1],b=pts[i],t=(q-a[0])/(b[0]-a[0]);return Math.max(0,a[1]+t*(b[1]-a[1]));}}return 0}
+const HOSE_F=.021, WATER_RHO=1000, LOCAL_EXTRA=1.10;
+function hoseVelocity(q,s){let d=s.d/1000,area=Math.PI*d*d/4;return q/60000/(Math.max(1,s.n)*area)}
+function hoseLoss(q,s){let d=s.d/1000,v=hoseVelocity(q,s);return HOSE_F*(s.len/d)*WATER_RHO*v*v/(2*1e5)*LOCAL_EXTRA}
+function suction(q){if($('source').value==='hydrant'){let p=+$('hydrant').value-.00000005*q*q;return {pin:p,npsh:10.1+p*10.197,loss:0,velocity:0,mode:'hydrant'}}if($('source').value==='tank'){let p=-.03-.000000015*q*q;return {pin:p,npsh:10.1+p*10.197,loss:0,velocity:0,mode:'tank'}}if(MODELS[stages[0].model].kind==='float')return {pin:0,npsh:9.7,loss:0,velocity:0,mode:'float'};const d=+$('suctDia').value/1000,n=+$('suctN').value,l=+$('suctL').value,area=Math.PI*d*d/4,v=q/60000/(area*n),vh=v*v/(2*9.81),intake=MODELS[stages[0].model].intake,portVel=intake?(q/60000)/(intake[1]*Math.PI*Math.pow(intake[0]/1000,2)/4):0,portLoss=intake?.5*portVel*portVel/(2*9.81):0,loss=(.022*l/d+2.5)*vh+portLoss,lev=+$('lift').value, pin=-(lev+loss+vh)*.0981;return {pin,npsh:10.1-lev-loss,loss,velocity:v,mode:'open'}}
+function npshRequired(m,q){return 1+(MODELS[m].npsh-1)*Math.pow(q/MODELS[m].nom,2)}
+function analyzeSection(q,auto,start,end,bufferSource){
+  const suctionData=bufferSource?bufferSuction(q,bufferSource):suction(q);
+  let pin=suctionData.pin,ok=true,rows=[],issues=[];
+  const requests=auto?autoRequestsSection(q,start,end):null;
+  for(let i=start;i<=end;i++){
+    const s=stages[i],m=MODELS[s.model],pass=s.mode==='pass',floating=m.kind==='float';
+    const fromBuffer=i===start&&!!bufferSource;
+    const npsha=fromBuffer?suctionData.npsh:i===0&&suctionData.mode==='open'?suctionData.npsh:10.1+pin*10.197;
+    const nm=floating?Infinity:npsha-npshRequired(s.model,q),maxH=head(s.model,q);
+    const target=auto?requests[i-start]:s.set;
+    let gain=0;
+    if(floating&&(i!==0||$('source').value!=='open')){ok=false;issues.push(`Pompa pływająca nr ${i+1} musi znajdować się na otwartej wodzie.`)}
+    if(floating&&pass){ok=false;issues.push(`Pompa pływająca nr ${i+1} nie ma potwierdzonej funkcji przelotu.`)}
+    if(fromBuffer&&pass){ok=false;issues.push(`Pompa nr ${i+1} za zbiornikiem pośrednim musi pracować, nie może być tylko na przelocie.`)}
+    if(!pass&&q>dh(s.model)+.0001)ok=false;
+    if(!pass&&nm<.4)ok=false;
+    if(!pass){gain=Math.min(maxH,Math.max(0,target-pin));if(auto&&gain+0.01<Math.max(0,target-pin))ok=false}
+    const passLoss=pass?.05*(q/1000)**2:0,pout=pass?pin-passLoss:pin+gain;
+    const loss=hoseLoss(q,s),endPressure=pout-loss-.0981*s.dz;
+    if(i>start&&pin<.35)ok=false;
+    const required=i===end&&end<stages.length-1?.1:i===end?+$('need').value:-Infinity;
+    if(i===end&&endPressure<required-.00001)ok=false;
+    rows.push({pin,pout,end:endPressure,loss,passLoss,nm,npsha,maxH,gain,q,pass,floating,velocity:hoseVelocity(q,s),fromBuffer,afterBuffer:!!bufferAfter(i)});
+    pin=endPressure;
+  }
+  return {q,rows,end:pin,ok,suction:suctionData,issues};
+}
+function bufferSuction(q,b){
+  // Open tank is at atmospheric pressure, with low suction-side head. Simplified 2 m suction branch.
+  const d=.125,area=Math.PI*d*d/4,v=q/60000/area,headLoss=(.022*2/d+1.2)*v*v/(2*9.81);
+  const waterHead=(b.volume/b.capacity)*1.2, pin=(waterHead-headLoss)*.0981;
+  return {pin,npsh:10.1+waterHead-headLoss,loss:headLoss,velocity:v,mode:'buffer'};
+}
+function autoRequestsSection(q,start,end){const R=[];let required=end===stages.length-1?+$('need').value:.1;
+  for(let i=end;i>=start;i--){const s=stages[i];const h=hoseLoss(q,s)+.0981*s.dz;
+    R[i-start]=Math.max(0,required+h);
+    if(s.mode==='pass')required=R[i-start]+.05*(q/1000)**2;
+    else required=Math.max(.55,R[i-start]-head(s.model,q));
+  }return R;
+}
+function solveSection(auto,start,end,bufferSource){let low=0,high=9800;for(let k=0;k<38;k++){const q=(low+high)/2;if(analyzeSection(q,auto,start,end,bufferSource).ok)low=q;else high=q}return analyzeSection(low,auto,start,end,bufferSource)}
+function inactiveRow(i){const s=stages[i];return {pin:0,pout:0,end:0,loss:0,passLoss:0,nm:Infinity,npsha:0,maxH:0,gain:0,q:0,pass:s.mode==='pass',floating:MODELS[s.model].kind==='float',velocity:0,inactive:true,fromBuffer:!!bufferAfter(i-1),afterBuffer:!!bufferAfter(i)}}
+function solveNetwork(auto=false,simSeconds=0){
+  const cuts=[-1,...buffers.map(b=>b.after),stages.length-1];
+  const plans=[];
+  for(let j=0;j<cuts.length-1;j++){
+    const start=cuts[j]+1,end=cuts[j+1],feed=j===0?null:bufferAfter(cuts[j]);
+    plans.push({start,end,feed,calculated:solveSection(auto,start,end,feed)});
+  }
+  const flows=[];const readings=[];let previousOut=0;let ok=true;const rows=Array(stages.length);const issues=[];
+  plans.forEach((p,j)=>{
+    let q=p.calculated.ok?p.calculated.q:0;
+    if(j>0){
+      const b=p.feed;const canRun=b.primed || b.volume>=BUF_PRIME;
+      if(!canRun)q=0;
+      else if(simSeconds>0){
+        // Hydrauliczna ochrona przed pobraniem większej ilości wody niż jest dostępna.
+        const remaining=Math.max(0,b.volume-BUF_MIN);
+        const maxDraw=previousOut+remaining*60/simSeconds;
+        q=Math.min(q,maxDraw);
+      }
+    }
+    flows.push(q);
+    const result=q>.01?analyzeSection(q,auto,p.start,p.end,p.feed):null;
+    if(result){result.rows.forEach((r,k)=>rows[p.start+k]=r);issues.push(...result.issues)}
+    else {for(let i=p.start;i<=p.end;i++)rows[i]=inactiveRow(i)}
+    if(j>0){const b=p.feed;readings.push({id:b.id,after:b.after,inflow:previousOut,outflow:q,net:previousOut-q,volume:b.volume,capacity:b.capacity,primed:b.primed});}
+    previousOut=q;
+    if(!p.calculated.ok && j===0)ok=false;
+  });
+  return {q:flows[flows.length-1],rows,end:rows[rows.length-1].end,ok,suction:suction(flows[0]),issues,flows,sections:plans,bufferReadings:readings};
+}
+function analyze(q,auto=false){return analyzeSection(q,auto,0,stages.length-1,null)}
+function autoRequests(q){return autoRequestsSection(q,0,stages.length-1)}
+function solve(auto=false){return buffers.length?solveNetwork(auto):solveSection(auto,0,stages.length-1,null)}
+function esc(s){return String(s).replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]))}
+
+function curveSVG(key,i){
+ const model=MODELS[key],pts=model.points;
+ const qmax=pts[pts.length-1][0],pmax=Math.max(12,Math.ceil((Math.max(...pts.map(x=>x[1]))+1)/2)*2);
+ const X=q=>48+440*q/qmax,Y=p=>198-158*p/pmax;
+ let grid='';for(let j=0;j<=4;j++){const p=pmax*j/4,y=Y(p);grid+=`<line x1="48" y1="${y}" x2="488" y2="${y}" stroke="#315169" stroke-width="1"/><text x="42" y="${y+4}" text-anchor="end" fill="#cfe7f8" font-size="11">${F(p)}</text>`}
+ for(let j=0;j<=4;j++){const q=qmax*j/4,x=X(q);grid+=`<line x1="${x}" y1="40" x2="${x}" y2="198" stroke="#315169" stroke-width="1"/><text x="${x}" y="214" fill="#cfe7f8" font-size="11" text-anchor="middle">${Math.round(q)}</text>`}
+ let seg='';for(let j=1;j<pts.length;j++){const a=pts[j-1],b=pts[j];seg+=`<line x1="${X(a[0])}" y1="${Y(a[1])}" x2="${X(b[0])}" y2="${Y(b[1])}" stroke="${a[2]&&b[2]?'#5ce6bc':'#b8c7d6'}" stroke-width="3" stroke-dasharray="${a[2]&&b[2]?'':'8 7'}"/>`}
+ for(const p of pts){const valid=!!p[2];seg+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="5.5" fill="${valid?'#61e7a7':'#14293b'}" stroke="${valid?'#0e4339':'#edc778'}" stroke-width="2"><title>${p[0]} l/min, ${F(p[1])} bar — ${valid?'punkt źródłowy':'założenie modelu'}</title></circle>`}
+ return `<svg role="img" aria-label="Charakterystyka ${esc(model.short)}: ciśnienie w bar w zależności od wydatku l/min" viewBox="0 0 520 247"><rect width="520" height="247" fill="#0c263d" rx="10"/><text x="15" y="18" fill="#eef9ff" font-size="14" font-weight="800">${esc(model.short)} — charakterystyka Q–p</text>${grid}${seg}<g id="opPoint${i}" style="display:none"><circle cx="48" cy="198" r="7.5" fill="#fc7793" stroke="#fff" stroke-width="2"/><text x="15" y="235" font-size="11" fill="#ffd9e2" id="opText${i}"></text></g><text x="493" y="235" text-anchor="end" fill="#e7f6ff" font-size="11">Q [l/min]</text><text x="13" y="32" fill="#e7f6ff" font-size="11">p [bar]</text></svg>`;
+}
+function chartPointsText(key){const m=MODELS[key];return m.points.map(p=>`<div><strong>${FG(p[0])} l/min przy ${F(p[1])} bar</strong> — ${p[2]?'● potwierdzony punkt źródłowy':'○ punkt przyjęty do obliczeń (szacunek)'}</div>`).join('')}
+function curvePosition(key,q,p){const pts=MODELS[key].points,qmax=pts[pts.length-1][0],pmax=Math.max(12,Math.ceil((Math.max(...pts.map(x=>x[1]))+1)/2)*2);return {x:48+440*clamp(q,0,qmax)/qmax,y:198-158*clamp(p,0,pmax)/pmax}}
+function figure(kind){
+ if(kind==='truck')return `<svg viewBox="0 0 125 73" width="100%" role="img" aria-label="Samochód strażacki GCBA">
+ <defs><linearGradient id="vehicleRed" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f83a42"/><stop offset="1" stop-color="#a61922"/></linearGradient></defs>
+ <ellipse cx="63" cy="67" rx="57" ry="5" fill="#051626" opacity=".5"/>
+ <rect x="5" y="20" width="79" height="37" rx="5" fill="url(#vehicleRed)" stroke="#8b1420" stroke-width="2"/>
+ <path d="M83 27H104L117 42V57H83Z" fill="#d92b37" stroke="#8e1520" stroke-width="2"/>
+ <path d="M91 32H104L111 43H91Z" fill="#a7ddff" stroke="#d4f5ff" stroke-width="1.5"/>
+ <path d="M8 27H81" stroke="#ffefba" stroke-width="5"/><path d="M8 43H84" stroke="#f8feff" stroke-width="2"/>
+ <rect x="20" y="32" width="19" height="17" rx="2" fill="#ae1d2b" stroke="#ffe2e8" stroke-width="1"/>
+ <rect x="48" y="32" width="19" height="17" rx="2" fill="#ae1d2b" stroke="#ffe2e8" stroke-width="1"/>
+ <path d="M25 14H73" stroke="#bed2e0" stroke-width="5"/><path d="M34 10V18 M64 10V18" stroke="#dce8f1" stroke-width="3"/>
+ <rect x="15" y="16" width="10" height="6" rx="2" fill="#77d0ff"/>
+ <circle cx="30" cy="57" r="11" fill="#26344a" stroke="#ccd9e2" stroke-width="4"/><circle cx="101" cy="57" r="11" fill="#26344a" stroke="#ccd9e2" stroke-width="4"/>
+ <circle cx="30" cy="57" r="3" fill="#a6bece"/><circle cx="101" cy="57" r="3" fill="#a6bece"/>
+ <text x="47" y="43" font-size="9" text-anchor="middle" font-weight="900" fill="#fff">STRAŻ</text>
+ </svg>`;
+ if(kind==='portable')return `<svg viewBox="0 0 125 73" width="100%" role="img" aria-label="Motopompa przenośna">
+ <ellipse cx="63" cy="64" rx="55" ry="5" fill="#071727" opacity=".5"/>
+ <rect x="12" y="13" width="100" height="44" rx="8" fill="none" stroke="#f3bf56" stroke-width="6"/>
+ <rect x="24" y="25" width="50" height="26" rx="6" fill="#c92a34" stroke="#fc929c" stroke-width="2"/>
+ <circle cx="48" cy="38" r="11" fill="#516b7e" stroke="#d4e7f1" stroke-width="3"/><circle cx="48" cy="38" r="4" fill="#bfd7e3"/>
+ <rect x="74" y="23" width="25" height="28" rx="5" fill="#445569"/><rect x="81" y="18" width="12" height="6" rx="2" fill="#bbceda"/>
+ <path d="M14 16H110 M16 57H108" stroke="#ffe69c" stroke-width="2.5"/>
+ <text x="62" y="71" font-size="10" text-anchor="middle" font-weight="900" fill="#f9f9ff">MOTOPOMPA</text></svg>`;
+ return `<svg viewBox="0 0 125 73" width="100%" role="img" aria-label="Pompa pływająca">
+ <path d="M0 53Q18 45 35 53T70 53T105 53T125 53V73H0V53Z" fill="#0c83bc"/>
+ <path d="M0 53Q18 45 35 53T70 53T105 53T125 53" fill="none" stroke="#a3efff" stroke-width="3"/>
+ <ellipse cx="63" cy="49" rx="44" ry="16" fill="#f3b229" stroke="#bb7f0a" stroke-width="3"/>
+ <rect x="39" y="23" width="46" height="24" rx="6" fill="#d42f39" stroke="#fd9299" stroke-width="2"/>
+ <rect x="47" y="16" width="30" height="10" rx="3" fill="#3b4c5a"/>
+ <circle cx="62" cy="36" r="8" fill="#a3c0ce" stroke="#effcff" stroke-width="2"/>
+ <text x="62" y="12" font-size="10" font-weight="900" text-anchor="middle" fill="#e5f9ff">PŁYWAJĄCA</text></svg>`;
+}
+function sourceFigure(){
+ const src=$('source').value,first=MODELS[stages[0].model],lev=+$('lift').value;
+ if(src==='hydrant')return `<svg width="172" height="145" viewBox="0 0 172 145" role="img" aria-label="Hydrant nadziemny">
+ <defs><linearGradient id="hydrantR" x1="0" x2="1"><stop stop-color="#98141d"/><stop offset=".5" stop-color="#f23c46"/><stop offset="1" stop-color="#9d1721"/></linearGradient></defs>
+ <ellipse cx="86" cy="129" rx="65" ry="8" fill="#061728" opacity=".5"/>
+ <rect x="76" y="41" width="24" height="76" rx="8" fill="url(#hydrantR)" stroke="#ff9e98" stroke-width="2"/>
+ <rect x="65" y="53" width="46" height="12" rx="4" fill="#e32b37" stroke="#ffa2a7"/>
+ <rect x="59" y="54" width="14" height="12" rx="3" fill="#b5c8d7" stroke="#415a6d" stroke-width="2"/>
+ <rect x="104" y="54" width="14" height="12" rx="3" fill="#b5c8d7" stroke="#415a6d" stroke-width="2"/>
+ <path d="M76 42L78 28Q88 20 97 28L100 42Z" fill="#c82531" stroke="#ff9398" stroke-width="2"/>
+ <circle cx="88" cy="26" r="9" fill="#a8bdc9" stroke="#566e82" stroke-width="2"/>
+ <rect x="69" y="113" width="40" height="13" rx="5" fill="#ae1a27"/>
+ <path d="M26 129H146" stroke="#8eabba" stroke-width="4"/>
+ <text x="86" y="16" text-anchor="middle" fill="#e9f8ff" font-size="14" font-weight="900">HYDRANT</text>
+ </svg>`;
+ if(src==='tank')return `<svg width="185" height="148" viewBox="0 0 185 148" role="img" aria-label="Zbiornik wody">
+ <ellipse cx="92" cy="137" rx="76" ry="8" fill="#061728" opacity=".4"/>
+ <rect x="23" y="24" width="139" height="103" rx="14" fill="#708fa6" stroke="#dcecf5" stroke-width="3"/>
+ <path d="M27 83Q46 75 65 83T102 83T140 83T158 83V113Q158 123 147 123H38Q27 123 27 113Z" fill="#158ec3"/>
+ <path d="M27 83Q46 75 65 83T102 83T140 83T158 83" stroke="#90ebff" stroke-width="4" fill="none"/>
+ <rect x="73" y="14" width="38" height="12" rx="4" fill="#b8cedc"/>
+ <text x="92" y="57" font-size="17" font-weight="900" text-anchor="middle" fill="#fff">WODA</text>
+ </svg>`;
+ if(first.kind==='float')return `<svg width="190" height="156" viewBox="0 0 190 156" role="img" aria-label="Pompa pływająca pobiera wodę bezpośrednio z powierzchni">
+ <rect x="5" y="64" width="180" height="86" rx="9" fill="#0c74a7"/><path d="M5 64Q27 56 49 64T93 64T137 64T185 64" stroke="#93ecff" stroke-width="5" fill="none"/>
+ <ellipse cx="93" cy="61" rx="44" ry="17" fill="#f1b12f" stroke="#c2810a" stroke-width="3"/>
+ <rect x="72" y="29" width="42" height="29" rx="5" fill="#d72f38" stroke="#ffaaaa" stroke-width="2"/>
+ <rect x="78" y="21" width="30" height="10" rx="4" fill="#2c3b52"/>
+ <path d="M86 80V105" stroke="#6ee1fe" stroke-width="12"/>
+ <text x="93" y="141" text-anchor="middle" font-size="12" font-weight="900" fill="#e9f9ff">POMPA NA WODZIE</text>
+ </svg>`;
+ const y=28+lev*12,dim=Math.max(y,29),textY=clamp((28+y)/2+6,36,130);
+ return `<svg width="190" height="156" viewBox="0 0 190 156" role="img" aria-label="Wysokość ssania ${F(lev)} metra: od osi pompy do lustra wody">
+ <rect x="4" y="${y}" width="182" height="${151-y}" rx="7" fill="#0e76a9"/>
+ <path d="M4 ${y}Q27 ${y-5} 50 ${y}T96 ${y}T142 ${y}T186 ${y}" stroke="#99eaff" stroke-width="4" fill="none"/>
+ <path d="M7 29H88L76 43H7Z" fill="#8c7952"/>
+ <rect x="12" y="17" width="44" height="21" rx="4" fill="#d52d37" stroke="#ff909a" stroke-width="2"/>
+ <circle cx="22" cy="39" r="6" fill="#22354a" stroke="#dce9f2" stroke-width="2"/>
+ <circle cx="47" cy="39" r="6" fill="#22354a" stroke="#dce9f2" stroke-width="2"/>
+ <path d="M56 28H82V${y+12}" stroke="#65c8fc" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+ <rect x="75" y="${Math.min(142,y+7)}" width="15" height="11" rx="3" fill="#b8cbd6" stroke="#ecf8ff"/>
+ <path d="M118 28V${dim}" stroke="#ffe27d" stroke-width="3" stroke-dasharray="6 4"/>
+ <path d="M111 35L118 28L125 35 M111 ${Math.max(dim-8,29)}L118 ${dim}L125 ${Math.max(dim-8,29)}" fill="none" stroke="#ffe27d" stroke-width="2"/>
+ <rect x="126" y="${clamp(textY-21,13,104)}" width="60" height="34" rx="8" fill="#192f45" stroke="#e9c268" stroke-width="1.5"/>
+ <text x="156" y="${clamp(textY,36,126)}" text-anchor="middle" font-size="17" font-weight="900" fill="#ffe79c">${F(lev)} m</text>
+ <text x="9" y="12" font-size="12" font-weight="800" fill="#f0f9ff">OŚ POMPY</text>
+ <text x="13" y="${Math.min(143,y+22)}" font-size="11" font-weight="800" fill="#dcf8ff">LUSTRO WODY</text>
+ </svg>`;
+}
+function tankSchemeMarkup(b){return `<div class="schemeTank" id="buffer${b.id}" data-buffer="${b.id}"><button class="removeTank" data-remove-buffer="${b.id}" type="button" aria-label="Usuń zbiornik">×</button>
+ <div class="tankHeadline">🛢 Zbiornik pośredni</div><div class="tankViz"><div class="tankWater" id="tankWater${b.id}"></div><span class="tankPct" id="tankPct${b.id}">0%</span></div>
+ <div class="tankLit" id="tankLit${b.id}">0 / ${FG(b.capacity)} l</div>
+ <div class="tankRates">Dopływ <b id="tankIn${b.id}">0</b> l/min<br>Odpływ <b id="tankOut${b.id}">0</b> l/min</div>
+ <select data-buffer-cap="${b.id}" aria-label="Pojemność zbiornika">${[1000,2500,5000,10000,13000].map(c=>`<option value="${c}" ${b.capacity===c?'selected':''}>${FG(c)} l</option>`).join('')}</select>
+ <div class="tankStatus" id="tankStatus${b.id}">Oczekiwanie na wodę</div></div>`}
+function buildScheme(){const src=$('source').value;
+ let html=`<div class="sourceShape" id="sourceNode">${sourceFigure()}<div class="sourceLabel">${src==='open'?'🌊 Zbiornik otwarty':src==='tank'?'🛢 Zbiornik':'🚰 Hydrant'}</div></div>`;
+ stages.forEach((s,i)=>{
+   const m=MODELS[s.model];
+   html+=`<div class="schemeUnit" id="unitS${i}"><div style="height:63px;width:110px;margin:auto">${figure(m.kind)}</div><div class="name">${esc(m.short)}</div><div class="mode" id="sMode${i}">${s.mode==='pass'?'💧 Przelot':'⚙️ Tłoczenie'}</div><div class="press" id="sPress${i}">—</div></div>
+     <div class="hose" data-d="${s.d}" id="hose${i}"><div class="hoseCore"></div><div class="hoseTag" id="hoseTxt${i}">W${s.d} × ${s.n} • ${s.len} m</div><div class="hosePressure" id="hoseP${i}">—</div></div>`;
+   if(i<stages.length-1){
+     const b=bufferAfter(i);
+     html+=b?tankSchemeMarkup(b):`<button type="button" class="dropSlot" data-drop-after="${i}" aria-label="Wstaw zbiornik między pompami ${i+1} i ${i+2}"><span class="plus">+</span><span>Zbiornik</span><span class="small">po pompie ${i+1}</span></button>`;
+   }
+ });
+ html+='<div class="sourceShape" id="sinkNode">'+sourceFigureTank()+'<div class="sourceLabel">🎯 Zbiornik 13 m³</div></div>';
+ $('scheme').innerHTML=html;
+}
+function sourceFigureTank(){return `<svg width="100" height="82" viewBox="0 0 100 82" role="img" aria-label="Zbiornik wodny">
+ <ellipse cx="50" cy="73" rx="44" ry="7" fill="#061728" opacity=".5"/>
+ <rect x="13" y="15" width="74" height="58" rx="8" fill="#7d98af" stroke="#deebf4" stroke-width="3"/>
+ <path d="M17 42Q31 35 45 42T72 42T83 42V62Q83 69 76 69H24Q17 69 17 62Z" fill="#128fc9"/>
+ <path d="M17 42Q31 35 45 42T72 42T83 42" stroke="#a6eeff" stroke-width="3" fill="none"/>
+ <rect x="40" y="8" width="21" height="9" rx="3" fill="#bcd0e2"/>
+ <text x="50" y="31" font-size="10" font-weight="900" text-anchor="middle" fill="#fff">WODA</text>
+ </svg>`}
+function dialSVG(kind){const suction=kind==='s',min=suction?-1:0,max= suction?15:16,sz=170,C=85,R=64;const deg=v=>{if(suction&&v<=0)return 140+(v+1)*46;return suction?186+v/15*214:140+v/16*260};let marks='';let values=suction?[-1,0,3,6,9,12,15]:[0,2,4,6,8,10,12,14,16];for(let i=0;i<values.length;i++){let v=values[i],d=deg(v)*Math.PI/180,x1=C+R*Math.cos(d),y1=C+R*Math.sin(d),x2=C+(R-9)*Math.cos(d),y2=C+(R-9)*Math.sin(d),xt=C+(R-24)*Math.cos(d),yt=C+(R-24)*Math.sin(d);marks+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#213143" stroke-width="2.3"/><text x="${xt}" y="${yt+4}" font-size="12" font-weight="850" text-anchor="middle" fill="#263e50">${v}</text>`}
+return `<svg class="dial" viewBox="0 0 170 170" aria-label="${suction?'Manowakuometr, minus jeden do piętnastu bar':'Manometr ciśnienia tłoczenia, zero do szesnastu bar'}"><circle cx="85" cy="85" r="81" fill="#b0bdc5" stroke="#41505d" stroke-width="5"/><circle cx="85" cy="85" r="72" fill="#fffcf2" stroke="#e4e8e9" stroke-width="2"/>${marks}<text x="85" y="123" font-size="10" font-weight="800" fill="#536576" text-anchor="middle">bar</text><g id="needle__INDEX__${kind}" transform="rotate(140 85 85)"><line x1="76" y1="85" x2="143" y2="85" stroke="#162b3b" stroke-width="4.5" stroke-linecap="round"/><polygon points="147,85 133,77 133,93" fill="#162b3b"/><circle cx="85" cy="85" r="9" fill="#172737" stroke="#ced5df" stroke-width="2"/></g><text x="85" y="154" font-size="9" font-weight="850" fill="#2a5790" text-anchor="middle">HYDRO PSP</text></svg>`}
+function paintUnits(){const html=stages.map((s,i)=>{let m=MODELS[s.model];return `<article class="unitbox" id="card${i}"><div class="unitHead"><div class="unitIcon">${figure(m.kind)}</div><div class="grow"><b>Stanowisko ${i+1}</b><div class="small" id="caption${i}">${esc(m.short)}</div></div><span class="small">${m.kind==='truck'?'SAMOCHÓD':m.kind==='portable'?'MOTOPOMPA':'PŁYWAJĄCA'}</span></div><div class="unitSettings"><label>Urządzenie</label><select data-i="${i}" data-k="model">${Object.keys(MODELS).map(k=>`<option value="${k}" ${k===s.model?'selected':''}>${esc(MODELS[k].name)}</option>`).join('')}</select><div class="two"><div><label>Praca</label><select data-i="${i}" data-k="mode"><option value="boost" ${s.mode==='boost'?'selected':''}>Tłoczenie</option><option value="pass" ${s.mode==='pass'?'selected':''}>Swobodny przelot</option></select></div><div><label>Nastawa <span class="number" id="setV${i}">${F(s.set)} bar</span></label><input id="set${i}" data-i="${i}" data-k="set" type="range" min="0" max="16" step=".5" value="${s.set}"></div></div><div class="two"><div><label>Wąż</label><select data-i="${i}" data-k="d"><option value="52" ${s.d===52?'selected':''}>W52</option><option value="75" ${s.d===75?'selected':''}>W75</option><option value="110" ${s.d===110?'selected':''}>W110</option></select></div><div><label>Liczba linii</label><select data-i="${i}" data-k="n">${[1,2,3,4,5].map(n=>`<option value="${n}" ${s.n===n?'selected':''}>${n} ${n===1?'linia':'linie'}</option>`).join('')}</select></div></div><label>Odległość magistrali: <span class="number" id="lenV${i}">${s.len} m</span></label><input data-i="${i}" data-k="len" type="range" min="20" max="1500" step="10" value="${s.len}"><details class="curveDetails"><summary>📈 Zobacz charakterystykę tej pompy (wykres)</summary><div class="chartBox">${curveSVG(s.model,i)}</div><div class="curvePoints">${chartPointsText(s.model)}</div><div class="small" style="margin-top:7px"><b>Zielone punkty</b>: wartości potwierdzone w karcie. <b>Puste punkty i linie przerywane</b>: szacunki / interpolacja; nie są pomiarami producenta. <b>Różowy punkt</b>: aktualna praca w tej symulacji (Q oraz przyrost ciśnienia). Dane katalogowe mogą dotyczyć ssania 3 m.</div><div class="small" style="margin-top:7px">${esc(m.note)}</div><a class="sourceLink" href="${m.url}" target="_blank" rel="noopener noreferrer">Źródło producenta / karta produktu ↗</a></details><details><summary>Wzniesienie i katalog pompy</summary><label>Różnica wysokości na odcinku <span id="dzV${i}" class="number">${s.dz} m</span></label><input type="range" data-i="${i}" data-k="dz" min="-40" max="80" step="5" value="${s.dz}"><div class="sourceFoot small">${esc(m.note)}</div><a class="sourceLink" href="${m.url}" target="_blank" rel="noopener noreferrer">Dokumentacja / karta produktu ↗</a></details></div><div class="gaugePanel"><div class="gauges"><div class="gaugeCard">${dialSVG('s').replaceAll('__INDEX__',i)}<div class="gaugeName">MANOWAKUOMETR</div><div class="read" id="readS${i}">—</div><div class="hint">Pomiar na ssaniu</div></div><div class="gaugeCard">${dialSVG('p').replaceAll('__INDEX__',i)}<div class="gaugeName">MANOMETR NC</div><div class="read" id="readP${i}">—</div><div class="hint">Pomiar na tłoczeniu</div></div></div></div><div class="diag"><div class="stat" id="dHead${i}">—</div><div class="dash" id="pumpAnim${i}"></div><div id="diagnose${i}">—</div></div></article>`}).join('');$('units').innerHTML=html}
+function needle(i,which,val){let d;if(which==='s')d=val<=0?140+(clamp(val,-1,0)+1)*46:186+clamp(val,0,15)/15*214;else d=140+clamp(val,0,16)/16*260;const g=$(`needle${i}${which}`);if(g)g.setAttribute('transform',`rotate(${d} 85 85)`)}
+function diagnose(s,r,i,result){let m=MODELS[s.model],msgs=[];if(r.inactive)msgs.push(['warn','Ta pompa czeka na wodę w zbiorniku pośrednim. Gdy zbiornik się napełni, zacznie tłoczyć.']);if(r.fromBuffer&&r.pass)msgs.push(['danger','Za otwartym zbiornikiem nie ma ciśnienia od poprzedniej pompy. Włącz tłoczenie.']);if(r.floating&&i>0)msgs.push(['danger','Pompa pływająca nie może pracować w środku tej magistrali. Ustaw ją przy zbiorniku otwartym.']);if(r.pass){msgs.push(['ok',`Przelot: na wejściu jest ${F(r.pin)} bar, a na wyjściu ${F(r.pout)} bar. Ta pompa NIE zwiększa ciśnienia; wcześniejsza pompa przepycha wodę przez jej korpus.`]);if(r.passLoss>.5)msgs.push(['warn','Duży opór przelotu. W tym modelu jest tylko szacowany — sprawdź możliwość takiego połączenia w rzeczywistej armaturze.']);}else{msgs.push(['ok',`Pompa podniosła ciśnienie o ${F(r.gain)} bar. Na ssaniu ${F(r.pin)} bar → na tłoczeniu ${F(r.pout)} bar.`]);if(r.nm<1.4&&Number.isFinite(r.nm))msgs.push(['warn',`Mała rezerwa antykawitacyjna (${F(r.nm)} m według modelu). ${i===0?'Podnieś przepustowość ssania, użyj większej liczby przewodów lub zmniejsz wysokość ssania.':'Poprzednia pompa powinna zapewnić więcej ciśnienia na wlocie.'}`]);}
+if(r.loss>1)msgs.push(['warn',`Na odcinku tracisz ${F(r.loss)} bar: ${s.len} m W${s.d} × ${s.n}. Skróć linię albo dodaj równoległy wąż / większą średnicę.`]);if(i===0&&result.suction.loss>1&&$('source').value==='open')msgs.push(['warn',`Straty na ssaniu to ${F(result.suction.loss)} m słupa wody. Za mały przekrój, za długi przewód lub opory smoka utrudniają pracę.`]);if(r.floating)msgs.push(['ok','Pompa pływa na wodzie — nastawa wysokości ssania na brzegu nie dotyczy tego urządzenia.']);return msgs.slice(0,3).map(([type,msg])=>`<div class="${type}" style="margin-top:5px">${type==='warn'?'⚠':type==='danger'?'⛔':'✓'} ${esc(msg)}</div>`).join('')}
+
+function faults(result){
+  const found=[];const push=(level,at,i,title,cause,fix)=>found.push({level,at,i,title,cause,fix});
+  const first=stages[0];
+  if($('source').value==='open'&&MODELS[first.model].kind!=='float'){
+    const sn=result.suction, q=result.q;
+    const pressureHead=sn.npsh;
+    if(sn.loss>2.0)push('warning','source',-1,'Duże opory ssania',`Przewody ssawne, smok i armatura tracą około ${F(sn.loss)} m słupa wody. Przy tej średnicy, długości i liczbie węży duży strumień wymaga silniejszego zasysania.`,'Skróć przewody, zwiększ ich średnicę/liczbę, oczyść smok i sprawdź szczelność.');
+    if(sn.velocity>4)push('warning','source',-1,'Duża prędkość w przewodach ssawnych',`Prędkość ssania około ${F(sn.velocity)} m/s podnosi straty bardzo szybko (proporcjonalnie do Q²).`,'Zastosuj większy przekrój po stronie ssawnej.');
+    if(+$('lift').value>=6)push('warning','source',-1,'Duża wysokość ssania',`Lustro wody leży ${F(+$('lift').value)} m poniżej osi pompy; już sama różnica poziomów zużywa dużą część dostępnego ciśnienia atmosferycznego.`,'Jeżeli można, ustaw pompę bliżej lustra wody.');
+  }
+  const buffer=buffers.length>0;
+  for(let i=0;i<stages.length;i++){
+    const s=stages[i],r=result.rows[i],m=MODELS[s.model];
+    if(m.kind==='float'&&(i>0||$('source').value!=='open')) push('critical','pump',i,'Nieprawidłowe położenie pompy pływającej',`Stanowisko ${i+1} jest pompą pływającą, lecz nie znajduje się jako pierwsze przy otwartym zbiorniku.`,'Przenieś ją na początek układu przy jeziorze/rzece albo wybierz inną pompę.');
+    if(m.kind==='float'&&s.mode==='pass')push('critical','pump',i,'Pompa pływająca nie jest pompą przelotową',`Wybór „swobodny przelot” nie odpowiada opisanej armaturze ${m.short}.`,'Włącz tłoczenie albo użyj urządzenia ze zweryfikowaną możliwością przelotu.');
+    if(r.fromBuffer&&s.mode==='pass')push('critical','pump',i,'Po zbiorniku pośrednim brak pompy tłoczącej',`Otwarty zbiornik przerywa przekaz ciśnienia. Pompa nr ${i+1} ustawiona na przelot nie tłoczy wody dalej.`,'Włącz pompę nr '+(i+1)+' albo zmień metodę na przetłaczanie bezpośrednie.');
+    if(!r.inactive&&!r.pass&&Number.isFinite(r.nm)){
+      if(r.nm<.4)push('critical','pump',i,'Krytycznie mały zapas NPSH',`W modelu rezerwa wynosi ${F(r.nm)} m. Może dojść do tworzenia pęcherzy pary i spadku wydatku. To wyliczenie poglądowe — nie zastępuje wykresu NPSHr producenta.`,'Zmniejsz wymagany przepływ; dla pierwszej pompy zwiększ przekrój ssania i obniż wysokość ssania; dla dalszej zwiększ ciśnienie dopływowe.');
+      else if(r.nm<1.4)push('warning','pump',i,'Mała rezerwa przeciw kawitacji',`Margines NPSH ma tylko ${F(r.nm)} m, według założonej charakterystyki NPSHr.`,'Zmniejsz straty ssania lub wydatek, nie polegaj jedynie na podniesieniu nastawy.');
+    }
+    if(i>0&&!r.fromBuffer&&!r.inactive&&r.pin<.35)push('critical','pump',i,'Za słabe zasilanie kolejnej pompy',`Pompa ${i+1} ma na wlocie ${F(r.pin)} bar. Przepływ zużył ciśnienie w poprzednim odcinku.`,'Sprawdź nastawę pompy '+i+', długość odcinka, średnicę W'+stages[i-1].d+' oraz liczbę linii.');
+    else if(i>0&&!r.fromBuffer&&!r.inactive&&r.pin<.8)push('warning','pump',i,'Mała rezerwa ciśnienia na wlocie',`Do pompy nr ${i+1} dopływa tylko ${F(r.pin)} bar.`,'Zmniejsz straty w poprzedniej magistrali albo zmodyfikuj nastawę pompy poprzedniej.');
+    if(r.pass&&!r.inactive&&r.pin<=0)push('critical','pump',i,'Przelot bez dodatniego zasilania',`Przez niepracującą pompę nie da się przekazać zaplanowanego wydatku, jeżeli ciśnienie napędzające przepływ jest zerowe lub ujemne.`,'Uruchom tę pompę lub zapewnij większe ciśnienie z poprzedniego stanowiska.');
+    if(r.loss>4)push('warning','hose',i,'Bardzo duża strata węży',`Linia ${i+1}: ${s.len} m W${s.d} × ${s.n} pochłania ${F(r.loss)} bar, co silnie ogranicza końcowy wydatek.`,'Dodaj równoległą linię, zwiększ średnicę albo skróć odcinek.');
+    else if(r.loss>2)push('warning','hose',i,'Duże opory magistrali',`Linia ${i+1}: ${F(r.loss)} bar strat przy ${FG(r.q)} l/min.`,'Porównaj warianty w tabeli strat poniżej.');
+    if(r.velocity>6)push('warning','hose',i,'Bardzo szybki przepływ w wężu',`W linii nr ${i+1} średnia prędkość to ${F(r.velocity)} m/s. Większy przepływ powoduje gwałtowny wzrost strat.`,'Więcej równoległych węży lub większa średnica.');
+    if(r.pout>16)push('warning','pump',i,'Przekroczony zakres narysowanego manometru',`Obliczono ${F(r.pout)} bar na tłoczeniu, a wskaźnik kończy się na 16 bar. To nie jest automatycznie limit dopuszczalny producenta.`,'Sprawdź właściwy zakres przyrządu i dopuszczalne ciśnienie urządzenia.');
+  }
+  const minQ=+$('minFlow').value;
+  if(minQ>0&&result.q+1<minQ){
+    const trial=buffers.length?result:analyze(minQ,false);
+    let specifics=[];
+    if($('source').value==='open'&&trial.suction.loss>1.5) specifics.push('bardzo duże opory przewodów ssawnych');
+    const bad=trial.rows.findIndex((r,i)=>!r.pass&&r.nm<.4);
+    if(bad>=0)specifics.push('brak zapasu NPSH na pompie '+(bad+1));
+    const f=trial.rows.findIndex((r,i)=>r.loss>3);
+    if(f>=0)specifics.push('duże straty na odcinku '+(f+1));
+    const cap=trial.rows.findIndex((r,i)=>!r.pass&&(trial.q>dh(stages[i].model)||r.maxH<.1));
+    if(cap>=0)specifics.push('za mała wydajność modelu pompy '+(cap+1));
+    const why=specifics.length?' Najbardziej prawdopodobne ograniczenia: '+specifics.join(', ')+'.':'';
+    push('critical','output',-1,'Nie osiągasz wymaganego wydatku',`Wymagano ${FG(minQ)} l/min, a model daje ${FG(result.q)} l/min.${why}`,'Zwiększ wydajność zasilania, zmniejsz opory oraz sprawdź ciśnienia na każdym stanowisku.');
+  }
+  if(buffers.length){for(const b of result.bufferReadings){if(b.volume<BUF_MIN)push('warning','buffer',b.id,'Zbiornik prawie pusty',`Zbiornik nr ${b.id} ma ${FG(b.volume)} l. Pompa za zbiornikiem zostaje odcięta, dopóki wody nie będzie więcej.`,'Poczekaj na napełnienie lub ogranicz wydatek kolejnej pompy.');else if(b.outflow>b.inflow+100)push('warning','buffer',b.id,'Zbiornik się opróżnia',`Odpływ ${FG(b.outflow)} l/min przewyższa dopływ ${FG(b.inflow)} l/min.`,'Zmniejsz odbiór za zbiornikiem lub zwiększ zasilanie z poprzedniej magistrali.');else if(b.volume>=b.capacity-.1 && b.inflow>b.outflow+50)push('warning','buffer',b.id,'Zbiornik pełny – przelew',`Dopływ ${FG(b.inflow)} l/min przewyższa odbiór ${FG(b.outflow)} l/min; nadmiar wody przelewa się.`,'Zmniejsz dopływ albo zwiększ pobór, jeśli pozwala hydraulika.')}}
+  if(!result.ok || (result.q<1&&!buffers.length)){
+    push('critical','output',-1,'Układ nie spełnia warunków końcowych','Przy ustawionych pompach, wężach i źródle nie da się zapewnić wymaganego ciśnienia oraz przepływu.','Sprawdź najpierw elementy zaznaczone powyżej; zwiększenie samej nastawy nie zawsze pomoże.');
+  }
+  return found;
+}
+function renderFaults(result){
+  let all=faults(result);
+  const rank=f=>f.level==='critical'?2:1;
+  all.sort((a,b)=>rank(b)-rank(a));
+  const critical=all.filter(x=>x.level==='critical'),warnings=all.filter(x=>x.level==='warning');
+  const el=$('problemBanner'); el.className='problemBanner '+(critical.length?'critical':warnings.length?'warning':'ok');
+  const head=critical.length?`⛔ ${critical.length} krytyczne problemy — popraw układ`:warnings.length?`⚠ ${warnings.length} ostrzeżeń do sprawdzenia`:'✓ Brak wykrytych błędów krytycznych';
+  const visible=critical.slice(0,1);
+  const hidden=all.filter(x=>!visible.includes(x));
+  function faultMarkup(x){const id=x.at==='pump'?'card'+x.i:x.at==='hose'?'hose'+x.i:x.at==='source'?'sourceNode':x.at==='buffer'?'buffer'+x.i:'sinkNode';
+    return `<a class="problemLink" href="#${id}"><b>${x.level==='critical'?'⛔':'⚠'} ${esc(x.title)}</b> — ${esc(x.cause)} <b>Co zrobić:</b> ${esc(x.fix)}</a>`;}
+  el.innerHTML=`<div class="problemTitle">${head}</div>`+
+  (visible.length?visible.map(faultMarkup).join(''):'')+
+  (hidden.length?`<details class="faultDetails"><summary>ⓘ Pokaż diagnozę i sposoby naprawy (${hidden.length})</summary>${hidden.map(faultMarkup).join('')}</details>`:
+   `<div class="small">Bilans spełnia przyjęty model szkoleniowy. To nie jest weryfikacja nastaw operacyjnych.</div>`);
+  document.querySelectorAll('.unitbox').forEach((e,i)=>{const f=all.filter(x=>x.at==='pump'&&x.i===i);e.classList.toggle('criticalUnit',f.some(x=>x.level==='critical'));e.classList.toggle('warningUnit',f.length>0&&!f.some(x=>x.level==='critical'))});
+  document.querySelectorAll('.hose').forEach((e,i)=>{const f=all.filter(x=>x.at==='hose'&&x.i===i);e.classList.toggle('criticalHose',f.some(x=>x.level==='critical'));e.classList.toggle('warningHose',f.length>0&&!f.some(x=>x.level==='critical'))});
+  document.querySelectorAll('.schemeUnit').forEach((e,i)=>{const f=all.filter(x=>x.at==='pump'&&x.i===i);e.classList.toggle('criticalNode',f.some(x=>x.level==='critical'));e.classList.toggle('warningNode',f.length>0&&!f.some(x=>x.level==='critical'))});
+  const src=$('sourceNode');if(src){src.classList.toggle('criticalSource',all.some(x=>x.at==='source'&&x.level==='critical'));src.classList.toggle('warningSource',all.some(x=>x.at==='source'&&x.level==='warning'))}
+  for(const b of buffers){const e=$('buffer'+b.id);if(e)e.classList.toggle('tankAlert',all.some(x=>x.at==='buffer'&&x.i===b.id))}
+  const sink=$('sinkNode');if(sink)sink.classList.toggle('outputCritical',all.some(x=>x.at==='output'&&x.level==='critical'));
+  return all;
+}
+function renderHoseTables(result){
+  const q=+$('refQ').value,n=+$('refN').value,ds=[52,75,110],Ls=[20,40,100,200,300,500,1000];
+  $('lossReferenceRows').innerHTML=ds.map(d=>{const s={d,n,len:100};const velocity=hoseVelocity(q,s);return `<tr><th>W${d}</th>${Ls.map(L=>`<td>${F(hoseLoss(q,{d,n,len:L}))} bar</td>`).join('')}<td>${F(velocity)} m/s</td></tr>`}).join('');
+  $('controlLoss').textContent=F(hoseLoss(1000,{d:75,n:1,len:100}))+' bar';
+  $('actualLossRows').innerHTML=stages.map((s,i)=>{const r=result.rows[i],staticBar=.0981*s.dz,total=r.loss+staticBar;return `<tr><th>Za pompą ${i+1}</th><td>W${s.d} × ${s.n}</td><td>${s.len} m</td><td>${FG(r.q/s.n)} l/min</td><td>${F(r.velocity)} m/s</td><td class="lossMetric">${F(r.loss)} bar</td><td>${staticBar>=0?'+':''}${F(staticBar)} bar</td><td>${total>=0?'+':''}${F(total)} bar</td></tr>`}).join('');
+}
+
+function renderBuffers(result){for(const b of buffers){const row=result.bufferReadings.find(x=>x.id===b.id);if(!row)continue;
+ const level=100*b.volume/b.capacity;
+ $(`tankWater${b.id}`).style.height=level.toFixed(1)+'%';
+ $(`tankPct${b.id}`).textContent=Math.round(level)+'%';
+ $(`tankLit${b.id}`).textContent=`${FG(b.volume)} / ${FG(b.capacity)} l`;
+ $(`tankIn${b.id}`).textContent=FG(row.inflow);
+ $(`tankOut${b.id}`).textContent=FG(row.outflow);
+ const state=b.volume>=b.capacity-1&&row.inflow>row.outflow?'PEŁNY • przelew':!b.primed?'NAPEŁNIANIE • czeka na rozruch':row.outflow>row.inflow+50?'POZIOM SPADA':row.inflow>row.outflow+50?'POZIOM ROŚNIE':'PRACA STABILNA';
+ $(`tankStatus${b.id}`).textContent=state;
+ $(`buffer${b.id}`).classList.toggle('tankAlert',b.primed&&b.volume<BUF_PRIME*1.5&&row.outflow>row.inflow+10);
+ }}
+function renderResults(override=null){let manual=override||solve(false),automatic=solve(true);lastResult=manual;lastFlow=manual.ok?manual.q:0;$('qTop').textContent=FG(lastFlow)+' l/min';$('pTop').textContent=F(manual.end)+' bar na końcu';$('flow').textContent=FG(lastFlow)+' l/min';$('end').innerHTML='Ciśnienie na końcu: <b>'+F(manual.end)+' bar</b>';$('needV').textContent=F(+$('need').value)+' bar';$('liftV').textContent=F(+$('lift').value)+' m';$('hydrantV').textContent=F(+$('hydrant').value)+' bar';$('liftWrap').style.display=$('source').value==='open'&&MODELS[stages[0].model].kind!=='float'?'':'none';$('hydrantWrap').hidden=$('source').value!=='hydrant';$('suctionSettings').style.display=$('source').value==='open'&&MODELS[stages[0].model].kind!=='float'?'':'none';$('autoInfo').textContent=`AUTO: orientacyjnie ${FG(automatic.ok?automatic.q:0)} l/min. Szacunek na podstawie udokumentowanych punktów pracy i opisanych uproszczeń.`;
+let diag=[],src=manual.suction;if(src.mode==='open'&&src.loss>1.5)diag.push(['warn',`Pobór wody: przewody ssawne powodują stratę ${F(src.loss)} m słupa wody. Zwiększ średnicę lub liczbę przewodów.`]);if(src.mode==='open'&&+$('lift').value>=5)diag.push(['warn',`Woda jest ${F(+$('lift').value)} m poniżej osi pompy. Zapas NPSH maleje. Zwiększenie ciśnienia tłoczenia nie usuwa problemów ssania.`]);if(!$('start').disabled && manual.issues.length)manual.issues.forEach(s=>diag.push(['danger',s]));if(lastFlow<1)diag.push(['danger','Brak wymaganego przepływu: sprawdź source, ustawienia pomp, długości odcinków i końcowe wymagane ciśnienie.']);if(!diag.length)diag.push(['ok','Układ nie wykazuje podstawowego błędu bilansu ciśnienia w zastosowanym modelu.']);$('diagnoses').innerHTML=diag.map(([t,s])=>`<div class="callout ${t}" style="border-left-color:${t==='danger'?'#fa7777':t==='ok'?'#65e1a2':'#ffd66b'}">${esc(s)}</div>`).join('');
+renderBuffers(manual);stages.forEach((s,i)=>{let r=manual.rows[i];$(`sPress${i}`).textContent=F(r.pin)+' → '+F(r.pout)+' bar';$(`hoseP${i}`).textContent='po wężach: '+F(r.end)+' bar';$(`hoseTxt${i}`).textContent=`W${s.d} × ${s.n} • ${s.len} m`;$(`hose${i}`).dataset.d=s.d;$(`unitS${i}`).classList.toggle('problem',r.nm<.7||r.loss>2);$(`sMode${i}`).textContent=s.mode==='pass'?'💧 Przelot':'⚙️ Tłoczenie';$(`readS${i}`).textContent=F(r.pin)+' bar';$(`readP${i}`).textContent=F(r.pout)+' bar';const pt=$(`opPoint${i}`);if(pt){const pos=curvePosition(s.model,manual.q,r.gain);pt.style.display=r.pass?'none':'';const dot=pt.querySelector('circle');dot.setAttribute('cx',pos.x);dot.setAttribute('cy',pos.y);const op=$(`opText${i}`);if(op)op.textContent=`Punkt symulowany: ${FG(r.q)} l/min, przyrost ${F(r.gain)} bar`; }needle(i,'s',r.pin);needle(i,'p',r.pout);$(`setV${i}`).textContent=F(s.set)+' bar';$(`lenV${i}`).textContent=s.len+' m';$(`dzV${i}`).textContent=s.dz+' m';$(`dHead${i}`).innerHTML=(r.pass?'💧 Przelot bez podbijania • ':'⚙️ Tłoczenie • ')+'<b>'+FG(r.q)+' l/min</b>';$(`diagnose${i}`).innerHTML=diagnose(s,r,i,manual);$(`card${i}`).classList.toggle('alert',r.nm<.7||r.loss>3);$(`set${i}`).disabled=s.mode==='pass';});renderFaults(manual);renderHoseTables(manual);updateAnimated();updateTank()}
+function updateAnimated(){let a=running&&lastFlow>1;$('flowing').style.animationPlayState=a?'running':'paused';document.querySelectorAll('.hoseCore,.dash,.lake').forEach(x=>x.style.animationPlayState=a?'running':'paused')}
+function updateTank(){$('litres').textContent=FG(litres)+' / 13 000 l';$('tankfill').style.width=(100*litres/13000).toFixed(2)+'%';$('elapsed').textContent=FG(elapsed)+' s (czas symulacji ×8)';$('timeToTank').textContent=lastFlow>1?F((13000-litres)/lastFlow)+' min':'brak dopływu'}
+function build(){modeSync();paintUnits();buildScheme();renderResults()}
+function applyAuto(){let a=solve(true);stages.forEach((s,i)=>{if(s.mode==='boost')s.set=clamp(Math.ceil((a.rows[i].pout+.01)*2)/2,0,16)});build()}
+function paletteToggle(){paletteArmed=!paletteArmed;$('bufferPalette').classList.toggle('armed',paletteArmed);dragStatus(paletteArmed?'Teraz dotknij + Zbiornik na schemacie, aby go wstawić.':'Przeciągnij ikonę zbiornika na wybrane miejsce.');}
+function dragCancel(){if(!dragState)return;dragState.ghost?.remove();document.querySelectorAll('.dropSlot.target').forEach(e=>e.classList.remove('target'));dragState=null}
+const palette=$('bufferPalette');
+palette.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragState={x:e.clientX,y:e.clientY,active:false,ghost:null,slot:null};try{palette.setPointerCapture(e.pointerId)}catch(err){};e.preventDefault()});
+palette.addEventListener('pointermove',e=>{if(!dragState)return;let d=dragState;if(!d.active && Math.hypot(e.clientX-d.x,e.clientY-d.y)>9){d.active=true;d.ghost=document.createElement('div');d.ghost.className='dragGhost';d.ghost.textContent='🛢 Zbiornik';document.body.append(d.ghost)}if(!d.active)return;d.ghost.style.left=e.clientX+'px';d.ghost.style.top=e.clientY+'px';const scroll=$('schemeScroll'),rect=scroll.getBoundingClientRect();if(e.clientY>=rect.top-30&&e.clientY<=rect.bottom+30){if(e.clientX>rect.right-40)scroll.scrollLeft+=17;else if(e.clientX<rect.left+40)scroll.scrollLeft-=17;}
+ const node=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-drop-after]');document.querySelectorAll('.dropSlot.target').forEach(el=>el.classList.remove('target'));d.slot=node||null;if(node)node.classList.add('target');});
+palette.addEventListener('pointerup',e=>{if(!dragState)return;const d=dragState;const target=d.slot;dragCancel();if(d.active){if(target)addBuffer(+target.dataset.dropAfter);else dragStatus('Upuść na polu + Zbiornik. Możesz też dotknąć ikony, a potem pola.');}else paletteToggle();});
+palette.addEventListener('pointercancel',dragCancel);
+palette.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();paletteToggle()}});
+document.addEventListener('click',e=>{const slot=e.target.closest('[data-drop-after]');if(slot){addBuffer(+slot.dataset.dropAfter);return}const remove=e.target.closest('[data-remove-buffer]');if(remove){removeBuffer(+remove.dataset.removeBuffer);return}});
+function selectChange(t){if(t.dataset.bufferCap!==undefined){const b=buffers.find(x=>x.id===+t.dataset.bufferCap);if(b){b.capacity=+t.value;b.volume=Math.min(b.volume,b.capacity);renderResults();}return}
+if(t.dataset.i!==undefined){let i=+t.dataset.i,k=t.dataset.k;stages[i][k]=(k==='model'||k==='mode')?t.value:+t.value;if(k==='model'){let m=MODELS[t.value];if(m.kind==='float'&&i===0)$('source').value='open';if(m.kind==='float')stages[i].mode='boost';}if(['model','mode','d','n'].includes(k)){build();return}renderResults();return}if(t.id==='lift'){buildScheme();renderResults();return}if(['source','mode','suctDia','suctN','suctL'].includes(t.id)){build();return}renderResults()}
+document.addEventListener('input',e=>{if(e.target.type==='range')selectChange(e.target)});document.addEventListener('change',e=>{if(e.target.tagName==='SELECT')selectChange(e.target)});
+$('start').addEventListener('click',()=>{running=!running;$('start').textContent=running?'⏸ Pauza':'▶ Start';updateAnimated()});$('reset').addEventListener('click',()=>{running=false;litres=0;elapsed=0;buffers.forEach(b=>{b.volume=0;b.primed=false});$('start').textContent='▶ Start';updateAnimated();renderResults()});$('add').addEventListener('click',()=>{if(stages.length<5)stages.push({model:'n25',mode:'boost',set:9,len:200,d:75,n:2,dz:0});build()});$('remove').addEventListener('click',()=>{if(stages.length>1){stages.pop();buffers=buffers.filter(b=>b.after<stages.length-1)}build()});$('auto').addEventListener('click',applyAuto);$('exampleTruck').addEventListener('click',()=>{stages=[{model:'n65',mode:'boost',set:10,len:300,d:110,n:2,dz:0},{model:'n55',mode:'boost',set:10,len:300,d:110,n:2,dz:0},{model:'n25',mode:'pass',set:10,len:200,d:110,n:2,dz:0}];$('source').value='open';build()});$('exampleFloat').addEventListener('click',()=>{stages=[{model:'niagara',mode:'boost',set:2,len:60,d:75,n:1,dz:0},{model:'n25',mode:'boost',set:8,len:180,d:75,n:2,dz:0}];$('source').value='open';$('need').value='0.5';build()});
+function frame(ts){if(lastFrame!==null&&running){let dt=Math.min(.2,(ts-lastFrame)/1000);elapsed+=dt*8;const delta=dt*8;let r=buffers.length?solveNetwork(false,delta):solve(false);const rows=r.bufferReadings||[];for(const b of buffers){const v=rows.find(x=>x.id===b.id);if(!v)continue;b.volume=clamp(b.volume+(v.inflow-v.outflow)*delta/60,0,b.capacity);if(b.volume<=BUF_MIN+.00001)b.primed=false;else if(b.volume>=BUF_PRIME)b.primed=true;}lastResult=r;lastFlow=r.q;litres=Math.min(13000,litres+lastFlow*delta/60);if(buffers.length&&ts-lastTankDisplay>280){renderResults(r);lastTankDisplay=ts;}if(litres>=13000){running=false;$('start').textContent='▶ Start';updateAnimated()}updateTank()}lastFrame=ts;requestAnimationFrame(frame)}
+build();requestAnimationFrame(frame);window.HydroPSPTest={getState:()=>({stages:stages.map(s=>({...s})),running,litres,flow:lastFlow,result:lastResult}),analyze,solve,head,hoseLoss,hoseVelocity,MODELS,suction,applyAuto,faults,curvePosition,addBuffer,removeBuffer,getBuffers:()=>buffers.map(b=>({...b})),solveNetwork};
+})();
+</script></body></html>
